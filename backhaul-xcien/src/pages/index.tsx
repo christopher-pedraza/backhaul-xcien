@@ -1,9 +1,15 @@
-import DefaultLayout from "@/layouts/default";
+import { FC } from "react";
+import Graph from "@/components/graph";
 
-export default function IndexPage() {
-    return (
-        <DefaultLayout>
-            <></>
-        </DefaultLayout>
-    );
+interface Props { }
+
+const IndexPage: FC<Props> = ({
+}: Props) => {
+
+  return (
+    <Graph />
+  );
 }
+
+
+export default IndexPage;
