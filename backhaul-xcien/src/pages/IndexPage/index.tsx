@@ -7,7 +7,9 @@ const IndexPage: FC<Props> = ({
 }: Props) => {
 
   return (
-    <Graph />
+    <div className="flex-1 flex flex-col">
+      <Graph />
+    </div>
   );
 }
 

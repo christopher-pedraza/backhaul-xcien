@@ -28,7 +28,7 @@ const Graph: FC<Props> = ({ }) => {
   return (
     <div
       ref={containerRef}
-      className="w-[600px] h-[600px]"
+      className="flex-1"
     />
   );
 }

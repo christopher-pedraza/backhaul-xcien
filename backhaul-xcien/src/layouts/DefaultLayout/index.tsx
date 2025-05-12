@@ -9,7 +9,7 @@ const DefaultLayout: FC<Props> = ({
 }: Props) => {
   return (
     <div className="w-full min-h-screen flex flex-col bg-neutral-100">
-      <div className="flex-1 overflow-auto p-4">
+      <div className="flex-1 flex flex-col overflow-auto">
         {children}
       </div>
     </div>
