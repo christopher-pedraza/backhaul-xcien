@@ -18,7 +18,18 @@ const IndexPage: FC<Props> = ({}: Props) => {
             const id = target.id();
             console.log("Node ID:", id);
             setSelectedNode(id);
-            setIsOpen(true);
+            if (!isOpen) {
+                setIsOpen(true);
+            }
+        });
+        cy.on("tap", "edge", (event) => {
+            const target = event.target;
+            const id = target.id();
+            console.log("Node ID:", id);
+            setSelectedNode(id);
+            if (!isOpen) {
+                setIsOpen(true);
+            }
         });
     }
 
