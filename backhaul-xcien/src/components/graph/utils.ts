@@ -8,7 +8,7 @@ export const elements: CytoscapeOptions['elements'] = [
     data: { id: 'b' }
   },
   { // edge ab
-    data: { id: 'ab', source: 'a', target: 'b' }
+    data: { id: 'ab', source: 'a', target: 'b', label: 'agua'}
   },
 ];
 
@@ -29,7 +29,8 @@ export const style: CytoscapeOptions['style'] = [
       'line-color': '#ccc',
       'target-arrow-color': '#ccc',
       'target-arrow-shape': 'triangle',
-      'curve-style': 'bezier'
+      'curve-style': 'bezier',
+      'label': 'data(label)'
     }
   }
 ]
