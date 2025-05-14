@@ -31,7 +31,7 @@ export default function SideBar({
                 open={isOpen}
                 onClose={toggleDrawer}
                 direction="right"
-                size={"20vw"}
+                size={"30vw"}
                 duration={200}
                 enableOverlay={false}
                 style={{
@@ -57,6 +57,7 @@ export default function SideBar({
                             color="primary"
                             variant="bordered"
                             size="lg"
+                            placement="top"
                         >
                             <Tab
                                 key="configuracion"
