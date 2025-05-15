@@ -1,42 +1,43 @@
 import { CytoscapeOptions } from "cytoscape";
 
-export const elements: CytoscapeOptions['elements'] = [
-  { // node a
-    data: { id: 'a' }
+export const elements: CytoscapeOptions["elements"] = [
+  {
+    // node a
+    data: { id: "a" },
   },
-  { // node b
-    data: { id: 'b' }
+  {
+    // node b
+    data: { id: "b" },
   },
-  { // edge ab
-    data: { id: 'ab', source: 'a', target: 'b', label: '100/200'}
+  {
+    // edge ab
+    data: { id: "ab", source: "a", target: "b", label: "100/200" },
   },
 ];
 
-
-export const style: CytoscapeOptions['style'] = [
+export const style: CytoscapeOptions["style"] = [
   {
-    selector: 'node',
+    selector: "node",
     style: {
-      'background-color': '#666',
-      'label': 'data(id)'
-    }
+      "background-color": "#666",
+      label: "data(id)",
+    },
   },
 
   {
-    selector: 'edge',
+    selector: "edge",
     style: {
-      'width': 3,
-      'line-color': '#ccc',
-      'target-arrow-color': '#ccc',
-      'target-arrow-shape': 'triangle',
-      'curve-style': 'bezier',
-      'label': 'data(label)'
-    }
-  }
-]
+      width: 3,
+      "line-color": "#ccc",
+      "target-arrow-color": "#ccc",
+      "target-arrow-shape": "triangle",
+      "curve-style": "bezier",
+      label: "data(label)",
+    },
+  },
+];
 
-
-export const layout: CytoscapeOptions['layout'] = {
-  name: 'grid',
-  rows: 1
-}
+export const layout: CytoscapeOptions["layout"] = {
+  name: "grid",
+  rows: 1,
+};
