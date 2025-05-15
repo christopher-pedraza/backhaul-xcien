@@ -8,7 +8,7 @@ export const elements: CytoscapeOptions['elements'] = [
     data: { id: 'b' }
   },
   { // edge ab
-    data: { id: 'ab', source: 'a', target: 'b', label: 'agua'}
+    data: { id: 'ab', source: 'a', target: 'b', label: '100/200'}
   },
 ];
 
