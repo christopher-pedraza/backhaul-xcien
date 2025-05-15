@@ -9,7 +9,11 @@ declare module "@react-types/shared" {
   }
 }
 
-export function HeroUIProviderWrapper({ children }: { children: React.ReactNode }) {
+export function HeroUIProviderWrapper({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const navigate = useNavigate();
 
   return (
