@@ -4,19 +4,19 @@ import { HeroUIProvider } from "@heroui/system";
 import { useHref, useNavigate } from "react-router-dom";
 
 declare module "@react-types/shared" {
-    interface RouterConfig {
-        routerOptions: NavigateOptions;
-    }
+  interface RouterConfig {
+    routerOptions: NavigateOptions;
+  }
 }
 
 export function Provider({ children }: { children: React.ReactNode }) {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    return (
-        <HeroUIProvider navigate={navigate} useHref={useHref}>
-            {/* <main className="dark text-foreground bg-background"> */}
-            {children}
-            {/* </main> */}
-        </HeroUIProvider>
-    );
+  return (
+    <HeroUIProvider navigate={navigate} useHref={useHref}>
+      {/* <main className="dark text-foreground bg-background"> */}
+      {children}
+      {/* </main> */}
+    </HeroUIProvider>
+  );
 }
