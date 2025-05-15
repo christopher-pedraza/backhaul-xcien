@@ -4,7 +4,8 @@ import { useCyContext } from "@/hooks/useCyContext";
 import { getRandomPosition } from "./utils";
 import SideBar from "@/components/SideBar/Sidebar";
 import NodeModal from "@/components/modal/modal";
-import LinkModal from "@/components/modal2/modal2"; // Asegúrate de tenerlo importado correctamente
+import LinkModal from "@/components/modal2/modal2";
+import FloatingActionBar from "@/components/FloatingActionBar/FloatingActionBar";
 
 interface Props {}
 
@@ -12,7 +13,7 @@ const IndexPage: FC<Props> = () => {
   const { cy } = useCyContext();
 
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedNode, setSelectedNode] = useState(null);
+  const [selectedNode, setSelectedNode] = useState<string | null>(null);
 
   // Node modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -26,6 +27,9 @@ const IndexPage: FC<Props> = () => {
   const [isEdgeModalOpen, setIsEdgeModalOpen] = useState(false);
   const [sourceNode, setSourceNode] = useState("");
   const [targetNode, setTargetNode] = useState("");
+
+  // Delete modal state
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const availableNodes = cy ? cy.nodes().map((node) => node.id()) : [];
 
@@ -43,18 +47,11 @@ const IndexPage: FC<Props> = () => {
     });
   }
 
-  const addNode = () => {
-    setIsModalOpen(true);
-  };
-
-  const addEdge = () => {
-    setIsEdgeModalOpen(true);
-  };
+  const addNode = () => setIsModalOpen(true);
+  const addEdge = () => setIsEdgeModalOpen(true);
 
   const handleCreateNode = () => {
-    if (!cy) return;
-
-    if (!newNodeId.trim()) {
+    if (!cy || !newNodeId.trim()) {
       setError("Node ID is required");
       return;
     }
@@ -65,7 +62,6 @@ const IndexPage: FC<Props> = () => {
     }
 
     setError(null);
-
     cy.add({
       group: "nodes",
       data: { id: newNodeId, capacity, usage },
@@ -95,9 +91,7 @@ const IndexPage: FC<Props> = () => {
   };
 
   const handleCreateLink = () => {
-    if (!cy) return;
-
-    if (!sourceNode || !targetNode) {
+    if (!cy || !sourceNode || !targetNode) {
       setError("Source and target nodes are required");
       return;
     }
@@ -109,7 +103,6 @@ const IndexPage: FC<Props> = () => {
     }
 
     setError(null);
-
     cy.add({
       group: "edges",
       data: {
@@ -120,7 +113,6 @@ const IndexPage: FC<Props> = () => {
       },
     });
 
-    // Reset states
     setSourceNode("");
     setTargetNode("");
     setCapacity("");
@@ -128,17 +120,18 @@ const IndexPage: FC<Props> = () => {
     setIsEdgeModalOpen(false);
   };
 
+  const handleDelete = () => {
+    if (selectedNode && cy) {
+      cy.getElementById(selectedNode).remove();
+      setSelectedNode(null);
+      setIsOpen(false);
+      setIsDeleteModalOpen(false);
+    }
+  };
+
   return (
     <div className="flex-1 flex flex-col">
-      <div className="flex gap-2 p-2">
-        <button className="bg-blue-500 text-white p-2 rounded" onClick={addNode}>
-          Add Node
-        </button>
-        <button className="bg-green-500 text-white p-2 rounded" onClick={addEdge}>
-          Add Edge
-        </button>
-      </div>
-
+      
       <Graph />
 
       <SideBar isOpen={isOpen} setIsOpen={setIsOpen} cy={cy} selectedNode={selectedNode} />
@@ -172,6 +165,38 @@ const IndexPage: FC<Props> = () => {
         handleCreateLink={handleCreateLink}
         availableNodes={availableNodes}
         error={error}
+      />
+
+      {/* Modal de Confirmación de Eliminación */}
+      {isDeleteModalOpen && selectedNode && (
+        <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
+          <div className="bg-white rounded-xl p-6 shadow-lg max-w-sm w-full">
+            <h2 className="text-lg font-semibold mb-4">¿Confirmar eliminación?</h2>
+            <p className="mb-4">
+              Estás a punto de eliminar el elemento <strong>{selectedNode}</strong>.
+            </p>
+            <div className="flex justify-end space-x-2">
+              <button
+                className="bg-gray-300 hover:bg-gray-400 text-black px-4 py-2 rounded"
+                onClick={() => setIsDeleteModalOpen(false)}
+              >
+                Cancelar
+              </button>
+              <button
+                className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
+                onClick={handleDelete}
+              >
+                Eliminar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <FloatingActionBar
+        onCreateNode={addNode}
+        onCreateEdge={addEdge}
+        onDelete={() => setIsDeleteModalOpen(true)}
       />
     </div>
   );
