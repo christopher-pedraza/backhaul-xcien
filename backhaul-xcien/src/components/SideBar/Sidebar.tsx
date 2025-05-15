@@ -15,7 +15,7 @@ interface SideBarProps {
   selectedNode: any; // TODO: PONER EL TIPO CORRECTO
 }
 
-export default function SideBar({
+export default function Sidebar({
   isOpen,
   setIsOpen,
   cy,

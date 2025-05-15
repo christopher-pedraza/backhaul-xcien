@@ -2,7 +2,7 @@ import { FC, useState } from "react";
 import Graph from "@/components/graph";
 import { useCyContext } from "@/hooks/useCyContext";
 import { getRandomPosition } from "./utils";
-import SideBar from "@/components/Sidebar/Sidebar";
+import Sidebar from "@/components/Sidebar/Sidebar";
 import NodeModal from "@/components/modal/modal";
 import LinkModal from "@/components/modal2/modal2";
 import FloatingActionBar from "@/components/FloatingActionBar/FloatingActionBar";
@@ -133,7 +133,7 @@ const IndexPage: FC<Props> = () => {
     <div className="flex-1 flex flex-col">
       <Graph />
 
-      <SideBar
+      <Sidebar
         isOpen={isSidebarOpen}
         setIsOpen={setSidebarIsOpen}
         cy={cy}
