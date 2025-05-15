@@ -27,7 +27,7 @@ const NodeModal: FC<NodeModalProps> = ({
   selectedNodes,
   setSelectedNodes,
   handleCreateNode,
-  availableNodes
+  availableNodes,
 }) => {
   if (!isOpen) return null; // Si no está abierto, no renderizamos nada
 
@@ -51,7 +51,10 @@ const NodeModal: FC<NodeModalProps> = ({
       className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center modal-overlay"
       onClick={handleClickOutside}
     >
-      <div className="bg-white p-6 rounded shadow-lg w-96" onClick={(e) => e.stopPropagation()}>
+      <div
+        className="bg-white p-6 rounded shadow-lg w-96"
+        onClick={(e) => e.stopPropagation()}
+      >
         <h3 className="text-xl mb-4">Enter Node Details</h3>
 
         <label htmlFor="nodeId" className="block mb-2">
@@ -65,8 +68,6 @@ const NodeModal: FC<NodeModalProps> = ({
           className="border p-2 mb-4 w-full"
           placeholder="Node ID"
         />
-
-   
 
         <div className="flex justify-between">
           <button
@@ -82,7 +83,6 @@ const NodeModal: FC<NodeModalProps> = ({
           >
             Create Node
           </button>
-          
         </div>
       </div>
     </div>

@@ -1,5 +1,11 @@
 import { FC } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 
 interface DeleteConfirmModal {
@@ -24,7 +30,9 @@ const DeleteConfirmModal: FC<DeleteConfirmModal> = ({
           <DialogTitle>¿Confirmar eliminación?</DialogTitle>
         </DialogHeader>
         <p>
-          Estás a punto de eliminar el {elementType === "node" ? "nodo" : "enlace"} <strong>{elementId}</strong>.
+          Estás a punto de eliminar el{" "}
+          {elementType === "node" ? "nodo" : "enlace"}{" "}
+          <strong>{elementId}</strong>.
         </p>
         <DialogFooter>
           <Button variant="destructive" onClick={onConfirm}>
