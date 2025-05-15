@@ -2,7 +2,7 @@ import { FC, useState } from "react";
 import Graph from "@/components/graph";
 import { useCyContext } from "@/hooks/useCyContext";
 import { getRandomPosition } from "./utils";
-import SideBar from "@/components/SideBar/Sidebar";
+import SideBar from "@/components/Sidebar/Sidebar";
 import NodeModal from "@/components/modal/modal";
 import LinkModal from "@/components/modal2/modal2";
 import FloatingActionBar from "@/components/FloatingActionBar/FloatingActionBar";
@@ -12,7 +12,7 @@ interface Props {}
 const IndexPage: FC<Props> = () => {
   const { cy } = useCyContext();
 
-  const [isOpen, setIsOpen] = useState(false);
+  const [isSidebarOpen, setSidebarIsOpen] = useState(false);
   const [selectedNode, setSelectedNode] = useState<string | null>(null);
 
   // Node modal state
@@ -37,13 +37,13 @@ const IndexPage: FC<Props> = () => {
     cy.on("tap", "node", (event) => {
       const id = event.target.id();
       setSelectedNode(id);
-      if (!isOpen) setIsOpen(true);
+      if (!isSidebarOpen) setSidebarIsOpen(true);
     });
 
     cy.on("tap", "edge", (event) => {
       const id = event.target.id();
       setSelectedNode(id);
-      if (!isOpen) setIsOpen(true);
+      if (!isSidebarOpen) setSidebarIsOpen(true);
     });
   }
 
@@ -124,17 +124,21 @@ const IndexPage: FC<Props> = () => {
     if (selectedNode && cy) {
       cy.getElementById(selectedNode).remove();
       setSelectedNode(null);
-      setIsOpen(false);
+      setSidebarIsOpen(false);
       setIsDeleteModalOpen(false);
     }
   };
 
   return (
     <div className="flex-1 flex flex-col">
-      
       <Graph />
 
-      <SideBar isOpen={isOpen} setIsOpen={setIsOpen} cy={cy} selectedNode={selectedNode} />
+      <SideBar
+        isOpen={isSidebarOpen}
+        setIsOpen={setSidebarIsOpen}
+        cy={cy}
+        selectedNode={selectedNode}
+      />
 
       <NodeModal
         isOpen={isModalOpen}
@@ -171,9 +175,12 @@ const IndexPage: FC<Props> = () => {
       {isDeleteModalOpen && selectedNode && (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
           <div className="bg-white rounded-xl p-6 shadow-lg max-w-sm w-full">
-            <h2 className="text-lg font-semibold mb-4">¿Confirmar eliminación?</h2>
+            <h2 className="text-lg font-semibold mb-4">
+              ¿Confirmar eliminación?
+            </h2>
             <p className="mb-4">
-              Estás a punto de eliminar el elemento <strong>{selectedNode}</strong>.
+              Estás a punto de eliminar el elemento{" "}
+              <strong>{selectedNode}</strong>.
             </p>
             <div className="flex justify-end space-x-2">
               <button
