@@ -9,6 +9,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
+      - run: ls -la
       - run: npm install
       - run: npx prettier . --write
       - uses: autofix-ci/action@v1
