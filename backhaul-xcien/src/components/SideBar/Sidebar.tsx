@@ -3,10 +3,12 @@ import "react-modern-drawer/dist/index.css";
 import { Button, Tabs, Tab, Card, CardBody } from "@heroui/react";
 
 // Iconos
-import CloseDrawerIcon from "@/components/Icons/CloseDrawerIcon";
-import ClipboardIcon from "@/components/Icons/ClipboardIcon";
-import SettingsIcon from "@/components/Icons/SettingsIcon";
-import NetworkIcon from "@/components/Icons/NetworkIcon";
+import ClipboardIcon from "@/components/Sidebar/Icons/ClipboardIcon";
+import SettingsIcon from "@/components/Sidebar/Icons/SettingsIcon";
+import NetworkIcon from "@/components/Sidebar/Icons/NetworkIcon";
+
+// Components
+import SidebarCloseButton from "./SidebarCloseButton/SidebarCloseButton";
 
 interface SideBarProps {
   isOpen: boolean;
@@ -31,28 +33,21 @@ export default function Sidebar({
         open={isOpen}
         onClose={toggleDrawer}
         direction="right"
-        size={"30vw"}
+        size={"450px"}
         duration={200}
         enableOverlay={false}
         style={{
           borderRadius: "15px 0px 0px 15px",
         }}
       >
+        <SidebarCloseButton onPress={toggleDrawer} />
         <div style={{ position: "relative", height: "100%" }}>
-          <Button isIconOnly onPress={toggleDrawer} className="bg-transparent">
-            <CloseDrawerIcon
-              fill="currentColor"
-              size={24}
-              height={24}
-              width={24}
-            />
-          </Button>
           <div className="flex flex-col items-center h-full">
             <Tabs
               aria-label="Options"
               color="primary"
               variant="bordered"
-              size="lg"
+              size="md"
               placement="top"
             >
               <Tab
