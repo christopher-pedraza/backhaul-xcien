@@ -1,7 +1,7 @@
 import { Plus, Trash } from "lucide-react";
 import { FC } from "react";
 
-const BottomActions: FC<{
+const ToolBox: FC<{
   onCreateNode: () => void;
   onCreateEdge: () => void;
   onDelete: () => void;
@@ -43,4 +43,4 @@ const BottomActions: FC<{
   );
 };
 
-export default BottomActions;
+export default ToolBox;

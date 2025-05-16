@@ -3,9 +3,9 @@ import Graph from "@/components/graph";
 import { useCyContext } from "@/hooks/useCyContext";
 import { getRandomPosition } from "./utils";
 import SideBar from "@/components/SideBar/Sidebar";
-import NodeModal from "@/components/modal/modal";
-import LinkModal from "@/components/modal2/modal2";
-import FloatingActionBar from "@/components/FloatingActionBar/FloatingActionBar";
+import CreateNodeModal from "@/components/toolBox/CreateNodeModal/CreateNodeModal";
+import LinkModal from "@/components/toolBox/CreatEdgeModal/CreateEdgeModal";
+import FloatingActionBar from "@/components/toolBox/ToolBox/ToolBox";
 
 interface Props {}
 
@@ -136,19 +136,12 @@ const IndexPage: FC<Props> = () => {
 
       <SideBar isOpen={isOpen} setIsOpen={setIsOpen} cy={cy} selectedNode={selectedNode} />
 
-      <NodeModal
+      <CreateNodeModal
         isOpen={isModalOpen}
         setIsOpen={setIsModalOpen}
         newNodeId={newNodeId}
         setNewNodeId={setNewNodeId}
-        capacity={capacity}
-        setCapacity={setCapacity}
-        usage={usage}
-        setUsage={setUsage}
-        selectedNodes={selectedNodes}
-        setSelectedNodes={setSelectedNodes}
         handleCreateNode={handleCreateNode}
-        availableNodes={availableNodes}
       />
 
       <LinkModal

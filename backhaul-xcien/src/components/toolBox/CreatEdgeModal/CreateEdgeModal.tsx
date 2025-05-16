@@ -1,6 +1,6 @@
 import { FC } from "react";
 
-interface LinkModalProps {
+interface CreateEdgeModal {
   isOpen: boolean;
   setIsOpen: (value: boolean) => void;
   sourceNode: string;
@@ -16,7 +16,7 @@ interface LinkModalProps {
   error: string | null;
 }
 
-const LinkModal: FC<LinkModalProps> = ({
+const CreateEdgeModal: FC<CreateEdgeModal> = ({
   isOpen,
   setIsOpen,
   sourceNode,
@@ -123,4 +123,4 @@ const LinkModal: FC<LinkModalProps> = ({
   );
 };
 
-export default LinkModal;
+export default CreateEdgeModal;
