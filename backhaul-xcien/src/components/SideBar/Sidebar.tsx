@@ -9,6 +9,7 @@ import NetworkIcon from "@/components/Sidebar/Icons/NetworkIcon";
 
 // Components
 import SidebarCloseButton from "./SidebarCloseButton/SidebarCloseButton";
+import TabConfiguracion from "./TabConfiguracion/TabConfiguracion";
 
 interface SideBarProps {
   isOpen: boolean;
@@ -47,8 +48,11 @@ export default function Sidebar({
               aria-label="Options"
               color="primary"
               variant="bordered"
-              size="md"
               placement="top"
+              classNames={{
+                base: "pt-8",
+                tab: "h-14",
+              }}
             >
               <Tab
                 key="configuracion"
@@ -60,9 +64,7 @@ export default function Sidebar({
                 }
               >
                 <div className="flex flex-col items-center p-4 h-full">
-                  <Card className="w-full">
-                    <CardBody>{selectedNode}</CardBody>
-                  </Card>
+                  <TabConfiguracion selectedNode={selectedNode} />
                 </div>
               </Tab>
               <Tab

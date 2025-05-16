@@ -39,12 +39,11 @@ const IndexPage: FC<Props> = () => {
       setSelectedNode(id);
       if (!isSidebarOpen) setSidebarIsOpen(true);
     });
-
-    cy.on("tap", "edge", (event) => {
-      const id = event.target.id();
-      setSelectedNode(id);
-      if (!isSidebarOpen) setSidebarIsOpen(true);
-    });
+    // cy.on("tap", "edge", (event) => {
+    //   const id = event.target.id();
+    //   setSelectedNode(id);
+    //   if (!isSidebarOpen) setSidebarIsOpen(true);
+    // });
   }
 
   const addNode = () => setIsModalOpen(true);
