@@ -23,6 +23,7 @@ export default function TabInput({
   errors,
   hasChanges,
 }: TabInputProps) {
+  var inputClass = hasChanges ? "italic" : "";
   return (
     <Input
       errorMessage={() => (
@@ -40,6 +41,7 @@ export default function TabInput({
       variant="underlined"
       className="pb-4"
       size="lg"
+      classNames={{ input: inputClass }}
     />
   );
 }

@@ -93,7 +93,7 @@ export default function TabConfiguracion({
     errorsSoldCapacity.push("El campo 'Capacidad vendida' debe ser un número");
   } else if (Number(sold_capacity) < 0) {
     errorsSoldCapacity.push(
-      "El campo 'Capacidad vendida' no puede ser negativo",
+      "El campo 'Capacidad vendida' no puede ser negativo"
     );
   }
 
@@ -151,7 +151,14 @@ export default function TabConfiguracion({
         hasChanges={sold_capacity !== lastSoldCapacity}
       />
 
-      <Button onPress={saveConfiguration}>Guardar</Button>
+      <Button
+        onPress={saveConfiguration}
+        className="w-3/4"
+        variant="faded"
+        color="default"
+      >
+        Guardar
+      </Button>
 
       <ConfirmationModal
         isOpen={isOpenConfirmation}
