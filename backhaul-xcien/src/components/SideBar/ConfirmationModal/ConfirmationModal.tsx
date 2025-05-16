@@ -13,6 +13,7 @@ interface ConfirmationModalProps {
   onOpen: () => void;
   onOpenChange: (isOpen: boolean) => void;
   onConfirm: () => void;
+  onCancel: () => void;
 }
 
 export default function ConfirmationModal({
@@ -20,9 +21,24 @@ export default function ConfirmationModal({
   onOpen,
   onOpenChange,
   onConfirm,
+  onCancel,
 }: ConfirmationModalProps) {
+  const confirm = () => {
+    onConfirm();
+    onOpenChange(false);
+  };
+
+  const cancel = () => {
+    onCancel();
+    onOpenChange(false);
+  };
+
   return (
-    <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+    <Modal
+      isOpen={isOpen}
+      onOpenChange={onOpenChange}
+      classNames={{ wrapper: "z-[1000]", backdrop: "z-[999]" }}
+    >
       <ModalContent>
         {(onClose) => (
           <>
@@ -36,11 +52,11 @@ export default function ConfirmationModal({
               </p>
             </ModalBody>
             <ModalFooter>
-              <Button color="danger" variant="light" onPress={onClose}>
-                Close
+              <Button color="danger" variant="light" onPress={cancel}>
+                Cancelar
               </Button>
-              <Button color="primary" onPress={onClose}>
-                Action
+              <Button color="primary" onPress={confirm}>
+                Guardar
               </Button>
             </ModalFooter>
           </>

@@ -13,6 +13,7 @@ interface TabInputProps {
   value: string;
   setValue: (value: string) => void;
   errors: Array<string>;
+  hasChanges: boolean;
 }
 
 export default function TabInput({
@@ -20,6 +21,7 @@ export default function TabInput({
   value,
   setValue,
   errors,
+  hasChanges,
 }: TabInputProps) {
   return (
     <Input
@@ -34,6 +36,7 @@ export default function TabInput({
       label={label}
       value={value}
       onValueChange={setValue}
+      isRequired={hasChanges}
       variant="underlined"
       className="pb-4"
       size="lg"

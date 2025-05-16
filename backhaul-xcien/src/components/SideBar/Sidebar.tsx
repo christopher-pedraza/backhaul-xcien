@@ -40,6 +40,7 @@ export default function Sidebar({
         style={{
           borderRadius: "15px 0px 0px 15px",
         }}
+        zIndex={100}
       >
         <SidebarCloseButton onPress={toggleDrawer} />
         <div style={{ position: "relative", height: "100%" }}>
@@ -64,7 +65,10 @@ export default function Sidebar({
                 }
               >
                 <div className="flex flex-col items-center p-4 h-full">
-                  <TabConfiguracion selectedNode={selectedNode} />
+                  <TabConfiguracion
+                    selectedNode={selectedNode}
+                    isOpen={isOpen}
+                  />
                 </div>
               </Tab>
               <Tab

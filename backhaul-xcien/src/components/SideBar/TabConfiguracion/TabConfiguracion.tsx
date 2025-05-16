@@ -8,10 +8,12 @@ import ConfirmationModal from "../ConfirmationModal/ConfirmationModal";
 
 interface TabConfiguracionProps {
   selectedNode: string;
+  isOpen: boolean;
 }
 
 export default function TabConfiguracion({
   selectedNode,
+  isOpen,
 }: TabConfiguracionProps) {
   const { cy } = useCyContext();
   if (!cy) return null;
@@ -36,6 +38,16 @@ export default function TabConfiguracion({
   const errorsCapacity: Array<string> = [];
   const errorsSoldCapacity: Array<string> = [];
 
+  // Resetear los datos del nodo cuando se cierra el sidebar
+  //   useEffect(() => {
+  //     if (!isOpen) {
+  //       setNodeData(null);
+  //       setUsage(lastUsage);
+  //       setCapacity(lastCapacity);
+  //       setSoldCapacity(lastSoldCapacity);
+  //     }
+  //   }, [isOpen]);
+
   useEffect(() => {
     const node = cy.getElementById(selectedNode);
     if (node) {
@@ -56,16 +68,6 @@ export default function TabConfiguracion({
       setLastSoldCapacity(node_data["sold_capacity"] || "");
     }
   }, [node_data]);
-
-  //   useEffect(() => {
-  //     if (node_data) {
-  //       cy.getElementById(selectedNode).data({
-  //         usage: usage,
-  //         capacity: capacity,
-  //         sold_capacity: sold_capacity,
-  //       });
-  //     }
-  //   }, [usage, capacity, sold_capacity]);
 
   if (usage === "") {
     errorsUsage.push("El campo 'Uso' es obligatorio");
@@ -101,14 +103,26 @@ export default function TabConfiguracion({
       errorsCapacity.length === 0 &&
       errorsSoldCapacity.length === 0
     ) {
-      //   cy.getElementById(selectedNode).data({
-      //     usage: usage,
-      //     capacity: capacity,
-      //     sold_capacity: sold_capacity,
-      //     name: name,
-      //   });
       onOpenConfirmation();
     }
+  };
+
+  const confirmSaveConfiguration = () => {
+    cy.getElementById(selectedNode).data({
+      usage: usage,
+      capacity: capacity,
+      sold_capacity: sold_capacity,
+      name: name,
+    });
+    setLastUsage(usage);
+    setLastCapacity(capacity);
+    setLastSoldCapacity(sold_capacity);
+  };
+
+  const cancelSaveConfiguration = () => {
+    // setUsage(lastUsage);
+    // setCapacity(lastCapacity);
+    // setSoldCapacity(lastSoldCapacity);
   };
 
   return (
@@ -120,18 +134,21 @@ export default function TabConfiguracion({
         value={usage}
         setValue={setUsage}
         errors={errorsUsage}
+        hasChanges={usage !== lastUsage}
       />
       <TabInput
         label="Capacidad"
         value={capacity}
         setValue={setCapacity}
         errors={errorsCapacity}
+        hasChanges={capacity !== lastCapacity}
       />
       <TabInput
         label="Capacidad vendida"
         value={sold_capacity}
         setValue={setSoldCapacity}
         errors={errorsSoldCapacity}
+        hasChanges={sold_capacity !== lastSoldCapacity}
       />
 
       <Button onPress={saveConfiguration}>Guardar</Button>
@@ -140,7 +157,8 @@ export default function TabConfiguracion({
         isOpen={isOpenConfirmation}
         onOpen={onOpenConfirmation}
         onOpenChange={onOpenChangeConfirmation}
-        onConfirm={saveConfiguration}
+        onConfirm={confirmSaveConfiguration}
+        onCancel={cancelSaveConfiguration}
       />
     </>
   );
