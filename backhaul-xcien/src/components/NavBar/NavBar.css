@@ -1,0 +1,25 @@
+.navbar {
+  display: flex;
+  /*background-image: linear-gradient(90deg, #051145 0%,#000000 100%) !important;*/
+  background-color: #051145 !important;
+  color: rgb(255, 255, 255);
+  height: 45px !important;
+}
+
+.navbar a {
+  color: inherit;
+  text-decoration: none;
+  margin: 0 1rem;
+  transition: color 0.3s ease;
+}
+
+.navbar a:hover {
+  color: #94a3b8;
+}
+
+.navbar-logo {
+  font-weight: bold;
+  font-family: var(--navbar-font, "Audiowide", sans-serif) !important; /* fuente por defecto */
+  color: white !important; /* Esto pone el texto en blanco */
+
+}

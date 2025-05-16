@@ -6,6 +6,7 @@ import SideBar from "@/components/SideBar/Sidebar";
 import CreateNodeModal from "@/components/toolBox/CreateNodeModal/CreateNodeModal";
 import LinkModal from "@/components/toolBox/CreatEdgeModal/CreateEdgeModal";
 import FloatingActionBar from "@/components/toolBox/ToolBox/ToolBox";
+import MyNavbar from "@/components/NavBar/NavBar";
 
 interface Props {}
 
@@ -131,6 +132,9 @@ const IndexPage: FC<Props> = () => {
 
   return (
 <div className="flex-1 flex flex-col bg-dotted">
+
+      
+      <MyNavbar></MyNavbar>
       
       <Graph />
 
