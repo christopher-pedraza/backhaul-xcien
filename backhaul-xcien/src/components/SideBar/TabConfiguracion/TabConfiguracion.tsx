@@ -93,7 +93,7 @@ export default function TabConfiguracion({
     errorsSoldCapacity.push("El campo 'Capacidad vendida' debe ser un número");
   } else if (Number(sold_capacity) < 0) {
     errorsSoldCapacity.push(
-      "El campo 'Capacidad vendida' no puede ser negativo",
+      "El campo 'Capacidad vendida' no puede ser negativo"
     );
   }
 
@@ -126,7 +126,7 @@ export default function TabConfiguracion({
   };
 
   return (
-    <>
+    <div className="flex flex-col items-center p-4 h-full">
       <h1 className="text-2xl font-bold mb-4">{name}</h1>
 
       <TabInput
@@ -167,6 +167,6 @@ export default function TabConfiguracion({
         onConfirm={confirmSaveConfiguration}
         onCancel={cancelSaveConfiguration}
       />
-    </>
+    </div>
   );
 }

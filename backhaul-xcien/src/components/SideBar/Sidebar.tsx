@@ -9,7 +9,10 @@ import NetworkIcon from "@/components/Sidebar/Icons/NetworkIcon";
 
 // Components
 import SidebarCloseButton from "./SidebarCloseButton/SidebarCloseButton";
+
+// Tabs
 import TabConfiguracion from "./TabConfiguracion/TabConfiguracion";
+import TabResumen from "./TabConfiguracion/TabResumen";
 
 interface SideBarProps {
   isOpen: boolean;
@@ -43,7 +46,7 @@ export default function Sidebar({
         zIndex={100}
       >
         <SidebarCloseButton onPress={toggleDrawer} />
-        <div style={{ position: "relative", height: "100%" }}>
+        <div className="relative flex flex-col h-full">
           <div className="flex flex-col items-center h-full">
             <Tabs
               aria-label="Options"
@@ -64,12 +67,7 @@ export default function Sidebar({
                   </div>
                 }
               >
-                <div className="flex flex-col items-center p-4 h-full">
-                  <TabConfiguracion
-                    selectedNode={selectedNode}
-                    isOpen={isOpen}
-                  />
-                </div>
+                <TabConfiguracion selectedNode={selectedNode} isOpen={isOpen} />
               </Tab>
               <Tab
                 key="soluciones"
@@ -88,7 +86,14 @@ export default function Sidebar({
                     <span>Resumen</span>
                   </div>
                 }
-              />
+              >
+                <TabResumen
+                  cambiosCapacidadV={[1, 2, 3, 4, 5]}
+                  cambiosCapacidadA={[1]}
+                  cambiosConsumoV={[1, 2]}
+                  cambiosConsumoA={[1, 2, 3]}
+                />
+              </Tab>
             </Tabs>
           </div>
         </div>
