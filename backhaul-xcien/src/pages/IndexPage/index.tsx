@@ -3,6 +3,7 @@ import Graph from "@/components/graph";
 import { useCyContext } from "@/hooks/useCyContext";
 import { getRandomPosition } from "./utils";
 import Sidebar from "@/components/Sidebar/Sidebar";
+import SidebarToggleButton from "@/components/Sidebar/SidebarToggleButton/SidebarToggleButton";
 import NodeModal from "@/components/modal/modal";
 import LinkModal from "@/components/modal2/modal2";
 import FloatingActionBar from "@/components/FloatingActionBar/FloatingActionBar";
@@ -129,13 +130,12 @@ const IndexPage: FC<Props> = () => {
   };
 
   return (
-    <div className="flex-1 flex flex-col">
+    <div className="relative flex-1 flex flex-col">
       <Graph />
 
       <Sidebar
         isOpen={isSidebarOpen}
         setIsOpen={setSidebarIsOpen}
-        cy={cy}
         selectedNode={selectedNode}
       />
 
@@ -153,7 +153,6 @@ const IndexPage: FC<Props> = () => {
         handleCreateNode={handleCreateNode}
         availableNodes={availableNodes}
       />
-
       <LinkModal
         isOpen={isEdgeModalOpen}
         setIsOpen={setIsEdgeModalOpen}
@@ -169,7 +168,6 @@ const IndexPage: FC<Props> = () => {
         availableNodes={availableNodes}
         error={error}
       />
-
       {/* Modal de Confirmación de Eliminación */}
       {isDeleteModalOpen && selectedNode && (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
@@ -198,7 +196,6 @@ const IndexPage: FC<Props> = () => {
           </div>
         </div>
       )}
-
       <FloatingActionBar
         onCreateNode={addNode}
         onCreateEdge={addEdge}

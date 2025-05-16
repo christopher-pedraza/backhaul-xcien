@@ -93,7 +93,7 @@ export default function TabConfiguracion({
     errorsSoldCapacity.push("El campo 'Capacidad vendida' debe ser un número");
   } else if (Number(sold_capacity) < 0) {
     errorsSoldCapacity.push(
-      "El campo 'Capacidad vendida' no puede ser negativo",
+      "El campo 'Capacidad vendida' no puede ser negativo"
     );
   }
 
@@ -125,6 +125,14 @@ export default function TabConfiguracion({
     // setSoldCapacity(lastSoldCapacity);
   };
 
+  var shouldDisableButton =
+    errorsUsage.length > 0 ||
+    errorsCapacity.length > 0 ||
+    errorsSoldCapacity.length > 0 ||
+    (usage == lastUsage &&
+      capacity == lastCapacity &&
+      sold_capacity == lastSoldCapacity);
+
   return (
     <div className="flex flex-col items-center p-4 h-full">
       <h1 className="text-2xl font-bold mb-4">{name}</h1>
@@ -134,28 +142,29 @@ export default function TabConfiguracion({
         value={usage}
         setValue={setUsage}
         errors={errorsUsage}
-        hasChanges={usage !== lastUsage}
+        hasChanges={usage != lastUsage}
       />
       <TabInput
         label="Capacidad"
         value={capacity}
         setValue={setCapacity}
         errors={errorsCapacity}
-        hasChanges={capacity !== lastCapacity}
+        hasChanges={capacity != lastCapacity}
       />
       <TabInput
         label="Capacidad vendida"
         value={sold_capacity}
         setValue={setSoldCapacity}
         errors={errorsSoldCapacity}
-        hasChanges={sold_capacity !== lastSoldCapacity}
+        hasChanges={sold_capacity != lastSoldCapacity}
       />
 
       <Button
         onPress={saveConfiguration}
         className="w-3/4"
-        variant="faded"
-        color="default"
+        variant={shouldDisableButton ? "faded" : "ghost"}
+        color={shouldDisableButton ? "default" : "primary"}
+        isDisabled={shouldDisableButton}
       >
         Guardar
       </Button>

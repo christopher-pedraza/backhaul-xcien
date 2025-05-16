@@ -1,12 +1,19 @@
 import { Button } from "@heroui/react";
-import CloseDrawerIcon from "@/components/Sidebar/Icons/CloseDrawerIcon";
 
 interface SidebarCloseButtonProps {
   onPress: () => void;
+  left?: number;
+  right?: number;
+  icon: any;
+  isDisabled: boolean;
 }
 
-export default function SidebarCloseButton({
+export default function SidebarToggleButton({
   onPress,
+  left,
+  right,
+  icon,
+  isDisabled,
 }: SidebarCloseButtonProps) {
   return (
     <Button
@@ -19,15 +26,17 @@ export default function SidebarCloseButton({
       style={{
         position: "absolute",
         top: 30,
-        left: -40,
+        left: left,
+        right: right,
         zIndex: 10,
         background: "#fff",
         height: "100px",
         boxShadow: "-4px 4px 10px 0px rgba(0,0,0,0.12)",
         borderRadius: "15px 0% 0% 15px",
       }}
+      isDisabled={isDisabled}
     >
-      <CloseDrawerIcon fill="currentColor" size={24} height={24} width={24} />
+      {icon}
     </Button>
   );
 }
