@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { FC, useState } from "react";
 import Graph from "@/components/graph";
 import { useCyContext } from "@/hooks/useCyContext";
@@ -6,6 +7,7 @@ import SideBar from "@/components/SideBar/Sidebar";
 import NodeModal from "@/components/modal/modal";
 import LinkModal from "@/components/modal2/modal2";
 import FloatingActionBar from "@/components/FloatingActionBar/FloatingActionBar";
+import CalculateRouteButton from "@/components/CalculateRoute/CalculateRouteButton";
 
 interface Props {}
 
@@ -192,6 +194,8 @@ const IndexPage: FC<Props> = () => {
           </div>
         </div>
       )}
+
+      <CalculateRouteButton />
 
       <FloatingActionBar
         onCreateNode={addNode}
