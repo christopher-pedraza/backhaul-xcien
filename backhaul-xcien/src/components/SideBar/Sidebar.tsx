@@ -136,22 +136,20 @@ export default function Sidebar({
     );
   } else {
     return (
-      <Tooltip content="Selecciona primero un " showArrow={true}>
-        <SidebarToggleButton
-          onPress={toggleDrawer}
-          left={undefined}
-          right={0}
-          icon={
-            <OpenDrawerIcon
-              fill="currentColor"
-              size={24}
-              height={24}
-              width={24}
-            />
-          }
-          isDisabled={true}
-        />
-      </Tooltip>
+      <SidebarToggleButton
+        onPress={toggleDrawer}
+        left={undefined}
+        right={0}
+        icon={
+          <OpenDrawerIcon
+            fill="currentColor"
+            size={24}
+            height={24}
+            width={24}
+          />
+        }
+        isDisabled={true}
+      />
     );
   }
 }
