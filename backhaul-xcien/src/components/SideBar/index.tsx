@@ -1,20 +1,20 @@
 import Drawer from "react-modern-drawer";
 import "react-modern-drawer/dist/index.css";
-import { Button, Tabs, Tab, Tooltip } from "@heroui/react";
+import { Tabs, Tab } from "@heroui/react";
 
 // Iconos
-import ClipboardIcon from "@/components/Sidebar/Icons/ClipboardIcon";
-import SettingsIcon from "@/components/Sidebar/Icons/SettingsIcon";
-import NetworkIcon from "@/components/Sidebar/Icons/NetworkIcon";
-import CloseDrawerIcon from "@/components/Sidebar/Icons/CloseDrawerIcon";
-import OpenDrawerIcon from "@/components/Sidebar/Icons/OpenDrawerIcon";
+import ClipboardIcon from "./Icons/ClipboardIcon";
+import SettingsIcon from "./Icons/SettingsIcon";
+import NetworkIcon from "./Icons/NetworkIcon";
+import CloseDrawerIcon from "./Icons/CloseDrawerIcon";
+import OpenDrawerIcon from "./Icons/OpenDrawerIcon";
 
 // Components
-import SidebarToggleButton from "./SidebarToggleButton/SidebarToggleButton";
+import SidebarToggleButton from "./SidebarToggleButton";
 
 // Tabs
-import TabConfiguracion from "./TabConfiguracion/TabConfiguracion";
-import TabResumen from "./TabConfiguracion/TabResumen";
+import TabConfiguracion from "./TabConfiguracion";
+import TabResumen from "./TabResumen";
 
 interface SideBarProps {
   isOpen: boolean;

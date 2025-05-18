@@ -3,8 +3,8 @@ import { useCyContext } from "@/hooks/useCyContext";
 import { useState, useEffect } from "react";
 
 // Components
-import TabInput from "../TabInput/TabInput";
-import ConfirmationModal from "../ConfirmationModal/ConfirmationModal";
+import TabInput from "../TabInput";
+import ConfirmationModal from "../ConfirmationModal";
 
 interface TabConfiguracionProps {
   selectedNode: string;
@@ -93,7 +93,7 @@ export default function TabConfiguracion({
     errorsSoldCapacity.push("El campo 'Capacidad vendida' debe ser un número");
   } else if (Number(sold_capacity) < 0) {
     errorsSoldCapacity.push(
-      "El campo 'Capacidad vendida' no puede ser negativo",
+      "El campo 'Capacidad vendida' no puede ser negativo"
     );
   }
 

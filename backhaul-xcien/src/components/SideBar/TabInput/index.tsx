@@ -1,12 +1,4 @@
-import {
-  Button,
-  Tabs,
-  Tab,
-  Card,
-  CardBody,
-  Input,
-  Skeleton,
-} from "@heroui/react";
+import { Input } from "@heroui/react";
 
 interface TabInputProps {
   label: string;
