@@ -10,3 +10,16 @@ export const getTopologyOptions = (): Promise<TopologyOption[]> => {
       300) // Simulate a network request
   );
 };
+
+export const getTopologyById = (id: string): Promise<Topology> => {
+  return new Promise(res =>
+    setTimeout(() => {
+      const topology = TOPOLOGIES.find(t => t.id === id);
+      if (topology) {
+        res(topology);
+      } else {
+        throw new Error("Topology not found");
+      }
+    }, 300) // Simulate a network request
+  );
+}
