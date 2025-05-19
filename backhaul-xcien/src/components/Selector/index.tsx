@@ -2,7 +2,6 @@ import { ChangeEventHandler, Dispatch, FC, SetStateAction } from "react";
 import { Select, SelectItem } from "@heroui/react";
 import { SelectOption } from "./types";
 
-
 interface Props {
   isLoadingOptions: boolean;
   options: SelectOption[];
@@ -16,7 +15,6 @@ const Selector: FC<Props> = ({
   selectedValue,
   setSelectedValue,
 }) => {
-
   const handleSelectionChange: ChangeEventHandler<HTMLSelectElement> = (e) => {
     setSelectedValue(e.target.value);
   };
@@ -29,16 +27,14 @@ const Selector: FC<Props> = ({
       selectionMode="single"
     >
       {isLoadingOptions ? (
-        <SelectItem key="loading">
-          Cargando…
-        </SelectItem>
+        <SelectItem key="loading">Cargando…</SelectItem>
       ) : (
         options.map((option) => (
           <SelectItem key={option.key}>{option.label}</SelectItem>
         ))
       )}
     </Select>
-  )
-}
+  );
+};
 
 export default Selector;
