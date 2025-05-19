@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { FC, useState, useRef, useEffect } from "react";
-import {Slider} from "@heroui/slider";
+import { Slider } from "@heroui/slider";
 
 interface CalculateRouteModalProps {
   isOpen: boolean;
@@ -53,10 +53,18 @@ const CalculateRouteModal: FC<CalculateRouteModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div ref={modalRef} className="absolute bottom-20 right-1/2 bg-white border rounded shadow-md p-4 w-64">
+    <div
+      ref={modalRef}
+      className="absolute bottom-20 right-1/2 bg-white border rounded shadow-md p-4 w-64"
+    >
       <h3 className="text-lg font-semibold mb-4">Modificar Cálculo</h3>
       <div className="mb-4">
-        <label className="block text-sm font-medium mb-2" htmlFor="capacity-slider">Capacidad</label>
+        <label
+          className="block text-sm font-medium mb-2"
+          htmlFor="capacity-slider"
+        >
+          Capacidad
+        </label>
         <Slider
           className="w-full"
           id="capacity-slider"
@@ -65,15 +73,20 @@ const CalculateRouteModal: FC<CalculateRouteModalProps> = ({
           step={1}
           value={capacityValue}
           onChange={(value) => {
-          if (typeof value === "number") {
-            handleCapacityChange(value);
-          }
+            if (typeof value === "number") {
+              handleCapacityChange(value);
+            }
           }}
         />
         <span className="text-sm">{capacityValue}%</span>
       </div>
       <div>
-        <label className="block text-sm font-medium mb-2" htmlFor="distance-slider">Distancia</label>
+        <label
+          className="block text-sm font-medium mb-2"
+          htmlFor="distance-slider"
+        >
+          Distancia
+        </label>
         <Slider
           className="w-full"
           id="distance-slider"
@@ -82,9 +95,9 @@ const CalculateRouteModal: FC<CalculateRouteModalProps> = ({
           step={1}
           value={distanceValue}
           onChange={(value) => {
-          if (typeof value === "number") {
-            handleDistanceChange(value);
-          }
+            if (typeof value === "number") {
+              handleDistanceChange(value);
+            }
           }}
         />
         <span className="text-sm">{distanceValue}%</span>
