@@ -1,4 +1,10 @@
-import { ChangeEventHandler, Dispatch, FC, SetStateAction, useEffect } from "react";
+import {
+  ChangeEventHandler,
+  Dispatch,
+  FC,
+  SetStateAction,
+  useEffect,
+} from "react";
 import { Select, SelectItem } from "@heroui/react";
 import { SelectOption } from "./types";
 
@@ -15,7 +21,6 @@ const Selector: FC<Props> = ({
   selectedValue,
   setSelectedValue,
 }) => {
-
   // set the first option as selected if no value is selected
   useEffect(() => {
     if (!selectedValue && options.length > 0) {
