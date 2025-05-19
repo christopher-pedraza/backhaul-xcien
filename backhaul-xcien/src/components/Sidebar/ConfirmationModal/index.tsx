@@ -5,7 +5,6 @@ import {
   ModalBody,
   ModalFooter,
   Button,
-  useDisclosure,
 } from "@heroui/react";
 
 interface ConfirmationModalProps {
@@ -18,7 +17,6 @@ interface ConfirmationModalProps {
 
 export default function ConfirmationModal({
   isOpen,
-  onOpen,
   onOpenChange,
   onConfirm,
   onCancel,
@@ -40,7 +38,7 @@ export default function ConfirmationModal({
       classNames={{ wrapper: "z-[1000]", backdrop: "z-[999]" }}
     >
       <ModalContent>
-        {(onClose) => (
+        {(_) => (
           <>
             <ModalHeader className="flex flex-col gap-1">
               ¿Guardar cambios?
