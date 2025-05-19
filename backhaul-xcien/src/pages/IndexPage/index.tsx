@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { FC, useState } from "react";
 import Graph from "@/components/graph";
 import { useCyContext } from "@/hooks/useCyContext";
