@@ -20,7 +20,6 @@ const nodes: Node[] = [
     classes: "cloud",
   },
 
-
   // Core routers
   {
     data: { id: "coreBorderPDN", name: "Core Border\nPiedras Negras" },
@@ -92,7 +91,7 @@ const edges: Edge[] = [
       id: "carrier1000_coreBorderPDN",
       source: "fibranet1000",
       target: "coreBorderPDN",
-    }
+    },
   },
   {
     data: {
@@ -158,7 +157,7 @@ const edges: Edge[] = [
       target: "coreApolo",
       capacity: 720,
       usage: 0,
-    }
+    },
   },
   {
     data: {
@@ -208,8 +207,8 @@ const edges: Edge[] = [
       target: "coreSispa",
       capacity: 150,
       usage: 0,
-    }
-  }
+    },
+  },
 ];
 
 export const piedrasNegrasNetwork: CytoscapeOptions["elements"] = [
