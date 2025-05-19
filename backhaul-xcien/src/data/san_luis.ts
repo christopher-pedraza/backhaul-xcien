@@ -2,7 +2,6 @@ import { CytoscapeOptions } from "cytoscape";
 import { Edge } from "@/types/Edge";
 import { Node } from "@/types/Node";
 
-
 const nodes: Node[] = [
   {
     data: { id: "carrier", name: "Carrier Flo Networks\n700 Mb" },
@@ -45,7 +44,6 @@ const nodes: Node[] = [
     classes: "router",
   },
 ];
-
 
 const edges: Edge[] = [
   {
@@ -134,9 +132,9 @@ const edges: Edge[] = [
       target: "coreSanAntonioTRM2",
     },
   },
-]
+];
 
 export const sanLuisNetwork: CytoscapeOptions["elements"] = [
   ...nodes,
   ...edges,
-]
+];

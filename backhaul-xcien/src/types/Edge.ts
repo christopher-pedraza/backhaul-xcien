@@ -1,4 +1,3 @@
-
 export interface EdgeData {
   id: string;
   source: string;
@@ -10,4 +9,3 @@ export interface EdgeData {
 export interface Edge {
   data: EdgeData;
 }
-
