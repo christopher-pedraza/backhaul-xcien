@@ -11,15 +11,16 @@ import Selector from "@/components/Selector";
 import useTopologyOptions from "@/hooks/topologies/useTopologyOptions";
 import useTopology from "@/hooks/topologies/useTopology";
 
-interface Props { }
+interface Props {}
 
 const IndexPage: FC<Props> = () => {
   const { cy } = useCyContext();
-  const { topologyOptions, isLoading: isLoadingTopologyOptions } = useTopologyOptions();
+  const { topologyOptions, isLoading: isLoadingTopologyOptions } =
+    useTopologyOptions();
 
   // Select Topology states
   const [selectedTopologyId, setSelectedTopologyId] = useState<string>("");
-  const { data: selectedTopology} = useTopology(selectedTopologyId);
+  const { data: selectedTopology } = useTopology(selectedTopologyId);
 
   const [isSidebarOpen, setSidebarIsOpen] = useState(false);
   const [selectedNode, setSelectedNode] = useState<string | null>(null);
@@ -41,7 +42,6 @@ const IndexPage: FC<Props> = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const availableNodes = cy ? cy.nodes().map((node) => node.id()) : [];
-
 
   // set the topology when the selectedTopologyId changes
   useEffect(() => {

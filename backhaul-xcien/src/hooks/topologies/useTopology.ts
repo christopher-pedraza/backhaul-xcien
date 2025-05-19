@@ -1,12 +1,9 @@
-import { getTopologyById } from '@/services/topology';
-import { useQuery } from '@tanstack/react-query';
+import { getTopologyById } from "@/services/topology";
+import { useQuery } from "@tanstack/react-query";
 
-const useTopology = (
-  id: string
-) => {
-
+const useTopology = (id: string) => {
   return useQuery({
-    queryKey: ['topology', id],
+    queryKey: ["topology", id],
     queryFn: () => getTopologyById(id),
     enabled: !!id,
   });

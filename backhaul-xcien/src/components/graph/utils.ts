@@ -5,7 +5,7 @@ const textColor = "#000000";
 export const elements: CytoscapeOptions["elements"] = [];
 
 export const style: CytoscapeOptions["style"] = [
- /* nodos genéricos */
+  /* nodos genéricos */
   {
     selector: "node",
     style: {
