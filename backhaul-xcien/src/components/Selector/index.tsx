@@ -4,12 +4,14 @@ import { SelectOption } from "./types";
 
 
 interface Props {
+  isLoadingOptions: boolean;
   options: SelectOption[];
   selectedValue: string;
   setSelectedValue: Dispatch<SetStateAction<string>>;
 }
 
 const Selector: FC<Props> = ({
+  isLoadingOptions,
   options,
   selectedValue,
   setSelectedValue,
@@ -26,11 +28,15 @@ const Selector: FC<Props> = ({
       selectedKeys={[selectedValue]}
       selectionMode="single"
     >
-      {options.map((option) => (
-        <SelectItem key={option.key}>
-          {option.label}
+      {isLoadingOptions ? (
+        <SelectItem key="loading">
+          Cargando…
         </SelectItem>
-      ))}
+      ) : (
+        options.map((option) => (
+          <SelectItem key={option.key}>{option.label}</SelectItem>
+        ))
+      )}
     </Select>
   )
 }
