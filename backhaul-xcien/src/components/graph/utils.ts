@@ -1,55 +1,79 @@
 import { CytoscapeOptions } from "cytoscape";
 
-export const elements: CytoscapeOptions["elements"] = [
-  {
-    // node a
-    data: {
-      id: "a",
-      name: "Antena 1",
-      usage: 100,
-      capacity: 200,
-      sold_capacity: 150,
-    },
-  },
-  {
-    // node b
-    data: {
-      id: "b",
-      name: "Antena 2",
-      usage: 50,
-      capacity: 100,
-      sold_capacity: 80,
-    },
-  },
-  {
-    // edge ab
-    data: { id: "ab", source: "a", target: "b", label: "100/200" },
-  },
-];
+const textColor = "#000000";
+
+export const elements: CytoscapeOptions["elements"] = [];
 
 export const style: CytoscapeOptions["style"] = [
+ /* nodos genéricos */
   {
     selector: "node",
     style: {
-      "background-color": "#666",
-      label: "data(id)",
+      width: 48,
+      height: 48,
+      label: "data(name)",
+      "text-wrap": "wrap",
+      "text-max-width": "100px",
+      "text-valign": "center",
+      "text-halign": "center",
+      color: textColor,
+      "font-size": 8,
     },
   },
 
+  /* aristas */
   {
     selector: "edge",
     style: {
-      width: 3,
-      "line-color": "#ccc",
-      "target-arrow-color": "#ccc",
-      "target-arrow-shape": "triangle",
+      width: 1.5,
+      "line-color": "#999",
+      "target-arrow-shape": "none",
+      "source-arrow-shape": "none",
       "curve-style": "bezier",
-      label: "data(label)",
+      label: (element: any) => {
+        const usage = element.data("usage");
+        const capacity = element.data("capacity");
+
+        if (usage === undefined || capacity === undefined) {
+          return "";
+        }
+
+        return `${usage} / ${capacity}`;
+      },
+      "font-size": 7,
+      "text-background-opacity": 1,
+      "text-background-color": "#fff",
+      "text-background-padding": "2px",
+    },
+  },
+
+  /* classes for icons */
+  {
+    selector: ".cloud",
+    style: {
+      "background-image": "/icons/cloud.svg",
+      "background-fit": "contain",
+      "background-opacity": 0,
+    },
+  },
+  {
+    selector: ".router",
+    style: {
+      "background-image": "/icons/router.svg",
+      "background-fit": "contain",
+      "background-opacity": 0,
+    },
+  },
+  {
+    selector: ".switch",
+    style: {
+      "background-image": "/icons/switch.svg",
+      "background-fit": "contain",
+      "background-opacity": 0,
     },
   },
 ];
 
 export const layout: CytoscapeOptions["layout"] = {
-  name: "grid",
-  rows: 1,
+  name: "preset",
 };
