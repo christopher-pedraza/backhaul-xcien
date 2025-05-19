@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { FC, useState, useRef, useEffect } from "react";
 import { Slider } from "@heroui/slider";
 
