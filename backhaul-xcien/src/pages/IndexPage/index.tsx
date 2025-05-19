@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import Graph from "@/components/graph";
 import { useCyContext } from "@/hooks/useCyContext";
 import { getRandomPosition } from "./utils";
@@ -7,11 +7,20 @@ import Sidebar from "@/components/Sidebar";
 import NodeModal from "@/components/modal/modal";
 import LinkModal from "@/components/modal2/modal2";
 import FloatingActionBar from "@/components/FloatingActionBar/FloatingActionBar";
+import Selector from "@/components/Selector";
+import useTopologyOptions from "@/hooks/topologies/useTopologyOptions";
+import useTopology from "@/hooks/topologies/useTopology";
 
 interface Props {}
 
 const IndexPage: FC<Props> = () => {
   const { cy } = useCyContext();
+  const { topologyOptions, isLoading: isLoadingTopologyOptions } =
+    useTopologyOptions();
+
+  // Select Topology states
+  const [selectedTopologyId, setSelectedTopologyId] = useState<string>("");
+  const { data: selectedTopology } = useTopology(selectedTopologyId);
 
   const [isSidebarOpen, setSidebarIsOpen] = useState(false);
   const [selectedNode, setSelectedNode] = useState<string | null>(null);
@@ -33,6 +42,14 @@ const IndexPage: FC<Props> = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const availableNodes = cy ? cy.nodes().map((node) => node.id()) : [];
+
+  // set the topology when the selectedTopologyId changes
+  useEffect(() => {
+    if (!selectedTopology || !cy) return;
+
+    cy.json({ elements: selectedTopology.elements });
+    cy.fit(undefined, 50);
+  }, [selectedTopology, cy]);
 
   if (cy) {
     cy.on("tap", "node", (event) => {
@@ -132,6 +149,15 @@ const IndexPage: FC<Props> = () => {
   return (
     <div className="relative flex-1 flex flex-col">
       <Graph />
+
+      <div className="absolute top-2 left-2 z-10 w-[200px]">
+        <Selector
+          options={topologyOptions}
+          isLoadingOptions={isLoadingTopologyOptions}
+          selectedValue={selectedTopologyId}
+          setSelectedValue={setSelectedTopologyId}
+        />
+      </div>
 
       <Sidebar
         isOpen={isSidebarOpen}

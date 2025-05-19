@@ -13,7 +13,6 @@ interface TabConfiguracionProps {
 
 export default function TabConfiguracion({
   selectedNode,
-  isOpen,
 }: TabConfiguracionProps) {
   const { cy } = useCyContext();
   if (!cy) return null;

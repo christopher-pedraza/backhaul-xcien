@@ -20,25 +20,20 @@ const NodeModal: FC<NodeModalProps> = ({
   setIsOpen,
   newNodeId,
   setNewNodeId,
-  capacity,
-  setCapacity,
-  usage,
-  setUsage,
-  selectedNodes,
-  setSelectedNodes,
+  // selectedNodes,
+  // setSelectedNodes,
   handleCreateNode,
-  availableNodes,
 }) => {
   if (!isOpen) return null; // Si no está abierto, no renderizamos nada
 
-  const handleSelectNode = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
-    if (event.target.checked) {
-      setSelectedNodes([...selectedNodes, value]);
-    } else {
-      setSelectedNodes(selectedNodes.filter((id) => id !== value));
-    }
-  };
+  // const handleSelectNode = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   const value = event.target.value;
+  //   if (event.target.checked) {
+  //     setSelectedNodes([...selectedNodes, value]);
+  //   } else {
+  //     setSelectedNodes(selectedNodes.filter((id) => id !== value));
+  //   }
+  // };
 
   const handleClickOutside = (event: React.MouseEvent) => {
     if ((event.target as HTMLElement).classList.contains("modal-overlay")) {
