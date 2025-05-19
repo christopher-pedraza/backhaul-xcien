@@ -53,29 +53,39 @@ const CalculateRouteModal: FC<CalculateRouteModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="absolute bottom-14 right-0 bg-white border rounded shadow-md p-4 w-64">
+    <div ref={modalRef} className="absolute bottom-20 right-1/2 bg-white border rounded shadow-md p-4 w-64">
       <h3 className="text-lg font-semibold mb-4">Modificar Cálculo</h3>
       <div className="mb-4">
-        <label className="block text-sm font-medium mb-2">Capacidad</label>
+        <label className="block text-sm font-medium mb-2" htmlFor="capacity-slider">Capacidad</label>
         <Slider
-          min={0}
-          max={100}
+          className="w-full"
+          id="capacity-slider"
+          maxValue={100}
+          minValue={0}
           step={1}
           value={capacityValue}
-          onChange={(value) => handleCapacityChange(value)}
-          className="w-full"
+          onChange={(value) => {
+          if (typeof value === "number") {
+            handleCapacityChange(value);
+          }
+          }}
         />
         <span className="text-sm">{capacityValue}%</span>
       </div>
       <div>
-        <label className="block text-sm font-medium mb-2">Distancia</label>
+        <label className="block text-sm font-medium mb-2" htmlFor="distance-slider">Distancia</label>
         <Slider
-          min={0}
-          max={100}
+          className="w-full"
+          id="distance-slider"
+          maxValue={100}
+          minValue={0}
           step={1}
           value={distanceValue}
-          onChange={(value) => handleDistanceChange(value)}
-          className="w-full"
+          onChange={(value) => {
+          if (typeof value === "number") {
+            handleDistanceChange(value);
+          }
+          }}
         />
         <span className="text-sm">{distanceValue}%</span>
       </div>
