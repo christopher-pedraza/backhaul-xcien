@@ -7,14 +7,20 @@ import Sidebar from "@/components/Sidebar";
 import NodeModal from "@/components/modal/modal";
 import LinkModal from "@/components/modal2/modal2";
 import FloatingActionBar from "@/components/FloatingActionBar/FloatingActionBar";
+import Selector from "@/components/Selector";
+import useTopologyOptions from "@/hooks/topologies/useTopologyOptions";
 
-interface Props {}
+interface Props { }
 
 const IndexPage: FC<Props> = () => {
   const { cy } = useCyContext();
+  const { topologyOptions, isLoading: isLoadingTopologyOptions } = useTopologyOptions();
 
   const [isSidebarOpen, setSidebarIsOpen] = useState(false);
   const [selectedNode, setSelectedNode] = useState<string | null>(null);
+
+  // Select Topology states
+  const [selectedTopologyId, setSelectedTopologyId] = useState<string>("1");
 
   // Node modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -132,6 +138,15 @@ const IndexPage: FC<Props> = () => {
   return (
     <div className="relative flex-1 flex flex-col">
       <Graph />
+
+      <div className="absolute top-2 left-2 z-10 w-[200px]">
+        <Selector
+          options={topologyOptions}
+          isLoadingOptions={isLoadingTopologyOptions}
+          selectedValue={selectedTopologyId}
+          setSelectedValue={setSelectedTopologyId}
+        />
+      </div>
 
       <Sidebar
         isOpen={isSidebarOpen}
