@@ -3,7 +3,7 @@ import { FC, useState } from "react";
 import Graph from "@/components/graph";
 import { useCyContext } from "@/hooks/useCyContext";
 import { getRandomPosition } from "./utils";
-import SideBar from "@/components/SideBar/Sidebar";
+import Sidebar from "@/components/Sidebar";
 import NodeModal from "@/components/modal/modal";
 import LinkModal from "@/components/modal2/modal2";
 import FloatingActionBar from "@/components/FloatingActionBar/FloatingActionBar";
@@ -13,7 +13,7 @@ interface Props {}
 const IndexPage: FC<Props> = () => {
   const { cy } = useCyContext();
 
-  const [isOpen, setIsOpen] = useState(false);
+  const [isSidebarOpen, setSidebarIsOpen] = useState(false);
   const [selectedNode, setSelectedNode] = useState<string | null>(null);
 
   // Node modal state
@@ -38,14 +38,13 @@ const IndexPage: FC<Props> = () => {
     cy.on("tap", "node", (event) => {
       const id = event.target.id();
       setSelectedNode(id);
-      if (!isOpen) setIsOpen(true);
+      if (!isSidebarOpen) setSidebarIsOpen(true);
     });
-
-    cy.on("tap", "edge", (event) => {
-      const id = event.target.id();
-      setSelectedNode(id);
-      if (!isOpen) setIsOpen(true);
-    });
+    // cy.on("tap", "edge", (event) => {
+    //   const id = event.target.id();
+    //   setSelectedNode(id);
+    //   if (!isSidebarOpen) setSidebarIsOpen(true);
+    // });
   }
 
   const addNode = () => setIsModalOpen(true);
@@ -125,17 +124,20 @@ const IndexPage: FC<Props> = () => {
     if (selectedNode && cy) {
       cy.getElementById(selectedNode).remove();
       setSelectedNode(null);
-      setIsOpen(false);
+      setSidebarIsOpen(false);
       setIsDeleteModalOpen(false);
     }
   };
 
   return (
-    <div className="flex-1 flex flex-col">
-      
+    <div className="relative flex-1 flex flex-col">
       <Graph />
 
-      <SideBar isOpen={isOpen} setIsOpen={setIsOpen} cy={cy} selectedNode={selectedNode} />
+      <Sidebar
+        isOpen={isSidebarOpen}
+        setIsOpen={setSidebarIsOpen}
+        selectedNode={selectedNode}
+      />
 
       <NodeModal
         isOpen={isModalOpen}
@@ -151,7 +153,6 @@ const IndexPage: FC<Props> = () => {
         handleCreateNode={handleCreateNode}
         availableNodes={availableNodes}
       />
-
       <LinkModal
         isOpen={isEdgeModalOpen}
         setIsOpen={setIsEdgeModalOpen}
@@ -167,14 +168,16 @@ const IndexPage: FC<Props> = () => {
         availableNodes={availableNodes}
         error={error}
       />
-
       {/* Modal de Confirmación de Eliminación */}
       {isDeleteModalOpen && selectedNode && (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
           <div className="bg-white rounded-xl p-6 shadow-lg max-w-sm w-full">
-            <h2 className="text-lg font-semibold mb-4">¿Confirmar eliminación?</h2>
+            <h2 className="text-lg font-semibold mb-4">
+              ¿Confirmar eliminación?
+            </h2>
             <p className="mb-4">
-              Estás a punto de eliminar el elemento <strong>{selectedNode}</strong>.
+              Estás a punto de eliminar el elemento{" "}
+              <strong>{selectedNode}</strong>.
             </p>
             <div className="flex justify-end space-x-2">
               <button
@@ -193,7 +196,6 @@ const IndexPage: FC<Props> = () => {
           </div>
         </div>
       )}
-
       <FloatingActionBar
         onCreateNode={addNode}
         onCreateEdge={addEdge}
