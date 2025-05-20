@@ -62,7 +62,7 @@ export default function Sidebar({
             }
             isDisabled={false}
           />
-          <div className="relative flex flex-col h-full">
+          <div className="relative flex flex-col">
             <div className="flex flex-col items-center h-full">
               <Tabs
                 aria-label="Options"

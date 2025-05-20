@@ -6,6 +6,7 @@ interface TabInputProps {
   setValue: (value: string) => void;
   errors: Array<string>;
   hasChanges: boolean;
+  isReadOnly?: boolean;
 }
 
 export default function TabInput({
@@ -14,6 +15,7 @@ export default function TabInput({
   setValue,
   errors,
   hasChanges,
+  isReadOnly,
 }: TabInputProps) {
   var inputClass = hasChanges ? "italic" : "";
   return (
@@ -34,6 +36,7 @@ export default function TabInput({
       className="pb-4"
       size="lg"
       classNames={{ input: inputClass }}
+      isReadOnly={isReadOnly}
     />
   );
 }

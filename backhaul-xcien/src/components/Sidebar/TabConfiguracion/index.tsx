@@ -8,60 +8,39 @@ import ConfirmationModal from "../ConfirmationModal";
 
 // Types
 import { NodeData } from "@/types/Node";
+import PencilIcon from "../Icons/PencilIcon";
+import ChangeNameModal from "../ChangeNameModal";
 
 interface TabConfiguracionProps {
   selectedNode: string;
   selectedType: string;
 }
 
-export default function TabConfiguracion({
-  selectedNode,
-  selectedType,
-}: TabConfiguracionProps) {
-  const { cy } = useCyContext();
-  if (!cy) return null;
-
-  const {
-    isOpen: isOpenConfirmation,
-    onOpen: onOpenConfirmation,
-    onOpenChange: onOpenChangeConfirmation,
-  } = useDisclosure();
-
-  const [node_data, setNodeData] = useState(null);
-  const [usage, setUsage] = useState("");
-  const [capacity, setCapacity] = useState("");
-  const [sold_capacity, setSoldCapacity] = useState("");
-  const [name, setName] = useState("");
-
-  const [lastUsage, setLastUsage] = useState("");
-  const [lastCapacity, setLastCapacity] = useState("");
-  const [lastSoldCapacity, setLastSoldCapacity] = useState("");
-
+function EdgeTab({
+  usage,
+  setUsage,
+  lastUsage,
+  capacity,
+  setCapacity,
+  lastCapacity,
+  onOpenConfirmation,
+}: {
+  usage: string;
+  setUsage: (v: string) => void;
+  lastUsage: string;
+  capacity: string;
+  setCapacity: (v: string) => void;
+  lastCapacity: string;
+  onOpenConfirmation: () => void;
+}) {
   const errorsUsage: Array<string> = [];
   const errorsCapacity: Array<string> = [];
-  const errorsSoldCapacity: Array<string> = [];
 
-  useEffect(() => {
-    const node = cy.getElementById(selectedNode);
-    if (node) {
-      setNodeData(node.data());
-      console.log(node.data());
+  const saveEdgeConfiguration = () => {
+    if (errorsUsage.length === 0 && errorsCapacity.length === 0) {
+      onOpenConfirmation();
     }
-  }, [selectedNode, cy]);
-
-  useEffect(() => {
-    if (node_data) {
-      // setUsage(node_data["usage"] || "");
-      // setCapacity(node_data["capacity"] || "");
-      // setSoldCapacity(node_data["sold_capacity"] || "");
-      // setName(node_data["name"] || "");
-      // // Guardar los valores anteriores para comparar
-      // setLastUsage(node_data["usage"] || "");
-      // setLastCapacity(node_data["capacity"] || "");
-      // setLastSoldCapacity(node_data["sold_capacity"] || "");
-      // console.log(node);
-    }
-  }, [node_data]);
+  };
 
   if (usage === "") {
     errorsUsage.push("El campo 'Uso' es obligatorio");
@@ -81,62 +60,20 @@ export default function TabConfiguracion({
     errorsCapacity.push("El campo 'Capacidad' no puede ser negativo");
   }
 
-  if (sold_capacity === "") {
-    errorsSoldCapacity.push("El campo 'Capacidad vendida' es obligatorio");
-  } else if (isNaN(Number(sold_capacity))) {
-    errorsSoldCapacity.push("El campo 'Capacidad vendida' debe ser un número");
-  } else if (Number(sold_capacity) < 0) {
-    errorsSoldCapacity.push(
-      "El campo 'Capacidad vendida' no puede ser negativo"
-    );
-  }
-
-  const saveConfiguration = () => {
-    if (
-      errorsUsage.length === 0 &&
-      errorsCapacity.length === 0 &&
-      errorsSoldCapacity.length === 0
-    ) {
-      onOpenConfirmation();
-    }
-  };
-
-  const confirmSaveConfiguration = () => {
-    cy.getElementById(selectedNode).data({
-      usage: usage,
-      capacity: capacity,
-      sold_capacity: sold_capacity,
-      name: name,
-    });
-    setLastUsage(usage);
-    setLastCapacity(capacity);
-    setLastSoldCapacity(sold_capacity);
-  };
-
-  const cancelSaveConfiguration = () => {
-    // setUsage(lastUsage);
-    // setCapacity(lastCapacity);
-    // setSoldCapacity(lastSoldCapacity);
-  };
-
   var shouldDisableButton =
     errorsUsage.length > 0 ||
     errorsCapacity.length > 0 ||
-    errorsSoldCapacity.length > 0 ||
-    (usage == lastUsage &&
-      capacity == lastCapacity &&
-      sold_capacity == lastSoldCapacity);
+    (usage == lastUsage && capacity == lastCapacity);
 
   return (
-    <div className="flex flex-col items-center p-4 h-full">
-      <h1 className="text-2xl font-bold mb-4">{name}</h1>
-
+    <>
       <TabInput
         label="Uso"
         value={usage}
         setValue={setUsage}
         errors={errorsUsage}
         hasChanges={usage != lastUsage}
+        isReadOnly={true}
       />
       <TabInput
         label="Capacidad"
@@ -145,16 +82,8 @@ export default function TabConfiguracion({
         errors={errorsCapacity}
         hasChanges={capacity != lastCapacity}
       />
-      <TabInput
-        label="Capacidad vendida"
-        value={sold_capacity}
-        setValue={setSoldCapacity}
-        errors={errorsSoldCapacity}
-        hasChanges={sold_capacity != lastSoldCapacity}
-      />
-
       <Button
-        onPress={saveConfiguration}
+        onPress={saveEdgeConfiguration}
         className="w-3/4"
         variant={shouldDisableButton ? "faded" : "ghost"}
         color={shouldDisableButton ? "default" : "primary"}
@@ -162,6 +91,111 @@ export default function TabConfiguracion({
       >
         Guardar
       </Button>
+    </>
+  );
+}
+
+function NodeTab() {
+  return <></>;
+}
+
+export default function TabConfiguracion({
+  selectedNode,
+  selectedType,
+}: TabConfiguracionProps) {
+  const { cy } = useCyContext();
+  if (!cy) return null;
+
+  const {
+    isOpen: isOpenConfirmation,
+    onOpen: onOpenConfirmation,
+    onOpenChange: onOpenChangeConfirmation,
+  } = useDisclosure();
+
+  const {
+    isOpen: isOpenName,
+    onOpen: onOpenName,
+    onOpenChange: onOpenChangeName,
+  } = useDisclosure();
+
+  const [node_data, setNodeData] = useState(null);
+  const [usage, setUsage] = useState("");
+  const [capacity, setCapacity] = useState("");
+  const [name, setName] = useState("");
+
+  const [lastUsage, setLastUsage] = useState("");
+  const [lastCapacity, setLastCapacity] = useState("");
+
+  useEffect(() => {
+    const node = cy.getElementById(selectedNode);
+    if (node) {
+      setNodeData(node.data());
+    }
+  }, [selectedNode, cy]);
+
+  useEffect(() => {
+    if (!node_data) {
+      return;
+    }
+
+    if (selectedType == "node") {
+      setName(node_data["name"] || "");
+    } else if (selectedType == "edge") {
+      setName(node_data["id"]);
+      setUsage(node_data["usage"] || "");
+      setCapacity(node_data["capacity"] || "");
+      setLastUsage(node_data["usage"] || "");
+      setLastCapacity(node_data["capacity"] || "");
+    }
+  }, [node_data]);
+
+  const confirmSaveConfiguration = () => {
+    cy.getElementById(selectedNode).data({
+      usage: usage,
+      capacity: capacity,
+      name: name,
+    });
+    setLastUsage(usage);
+    setLastCapacity(capacity);
+  };
+
+  const confirmSaveName = (newName: string) => {
+    cy.getElementById(selectedNode).data({
+      name: newName,
+    });
+    setName(newName);
+  };
+
+  const cancelSaveConfiguration = () => {
+    // setUsage(lastUsage);
+    // setCapacity(lastCapacity);
+  };
+
+  return (
+    <div className="flex flex-col items-center p-4 h-full">
+      <Button
+        endContent={<PencilIcon />}
+        className="bg-transparent mb-4"
+        onPress={onOpenChangeName}
+      >
+        <h1 className="text-2xl font-bold text-ellipsis whitespace-nowrap overflow-hidden max-w-[300px]">
+          {name}
+        </h1>
+      </Button>
+
+      {selectedType == "node" ? (
+        <NodeTab />
+      ) : selectedType == "edge" ? (
+        <EdgeTab
+          usage={usage}
+          setUsage={setUsage}
+          lastUsage={lastUsage}
+          capacity={capacity}
+          setCapacity={setCapacity}
+          lastCapacity={lastCapacity}
+          onOpenConfirmation={onOpenConfirmation}
+        />
+      ) : null}
 
       <ConfirmationModal
         isOpen={isOpenConfirmation}
@@ -169,6 +203,12 @@ export default function TabConfiguracion({
         onOpenChange={onOpenChangeConfirmation}
         onConfirm={confirmSaveConfiguration}
         onCancel={cancelSaveConfiguration}
+      />
+      <ChangeNameModal
+        isOpen={isOpenName}
+        onOpenChange={onOpenChangeName}
+        onConfirm={confirmSaveName}
+        name={name}
       />
     </div>
   );
