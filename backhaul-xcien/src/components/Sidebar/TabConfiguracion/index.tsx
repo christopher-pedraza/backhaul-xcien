@@ -6,13 +6,17 @@ import { useState, useEffect } from "react";
 import TabInput from "../TabInput";
 import ConfirmationModal from "../ConfirmationModal";
 
+// Types
+import { NodeData } from "@/types/Node";
+
 interface TabConfiguracionProps {
   selectedNode: string;
-  isOpen: boolean;
+  selectedType: string;
 }
 
 export default function TabConfiguracion({
   selectedNode,
+  selectedType,
 }: TabConfiguracionProps) {
   const { cy } = useCyContext();
   if (!cy) return null;
@@ -37,34 +41,25 @@ export default function TabConfiguracion({
   const errorsCapacity: Array<string> = [];
   const errorsSoldCapacity: Array<string> = [];
 
-  // Resetear los datos del nodo cuando se cierra el sidebar
-  //   useEffect(() => {
-  //     if (!isOpen) {
-  //       setNodeData(null);
-  //       setUsage(lastUsage);
-  //       setCapacity(lastCapacity);
-  //       setSoldCapacity(lastSoldCapacity);
-  //     }
-  //   }, [isOpen]);
-
   useEffect(() => {
     const node = cy.getElementById(selectedNode);
     if (node) {
       setNodeData(node.data());
+      console.log(node.data());
     }
   }, [selectedNode, cy]);
 
   useEffect(() => {
     if (node_data) {
-      setUsage(node_data["usage"] || "");
-      setCapacity(node_data["capacity"] || "");
-      setSoldCapacity(node_data["sold_capacity"] || "");
-      setName(node_data["name"] || "");
-
-      // Guardar los valores anteriores para comparar
-      setLastUsage(node_data["usage"] || "");
-      setLastCapacity(node_data["capacity"] || "");
-      setLastSoldCapacity(node_data["sold_capacity"] || "");
+      // setUsage(node_data["usage"] || "");
+      // setCapacity(node_data["capacity"] || "");
+      // setSoldCapacity(node_data["sold_capacity"] || "");
+      // setName(node_data["name"] || "");
+      // // Guardar los valores anteriores para comparar
+      // setLastUsage(node_data["usage"] || "");
+      // setLastCapacity(node_data["capacity"] || "");
+      // setLastSoldCapacity(node_data["sold_capacity"] || "");
+      // console.log(node);
     }
   }, [node_data]);
 
@@ -92,7 +87,7 @@ export default function TabConfiguracion({
     errorsSoldCapacity.push("El campo 'Capacidad vendida' debe ser un número");
   } else if (Number(sold_capacity) < 0) {
     errorsSoldCapacity.push(
-      "El campo 'Capacidad vendida' no puede ser negativo",
+      "El campo 'Capacidad vendida' no puede ser negativo"
     );
   }
 
