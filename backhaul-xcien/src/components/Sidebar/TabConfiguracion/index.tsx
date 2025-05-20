@@ -1,15 +1,33 @@
-import { Button, useDisclosure } from "@heroui/react";
+import {
+  Button,
+  useDisclosure,
+  Table,
+  TableHeader,
+  TableColumn,
+  TableBody,
+  TableRow,
+  TableCell,
+  ScrollShadow,
+  Card,
+  CardBody,
+  CardHeader,
+  Divider,
+} from "@heroui/react";
 import { useCyContext } from "@/hooks/useCyContext";
 import { useState, useEffect } from "react";
 
 // Components
 import TabInput from "../TabInput";
 import ConfirmationModal from "../ConfirmationModal";
+import ChangeNameModal from "../ChangeNameModal";
 
 // Types
 import { NodeData } from "@/types/Node";
+import { Client } from "@/types/Client";
+
+// Icons
 import PencilIcon from "../Icons/PencilIcon";
-import ChangeNameModal from "../ChangeNameModal";
+import { PlusCircleIcon } from "lucide-react";
 
 interface TabConfiguracionProps {
   selectedNode: string;
@@ -95,8 +113,52 @@ function EdgeTab({
   );
 }
 
-function NodeTab() {
-  return <></>;
+function NodeTab({ clients }: { clients: Client[] }) {
+  return (
+    <>
+      <Card className="w-full h-[400px]">
+        <CardHeader className="relative text-xl font-bold flex flex-col items-center justify-center">
+          <p>Clientes</p>
+          <Button
+            className="absolute right-2 top-1/8 bg-transparent"
+            isIconOnly
+          >
+            <PlusCircleIcon />
+          </Button>
+        </CardHeader>
+        <Divider />
+        <CardBody>
+          {clients.length > 0 ? (
+            <ScrollShadow className="overflow-y-auto">
+              {clients.map((client, index) => (
+                <Card className="h-min-[100px] m-4 p-3 relative">
+                  <p className="text-lg font-bold">{client.name}</p>
+                  <p className="text-medium">
+                    <strong>Capacidad vendida: </strong>
+                    {client.soldCapacity}
+                  </p>
+                  <p className="text-medium">
+                    <strong> Uso: </strong>
+                    {client.usage}
+                  </p>
+                  <Button
+                    className="absolute right-0 top-0 bg-transparent"
+                    isIconOnly
+                  >
+                    <PencilIcon />
+                  </Button>
+                </Card>
+              ))}
+            </ScrollShadow>
+          ) : (
+            <div className="w-full h-full flex flex-col justify-center items-center">
+              <p className="text-lg">El nodo no cuenta con clientes.</p>
+            </div>
+          )}
+        </CardBody>
+      </Card>
+    </>
+  );
 }
 
 export default function TabConfiguracion({
@@ -122,6 +184,7 @@ export default function TabConfiguracion({
   const [usage, setUsage] = useState("");
   const [capacity, setCapacity] = useState("");
   const [name, setName] = useState("");
+  const [clients, setClients] = useState([]);
 
   const [lastUsage, setLastUsage] = useState("");
   const [lastCapacity, setLastCapacity] = useState("");
@@ -140,6 +203,7 @@ export default function TabConfiguracion({
 
     if (selectedType == "node") {
       setName(node_data["name"] || "");
+      setClients(node_data["clients"] || []);
     } else if (selectedType == "edge") {
       setName(node_data["id"]);
       setUsage(node_data["usage"] || "");
@@ -184,7 +248,7 @@ export default function TabConfiguracion({
       </Button>
 
       {selectedType == "node" ? (
-        <NodeTab />
+        <NodeTab clients={clients} />
       ) : selectedType == "edge" ? (
         <EdgeTab
           usage={usage}

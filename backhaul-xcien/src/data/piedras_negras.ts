@@ -8,7 +8,32 @@ const nodes: Node[] = [
     data: {
       id: "movistar",
       name: "Carrier\nMovistar",
-      clients: [],
+      clients: [
+        {
+          id: "movistarClient",
+          name: "Movistar Client",
+          soldCapacity: 1000,
+          usage: 300,
+        },
+        {
+          id: "movistarClient",
+          name: "Movistar Client",
+          soldCapacity: 1000,
+          usage: 300,
+        },
+        {
+          id: "movistarClient",
+          name: "Movistar Client",
+          soldCapacity: 1000,
+          usage: 300,
+        },
+        {
+          id: "movistarClient",
+          name: "Movistar Client",
+          soldCapacity: 1000,
+          usage: 300,
+        },
+      ],
     },
     position: { x: -100, y: 0 },
     classes: "cloud",
@@ -114,6 +139,8 @@ const edges: Edge[] = [
       id: "movistar-coreBorderPDN",
       source: "movistar",
       target: "coreBorderPDN",
+      capacity: 700,
+      usage: 500,
     },
   },
   {

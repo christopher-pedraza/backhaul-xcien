@@ -55,8 +55,6 @@ const edges: Edge[] = [
       id: "carrier_core",
       source: "carrier",
       target: "coreSanLuis",
-      capacity: 700,
-      usage: 500,
     },
   },
   {
