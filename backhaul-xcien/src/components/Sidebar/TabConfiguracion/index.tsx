@@ -1,12 +1,6 @@
 import {
   Button,
   useDisclosure,
-  Table,
-  TableHeader,
-  TableColumn,
-  TableBody,
-  TableRow,
-  TableCell,
   ScrollShadow,
   Card,
   CardBody,
@@ -20,6 +14,8 @@ import { useState, useEffect } from "react";
 import TabInput from "../TabInput";
 import ConfirmationModal from "../ConfirmationModal";
 import ChangeNameModal from "../ChangeNameModal";
+import AddClientModal from "../AddClientModal";
+import ModifyClientModal from "../ModifyClientModal";
 
 // Types
 import { NodeData } from "@/types/Node";
@@ -112,8 +108,19 @@ function EdgeTab({
     </>
   );
 }
+interface NodeTabProps {
+  clients: Array<Client>;
+  onOpenChangeAddClient: () => void;
+  onOpenChangeModifyClient: () => void;
+  setSelectedClient: (client: Client | null) => void;
+}
 
-function NodeTab({ clients }: { clients: Client[] }) {
+function NodeTab({
+  clients,
+  onOpenChangeAddClient,
+  onOpenChangeModifyClient,
+  setSelectedClient,
+}: NodeTabProps) {
   return (
     <>
       <Card className="w-full h-[400px]">
@@ -122,6 +129,7 @@ function NodeTab({ clients }: { clients: Client[] }) {
           <Button
             className="absolute right-2 top-1/8 bg-transparent"
             isIconOnly
+            onPress={onOpenChangeAddClient}
           >
             <PlusCircleIcon />
           </Button>
@@ -131,7 +139,7 @@ function NodeTab({ clients }: { clients: Client[] }) {
           {clients.length > 0 ? (
             <ScrollShadow className="overflow-y-auto">
               {clients.map((client, index) => (
-                <Card className="h-min-[100px] m-4 p-3 relative">
+                <Card className="h-min-[100px] m-4 p-3 relative" key={index}>
                   <p className="text-lg font-bold">{client.name}</p>
                   <p className="text-medium">
                     <strong>Capacidad vendida: </strong>
@@ -144,6 +152,11 @@ function NodeTab({ clients }: { clients: Client[] }) {
                   <Button
                     className="absolute right-0 top-0 bg-transparent"
                     isIconOnly
+                    onPress={() => {
+                      setSelectedClient(client);
+                      onOpenChangeModifyClient();
+                    }}
+                    key={index + 100}
                   >
                     <PencilIcon />
                   </Button>
@@ -180,14 +193,28 @@ export default function TabConfiguracion({
     onOpenChange: onOpenChangeName,
   } = useDisclosure();
 
+  const {
+    isOpen: isOpenAddClient,
+    onOpen: onOpenAddClient,
+    onOpenChange: onOpenChangeAddClient,
+  } = useDisclosure();
+
+  const {
+    isOpen: isOpenModifyClient,
+    onOpen: onOpenModifyClient,
+    onOpenChange: onOpenChangeModifyClient,
+  } = useDisclosure();
+
   const [node_data, setNodeData] = useState(null);
   const [usage, setUsage] = useState("");
   const [capacity, setCapacity] = useState("");
   const [name, setName] = useState("");
-  const [clients, setClients] = useState([]);
+  const [clients, setClients] = useState<Array<Client>>([]);
 
   const [lastUsage, setLastUsage] = useState("");
   const [lastCapacity, setLastCapacity] = useState("");
+
+  const [selectedClient, setSelectedClient] = useState<Client | null>(null);
 
   useEffect(() => {
     const node = cy.getElementById(selectedNode);
@@ -230,6 +257,27 @@ export default function TabConfiguracion({
     setName(newName);
   };
 
+  const confirmAddClient = (client: Client) => {
+    const newClients = [...clients, client];
+    setClients(newClients);
+    cy.getElementById(selectedNode).data({
+      clients: newClients,
+    });
+  };
+
+  const confirmModifyClient = (client: Client) => {
+    const newClients = clients.map((c) => {
+      if (c.id === client.id) {
+        return client;
+      }
+      return c;
+    });
+    setClients(newClients);
+    cy.getElementById(selectedNode).data({
+      clients: newClients,
+    });
+  };
+
   const cancelSaveConfiguration = () => {
     // setUsage(lastUsage);
     // setCapacity(lastCapacity);
@@ -248,7 +296,12 @@ export default function TabConfiguracion({
       </Button>
 
       {selectedType == "node" ? (
-        <NodeTab clients={clients} />
+        <NodeTab
+          clients={clients}
+          onOpenChangeAddClient={onOpenChangeAddClient}
+          onOpenChangeModifyClient={onOpenChangeModifyClient}
+          setSelectedClient={setSelectedClient}
+        />
       ) : selectedType == "edge" ? (
         <EdgeTab
           usage={usage}
@@ -268,11 +321,25 @@ export default function TabConfiguracion({
         onConfirm={confirmSaveConfiguration}
         onCancel={cancelSaveConfiguration}
       />
+
       <ChangeNameModal
         isOpen={isOpenName}
         onOpenChange={onOpenChangeName}
         onConfirm={confirmSaveName}
         name={name}
+      />
+
+      <AddClientModal
+        isOpen={isOpenAddClient}
+        onOpenChange={onOpenChangeAddClient}
+        onConfirm={confirmAddClient}
+      />
+
+      <ModifyClientModal
+        isOpen={isOpenModifyClient}
+        onOpenChange={onOpenChangeModifyClient}
+        onConfirm={confirmModifyClient}
+        selectedClient={selectedClient}
       />
     </div>
   );

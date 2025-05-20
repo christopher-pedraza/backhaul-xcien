@@ -6,6 +6,7 @@ import {
   ModalFooter,
   Button,
   Input,
+  Divider,
 } from "@heroui/react";
 import { useState, useEffect } from "react";
 
@@ -66,7 +67,6 @@ export default function ChangeNameModal({
               Cambiar nombre
             </ModalHeader>
             <ModalBody>
-              <p>Introduce el nuevo nombre.</p>
               <Input
                 label="Nuevo nombre"
                 value={newName}
