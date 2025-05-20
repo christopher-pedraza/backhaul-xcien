@@ -16,6 +16,9 @@ import SidebarToggleButton from "./SidebarToggleButton";
 import TabConfiguracion from "./TabConfiguracion";
 import TabResumen from "./TabResumen";
 
+import { useHistoryContext } from "@/hooks/useHistoryContext";
+import { UserActionType } from "@/context/HistoryContext";
+
 interface SideBarProps {
   isOpen: boolean;
   setIsOpen: (value: boolean | ((prevState: boolean) => boolean)) => void;
@@ -29,6 +32,8 @@ export default function Sidebar({
   selectedNode,
   selectedType,
 }: SideBarProps) {
+  const { addAction, actions } = useHistoryContext();
+
   const toggleDrawer = () => {
     setIsOpen((prevState) => !prevState);
   };
@@ -97,7 +102,15 @@ export default function Sidebar({
                       <span>Soluciones</span>
                     </div>
                   }
-                />
+                >
+                  {/*  */}
+                  <button
+                    onClick={() => addAction({ type: UserActionType.CREATE })}
+                  >
+                    Hola
+                  </button>
+                  {/*  */}
+                </Tab>
                 <Tab
                   key="resumen"
                   title={
@@ -115,6 +128,19 @@ export default function Sidebar({
                   />
                 </Tab>
               </Tabs>
+              {/*  */}
+              <div className="mt-4 p-2 border-t border-gray-200">
+                <h4 className="font-bold mb-2">User Actions Log</h4>
+                <ul className="text-xs max-h-32 overflow-y-auto">
+                  {actions.map((action, idx) => (
+                    <li key={idx}>
+                      {action.type} @{" "}
+                      {new Date(action.timestamp).toLocaleTimeString()}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              {/*  */}
             </div>
           </div>
         </Drawer>
