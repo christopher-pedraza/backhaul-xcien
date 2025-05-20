@@ -6,7 +6,6 @@ import {
   ModalFooter,
   Button,
   Input,
-  Divider,
 } from "@heroui/react";
 import { useState, useEffect } from "react";
 

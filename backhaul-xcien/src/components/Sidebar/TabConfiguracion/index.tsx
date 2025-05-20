@@ -18,7 +18,6 @@ import AddClientModal from "../AddClientModal";
 import ModifyClientModal from "../ModifyClientModal";
 
 // Types
-import { NodeData } from "@/types/Node";
 import { Client } from "@/types/Client";
 
 // Icons
@@ -189,19 +188,19 @@ export default function TabConfiguracion({
 
   const {
     isOpen: isOpenName,
-    onOpen: onOpenName,
+    // onOpen: onOpenName,
     onOpenChange: onOpenChangeName,
   } = useDisclosure();
 
   const {
     isOpen: isOpenAddClient,
-    onOpen: onOpenAddClient,
+    // onOpen: onOpenAddClient,
     onOpenChange: onOpenChangeAddClient,
   } = useDisclosure();
 
   const {
     isOpen: isOpenModifyClient,
-    onOpen: onOpenModifyClient,
+    // onOpen: onOpenModifyClient,
     onOpenChange: onOpenChangeModifyClient,
   } = useDisclosure();
 
