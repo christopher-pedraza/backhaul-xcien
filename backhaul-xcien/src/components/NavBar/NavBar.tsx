@@ -1,28 +1,42 @@
-import { Navbar, NavbarBrand, NavbarContent, NavbarItem, NavbarMenu, NavbarMenuItem } from "@heroui/react";
+import { useState } from "react";
+import { Navbar, NavbarBrand } from "@heroui/react";
 import "./NavBar.css";
-
+import UserBox from "../UserBox/UserBox";
+import { ChevronUp, ChevronDown } from "lucide-react";
 
 
 const MyNavbar = () => {
+  const [visible, setVisible] = useState(true);
+
+  const toggleNavbar = () => {
+    setVisible(!visible);
+  };
+
   return (
-    <Navbar className="navbar">
-      <NavbarBrand className="navbar-logo">
-        <a href="/">FlowForge</a>
-      </NavbarBrand>
+    <>
+      
 
-      <NavbarContent>
-        <NavbarItem>
-          <a href="#contacto" className="hover:underline">Cuenta</a>
-        </NavbarItem>
-      </NavbarContent>
+      <div className={`navbar-wrapper ${visible ? "visible" : "hidden"}`}>
+        <Navbar className="navbar">
+          <div className="navbar-section left" />
 
+          <NavbarBrand className="navbar-logo">
+            <a href="/">FlowForge</a>
+          </NavbarBrand>
 
-      <NavbarMenu>
-        <NavbarMenuItem>
-          <a href="#inicio">Cuenta</a>
-        </NavbarMenuItem>
-      </NavbarMenu>
-    </Navbar>
+          <div className="navbar-section right">
+            <UserBox nombreCompleto="Gerardo Mesa" />
+          </div>
+        </Navbar>
+      </div>
+    	
+      <div className="open-close-button-div" onClick={toggleNavbar}>
+        <div className="tag-navbar-open-close">
+          {visible ? <ChevronUp size={15}  /> : <ChevronDown size={15} />}
+        </div>
+      </div>
+
+    </>
   );
 };
 

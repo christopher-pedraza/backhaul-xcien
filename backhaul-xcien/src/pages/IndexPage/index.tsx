@@ -7,7 +7,6 @@ import CreateNodeModal from "@/components/toolBox/CreateNodeModal/CreateNodeModa
 import LinkModal from "@/components/toolBox/CreatEdgeModal/CreateEdgeModal";
 import FloatingActionBar from "@/components/toolBox/ToolBox/ToolBox";
 import MyNavbar from "@/components/NavBar/NavBar";
-
 interface Props {}
 
 const IndexPage: FC<Props> = () => {
@@ -135,9 +134,9 @@ const IndexPage: FC<Props> = () => {
 
       
       <MyNavbar></MyNavbar>
-      
+     
       <Graph />
-
+      
       <SideBar isOpen={isOpen} setIsOpen={setIsOpen} cy={cy} selectedNode={selectedNode} />
 
       <CreateNodeModal

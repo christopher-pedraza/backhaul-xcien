@@ -1,9 +1,18 @@
 .navbar {
   display: flex;
-  /*background-image: linear-gradient(90deg, #051145 0%,#000000 100%) !important;*/
+  align-items: center;
   background-color: #051145 !important;
-  color: rgb(255, 255, 255);
+  color: white;
   height: 45px !important;
+}
+
+.navbar-logo {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-weight: bold;
+  font-family: var(--navbar-font, "Audiowide", sans-serif) !important;
+  color: white !important;
 }
 
 .navbar a {
@@ -13,13 +22,28 @@
   transition: color 0.3s ease;
 }
 
-.navbar a:hover {
-  color: #94a3b8;
+.open-close-button-div{
+  width: 100%;
+  background-color: #d3d3d3;
+  cursor: pointer;
+  text-align: center;
+  height: 15px;
+  z-index: 99; 
+  position: relative;
 }
 
-.navbar-logo {
-  font-weight: bold;
-  font-family: var(--navbar-font, "Audiowide", sans-serif) !important; /* fuente por defecto */
-  color: white !important; /* Esto pone el texto en blanco */
+.tag-navbar-open-close {
+  font-family: "Red Hat Text", sans-serif !important;
+  color: #051145 !important;
+  display: flex;
+  justify-content: center; /* centra horizontalmente */
+  align-items: center;     /* centra verticalmente */
+  width: 100%;
+}
 
+.navbar-section.right {
+  margin-left: auto;
+  display: flex;
+  align-items: center; /* para centrar verticalmente si quieres */
+  margin-left: 105%;
 }
