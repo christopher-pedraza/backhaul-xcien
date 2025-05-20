@@ -22,7 +22,7 @@ export interface HistoryContextValue {
 }
 
 export const HistoryContext = createContext<HistoryContextValue | undefined>(
-  undefined
+  undefined,
 );
 
 export const HistoryProvider = ({ children }: { children: ReactNode }) => {
