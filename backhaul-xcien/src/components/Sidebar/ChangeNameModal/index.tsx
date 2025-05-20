@@ -45,7 +45,7 @@ export default function ChangeNameModal({
   if (newName.length === 0) {
     errors.push("El nombre no puede estar vacío");
   } else if (newName.length > 30) {
-    errors.push("El nombre no puede tener más de 20 caracteres");
+    errors.push("El nombre no puede tener más de 30 caracteres");
   } else if (newName.length < 3) {
     errors.push("El nombre no puede tener menos de 3 caracteres");
   }
@@ -66,10 +66,7 @@ export default function ChangeNameModal({
               Cambiar nombre
             </ModalHeader>
             <ModalBody>
-              <p>
-                Introduce el nuevo nombre para el nodo. Este nombre se mostrará
-                en la interfaz de usuario.
-              </p>
+              <p>Introduce el nuevo nombre.</p>
               <Input
                 label="Nuevo nombre"
                 value={newName}
