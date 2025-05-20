@@ -4,42 +4,46 @@ import { Node } from "@/types/Node";
 
 const nodes: Node[] = [
   {
-    data: { id: "carrier", name: "Carrier Flo Networks\n700 Mb" },
+    data: { id: "carrier", name: "Carrier Flo Networks\n700 Mb", clients: [] },
     position: { x: 0, y: 0 },
     classes: "cloud",
   },
   {
-    data: { id: "coreSanLuis", name: "Core Border\nSan Luis" },
+    data: { id: "coreSanLuis", name: "Core Border\nSan Luis", clients: [] },
     position: { x: 0, y: 100 },
     classes: "router",
   },
   {
-    data: { id: "switchEME", name: "SW PoE\nEdificio EME" },
+    data: { id: "switchEME", name: "SW PoE\nEdificio EME", clients: [] },
     position: { x: 0, y: 200 },
     classes: "switch",
   },
   {
-    data: { id: "switchMatias", name: "Switch\nLos Matias" },
+    data: { id: "switchMatias", name: "Switch\nLos Matias", clients: [] },
     position: { x: -200, y: 250 },
     classes: "switch",
   },
   {
-    data: { id: "wrtMatias", name: "WRT Planta\nLos Matias" },
+    data: { id: "wrtMatias", name: "WRT Planta\nLos Matias", clients: [] },
     position: { x: -200, y: 450 },
     classes: "router",
   },
   {
-    data: { id: "repCerro", name: "Rep\nCerro Gordo" },
+    data: { id: "repCerro", name: "Rep\nCerro Gordo", clients: [] },
     position: { x: 0, y: 450 },
     classes: "switch",
   },
   {
-    data: { id: "coreCarretera57", name: "Core Carretera 57" },
+    data: { id: "coreCarretera57", name: "Core Carretera 57", clients: [] },
     position: { x: 200, y: 200 },
     classes: "router",
   },
   {
-    data: { id: "coreSanAntonioTRM2", name: "Core San Antonio\nTRM2" },
+    data: {
+      id: "coreSanAntonioTRM2",
+      name: "Core San Antonio\nTRM2",
+      clients: [],
+    },
     position: { x: 200, y: 450 },
     classes: "router",
   },

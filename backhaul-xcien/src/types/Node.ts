@@ -1,3 +1,5 @@
+import type { Client } from "./Client";
+
 export type NodeClass = "cloud" | "router" | "switch";
 
 export interface NodePosition {
@@ -8,6 +10,7 @@ export interface NodePosition {
 export interface NodeData {
   id: string;
   name: string;
+  clients: Client[];
 }
 
 export interface Node {

@@ -19,13 +19,15 @@ import TabResumen from "./TabResumen";
 interface SideBarProps {
   isOpen: boolean;
   setIsOpen: (value: boolean | ((prevState: boolean) => boolean)) => void;
-  selectedNode: any; // TODO: PONER EL TIPO CORRECTO
+  selectedNode: string;
+  selectedType: string;
 }
 
 export default function Sidebar({
   isOpen,
   setIsOpen,
   selectedNode,
+  selectedType,
 }: SideBarProps) {
   const toggleDrawer = () => {
     setIsOpen((prevState) => !prevState);
@@ -60,7 +62,7 @@ export default function Sidebar({
             }
             isDisabled={false}
           />
-          <div className="relative flex flex-col h-full">
+          <div className="relative flex flex-col">
             <div className="flex flex-col items-center h-full">
               <Tabs
                 aria-label="Options"
@@ -80,10 +82,11 @@ export default function Sidebar({
                       <span>Configuracion</span>
                     </div>
                   }
+                  isDisabled={selectedNode == ""}
                 >
                   <TabConfiguracion
                     selectedNode={selectedNode}
-                    isOpen={isOpen}
+                    selectedType={selectedType}
                   />
                 </Tab>
                 <Tab
@@ -117,7 +120,26 @@ export default function Sidebar({
         </Drawer>
       </>
     );
-  } else if (selectedNode) {
+  }
+  // else if (selectedNode) {
+  //   return (
+  //     <SidebarToggleButton
+  //       onPress={toggleDrawer}
+  //       left={undefined}
+  //       right={0}
+  //       icon={
+  //         <OpenDrawerIcon
+  //           fill="currentColor"
+  //           size={24}
+  //           height={24}
+  //           width={24}
+  //         />
+  //       }
+  //       isDisabled={false}
+  //     />
+  //   );
+  // }
+  else {
     return (
       <SidebarToggleButton
         onPress={toggleDrawer}
@@ -132,23 +154,6 @@ export default function Sidebar({
           />
         }
         isDisabled={false}
-      />
-    );
-  } else {
-    return (
-      <SidebarToggleButton
-        onPress={toggleDrawer}
-        left={undefined}
-        right={0}
-        icon={
-          <OpenDrawerIcon
-            fill="currentColor"
-            size={24}
-            height={24}
-            width={24}
-          />
-        }
-        isDisabled={true}
       />
     );
   }

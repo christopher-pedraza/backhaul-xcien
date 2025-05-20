@@ -5,81 +5,122 @@ import { Node } from "@/types/Node";
 const nodes: Node[] = [
   // Carriers
   {
-    data: { id: "movistar", name: "Carrier\nMovistar" },
+    data: {
+      id: "movistar",
+      name: "Carrier\nMovistar",
+      clients: [
+        {
+          id: "movistarClient1",
+          name: "Movistar Client 1",
+          soldCapacity: 1000,
+          usage: 300,
+        },
+        {
+          id: "movistarClient2",
+          name: "Movistar Client 2",
+          soldCapacity: 1000,
+          usage: 300,
+        },
+        {
+          id: "movistarClient3",
+          name: "Movistar Client 3",
+          soldCapacity: 1000,
+          usage: 300,
+        },
+        {
+          id: "movistarClient4",
+          name: "Movistar Client 4",
+          soldCapacity: 1000,
+          usage: 300,
+        },
+      ],
+    },
     position: { x: -100, y: 0 },
     classes: "cloud",
   },
   {
-    data: { id: "fibranet500", name: "Capacidad 500 Mb\nCarrier\nFibranet" },
+    data: {
+      id: "fibranet500",
+      name: "Capacidad 500 Mb\nCarrier\nFibranet",
+      clients: [],
+    },
     position: { x: -400, y: 0 },
     classes: "cloud",
   },
   {
-    data: { id: "fibranet1000", name: "Capacidad 1000 Mb\nCarrier\nFibranet" },
+    data: {
+      id: "fibranet1000",
+      name: "Capacidad 1000 Mb\nCarrier\nFibranet",
+      clients: [],
+    },
     position: { x: 100, y: 0 },
     classes: "cloud",
   },
 
   // Core routers
   {
-    data: { id: "coreBorderPDN", name: "Core Border\nPiedras Negras" },
+    data: {
+      id: "coreBorderPDN",
+      name: "Core Border\nPiedras Negras",
+      clients: [],
+    },
     position: { x: 0, y: 100 },
     classes: "router",
   },
   {
-    data: { id: "coreMorelos", name: "Core Morelos" },
+    data: { id: "coreMorelos", name: "Core Morelos", clients: [] },
     position: { x: 200, y: 350 },
     classes: "router",
   },
   {
-    data: { id: "coreVillaUnion", name: "Core Villa Unión" },
+    data: { id: "coreVillaUnion", name: "Core Villa Unión", clients: [] },
     position: { x: 300, y: 350 },
     classes: "router",
   },
   {
-    data: { id: "coreTelco", name: "Core Telco" },
+    data: { id: "coreTelco", name: "Core Telco", clients: [] },
     position: { x: 250, y: 100 },
     classes: "router",
   },
   {
-    data: { id: "coreApolo", name: "Core Apolo" },
+    data: { id: "coreApolo", name: "Core Apolo", clients: [] },
     position: { x: -200, y: 250 },
     classes: "router",
   },
   {
-    data: { id: "coreAcuna", name: "Core Acuña" },
+    data: { id: "coreAcuna", name: "Core Acuña", clients: [] },
     position: { x: -400, y: 150 },
     classes: "router",
   },
   {
-    data: { id: "coreSispa", name: "Core Sispa" },
+    data: { id: "coreSispa", name: "Core Sispa", clients: [] },
     position: { x: 0, y: 400 },
     classes: "router",
   },
   {
-    data: { id: "coreMTPGuerrero", name: "Core MTP\nGuerrero" },
+    data: { id: "coreMTPGuerrero", name: "Core MTP\nGuerrero", clients: [] },
     position: { x: 300, y: 450 },
     classes: "router",
   },
 
   // Switches
   {
-    data: { id: "swPoEPDN", name: "SW PoE\nPDN" },
+    data: { id: "swPoEPDN", name: "SW PoE\nPDN", clients: [] },
     position: { x: 0, y: 200 },
     classes: "switch",
   },
   {
-    data: { id: "swRB2011Sispa", name: "SW RB2011\nSispa" },
+    data: { id: "swRB2011Sispa", name: "SW RB2011\nSispa", clients: [] },
     position: { x: 70, y: 350 },
     classes: "switch",
   },
   {
-    data: { id: "swPoESanCarlos", name: "SW PoE\nSan Carlos" },
+    data: { id: "swPoESanCarlos", name: "SW PoE\nSan Carlos", clients: [] },
     position: { x: -200, y: 400 },
     classes: "switch",
   },
   {
-    data: { id: "swPoEAcuna", name: "SW PoE\nAcuña" },
+    data: { id: "swPoEAcuna", name: "SW PoE\nAcuña", clients: [] },
     position: { x: -400, y: 250 },
     classes: "switch",
   },
@@ -98,6 +139,8 @@ const edges: Edge[] = [
       id: "movistar-coreBorderPDN",
       source: "movistar",
       target: "coreBorderPDN",
+      capacity: 700,
+      usage: 500,
     },
   },
   {

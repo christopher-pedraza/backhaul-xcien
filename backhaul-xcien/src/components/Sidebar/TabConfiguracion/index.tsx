@@ -1,72 +1,59 @@
-import { Button, useDisclosure } from "@heroui/react";
+import {
+  Button,
+  useDisclosure,
+  ScrollShadow,
+  Card,
+  CardBody,
+  CardHeader,
+  Divider,
+} from "@heroui/react";
 import { useCyContext } from "@/hooks/useCyContext";
 import { useState, useEffect } from "react";
 
 // Components
 import TabInput from "../TabInput";
 import ConfirmationModal from "../ConfirmationModal";
+import ChangeNameModal from "../ChangeNameModal";
+import AddClientModal from "../AddClientModal";
+import ModifyClientModal from "../ModifyClientModal";
+
+// Types
+import { Client } from "@/types/Client";
+
+// Icons
+import PencilIcon from "../Icons/PencilIcon";
+import { PlusCircleIcon } from "lucide-react";
 
 interface TabConfiguracionProps {
   selectedNode: string;
-  isOpen: boolean;
+  selectedType: string;
 }
 
-export default function TabConfiguracion({
-  selectedNode,
-}: TabConfiguracionProps) {
-  const { cy } = useCyContext();
-  if (!cy) return null;
-
-  const {
-    isOpen: isOpenConfirmation,
-    onOpen: onOpenConfirmation,
-    onOpenChange: onOpenChangeConfirmation,
-  } = useDisclosure();
-
-  const [node_data, setNodeData] = useState(null);
-  const [usage, setUsage] = useState("");
-  const [capacity, setCapacity] = useState("");
-  const [sold_capacity, setSoldCapacity] = useState("");
-  const [name, setName] = useState("");
-
-  const [lastUsage, setLastUsage] = useState("");
-  const [lastCapacity, setLastCapacity] = useState("");
-  const [lastSoldCapacity, setLastSoldCapacity] = useState("");
-
+function EdgeTab({
+  usage,
+  setUsage,
+  lastUsage,
+  capacity,
+  setCapacity,
+  lastCapacity,
+  onOpenConfirmation,
+}: {
+  usage: string;
+  setUsage: (v: string) => void;
+  lastUsage: string;
+  capacity: string;
+  setCapacity: (v: string) => void;
+  lastCapacity: string;
+  onOpenConfirmation: () => void;
+}) {
   const errorsUsage: Array<string> = [];
   const errorsCapacity: Array<string> = [];
-  const errorsSoldCapacity: Array<string> = [];
 
-  // Resetear los datos del nodo cuando se cierra el sidebar
-  //   useEffect(() => {
-  //     if (!isOpen) {
-  //       setNodeData(null);
-  //       setUsage(lastUsage);
-  //       setCapacity(lastCapacity);
-  //       setSoldCapacity(lastSoldCapacity);
-  //     }
-  //   }, [isOpen]);
-
-  useEffect(() => {
-    const node = cy.getElementById(selectedNode);
-    if (node) {
-      setNodeData(node.data());
+  const saveEdgeConfiguration = () => {
+    if (errorsUsage.length === 0 && errorsCapacity.length === 0) {
+      onOpenConfirmation();
     }
-  }, [selectedNode, cy]);
-
-  useEffect(() => {
-    if (node_data) {
-      setUsage(node_data["usage"] || "");
-      setCapacity(node_data["capacity"] || "");
-      setSoldCapacity(node_data["sold_capacity"] || "");
-      setName(node_data["name"] || "");
-
-      // Guardar los valores anteriores para comparar
-      setLastUsage(node_data["usage"] || "");
-      setLastCapacity(node_data["capacity"] || "");
-      setLastSoldCapacity(node_data["sold_capacity"] || "");
-    }
-  }, [node_data]);
+  };
 
   if (usage === "") {
     errorsUsage.push("El campo 'Uso' es obligatorio");
@@ -86,62 +73,20 @@ export default function TabConfiguracion({
     errorsCapacity.push("El campo 'Capacidad' no puede ser negativo");
   }
 
-  if (sold_capacity === "") {
-    errorsSoldCapacity.push("El campo 'Capacidad vendida' es obligatorio");
-  } else if (isNaN(Number(sold_capacity))) {
-    errorsSoldCapacity.push("El campo 'Capacidad vendida' debe ser un número");
-  } else if (Number(sold_capacity) < 0) {
-    errorsSoldCapacity.push(
-      "El campo 'Capacidad vendida' no puede ser negativo",
-    );
-  }
-
-  const saveConfiguration = () => {
-    if (
-      errorsUsage.length === 0 &&
-      errorsCapacity.length === 0 &&
-      errorsSoldCapacity.length === 0
-    ) {
-      onOpenConfirmation();
-    }
-  };
-
-  const confirmSaveConfiguration = () => {
-    cy.getElementById(selectedNode).data({
-      usage: usage,
-      capacity: capacity,
-      sold_capacity: sold_capacity,
-      name: name,
-    });
-    setLastUsage(usage);
-    setLastCapacity(capacity);
-    setLastSoldCapacity(sold_capacity);
-  };
-
-  const cancelSaveConfiguration = () => {
-    // setUsage(lastUsage);
-    // setCapacity(lastCapacity);
-    // setSoldCapacity(lastSoldCapacity);
-  };
-
   var shouldDisableButton =
     errorsUsage.length > 0 ||
     errorsCapacity.length > 0 ||
-    errorsSoldCapacity.length > 0 ||
-    (usage == lastUsage &&
-      capacity == lastCapacity &&
-      sold_capacity == lastSoldCapacity);
+    (usage == lastUsage && capacity == lastCapacity);
 
   return (
-    <div className="flex flex-col items-center p-4 h-full">
-      <h1 className="text-2xl font-bold mb-4">{name}</h1>
-
+    <>
       <TabInput
         label="Uso"
         value={usage}
         setValue={setUsage}
         errors={errorsUsage}
         hasChanges={usage != lastUsage}
+        isReadOnly={true}
       />
       <TabInput
         label="Capacidad"
@@ -150,16 +95,8 @@ export default function TabConfiguracion({
         errors={errorsCapacity}
         hasChanges={capacity != lastCapacity}
       />
-      <TabInput
-        label="Capacidad vendida"
-        value={sold_capacity}
-        setValue={setSoldCapacity}
-        errors={errorsSoldCapacity}
-        hasChanges={sold_capacity != lastSoldCapacity}
-      />
-
       <Button
-        onPress={saveConfiguration}
+        onPress={saveEdgeConfiguration}
         className="w-3/4"
         variant={shouldDisableButton ? "faded" : "ghost"}
         color={shouldDisableButton ? "default" : "primary"}
@@ -167,6 +104,214 @@ export default function TabConfiguracion({
       >
         Guardar
       </Button>
+    </>
+  );
+}
+interface NodeTabProps {
+  clients: Array<Client>;
+  onOpenChangeAddClient: () => void;
+  onOpenChangeModifyClient: () => void;
+  setSelectedClient: (client: Client | null) => void;
+}
+
+function NodeTab({
+  clients,
+  onOpenChangeAddClient,
+  onOpenChangeModifyClient,
+  setSelectedClient,
+}: NodeTabProps) {
+  return (
+    <>
+      <Card className="w-full h-[400px]">
+        <CardHeader className="relative text-xl font-bold flex flex-col items-center justify-center">
+          <p>Clientes</p>
+          <Button
+            className="absolute right-2 top-1/8 bg-transparent"
+            isIconOnly
+            onPress={onOpenChangeAddClient}
+          >
+            <PlusCircleIcon />
+          </Button>
+        </CardHeader>
+        <Divider />
+        <CardBody>
+          {clients.length > 0 ? (
+            <ScrollShadow className="overflow-y-auto">
+              {clients.map((client, index) => (
+                <Card className="h-min-[100px] m-4 p-3 relative" key={index}>
+                  <p className="text-lg font-bold">{client.name}</p>
+                  <p className="text-medium">
+                    <strong>Capacidad vendida: </strong>
+                    {client.soldCapacity}
+                  </p>
+                  <p className="text-medium">
+                    <strong> Uso: </strong>
+                    {client.usage}
+                  </p>
+                  <Button
+                    className="absolute right-0 top-0 bg-transparent"
+                    isIconOnly
+                    onPress={() => {
+                      setSelectedClient(client);
+                      onOpenChangeModifyClient();
+                    }}
+                    key={index + 100}
+                  >
+                    <PencilIcon />
+                  </Button>
+                </Card>
+              ))}
+            </ScrollShadow>
+          ) : (
+            <div className="w-full h-full flex flex-col justify-center items-center">
+              <p className="text-lg">El nodo no cuenta con clientes.</p>
+            </div>
+          )}
+        </CardBody>
+      </Card>
+    </>
+  );
+}
+
+export default function TabConfiguracion({
+  selectedNode,
+  selectedType,
+}: TabConfiguracionProps) {
+  const { cy } = useCyContext();
+  if (!cy) return null;
+
+  const {
+    isOpen: isOpenConfirmation,
+    onOpen: onOpenConfirmation,
+    onOpenChange: onOpenChangeConfirmation,
+  } = useDisclosure();
+
+  const {
+    isOpen: isOpenName,
+    // onOpen: onOpenName,
+    onOpenChange: onOpenChangeName,
+  } = useDisclosure();
+
+  const {
+    isOpen: isOpenAddClient,
+    // onOpen: onOpenAddClient,
+    onOpenChange: onOpenChangeAddClient,
+  } = useDisclosure();
+
+  const {
+    isOpen: isOpenModifyClient,
+    // onOpen: onOpenModifyClient,
+    onOpenChange: onOpenChangeModifyClient,
+  } = useDisclosure();
+
+  const [node_data, setNodeData] = useState(null);
+  const [usage, setUsage] = useState("");
+  const [capacity, setCapacity] = useState("");
+  const [name, setName] = useState("");
+  const [clients, setClients] = useState<Array<Client>>([]);
+
+  const [lastUsage, setLastUsage] = useState("");
+  const [lastCapacity, setLastCapacity] = useState("");
+
+  const [selectedClient, setSelectedClient] = useState<Client | null>(null);
+
+  useEffect(() => {
+    const node = cy.getElementById(selectedNode);
+    if (node) {
+      setNodeData(node.data());
+    }
+  }, [selectedNode, cy]);
+
+  useEffect(() => {
+    if (!node_data) {
+      return;
+    }
+
+    if (selectedType == "node") {
+      setName(node_data["name"] || "");
+      setClients(node_data["clients"] || []);
+    } else if (selectedType == "edge") {
+      setName(node_data["id"]);
+      setUsage(node_data["usage"] || "");
+      setCapacity(node_data["capacity"] || "");
+      setLastUsage(node_data["usage"] || "");
+      setLastCapacity(node_data["capacity"] || "");
+    }
+  }, [node_data]);
+
+  const confirmSaveConfiguration = () => {
+    cy.getElementById(selectedNode).data({
+      usage: usage,
+      capacity: capacity,
+      name: name,
+    });
+    setLastUsage(usage);
+    setLastCapacity(capacity);
+  };
+
+  const confirmSaveName = (newName: string) => {
+    cy.getElementById(selectedNode).data({
+      name: newName,
+    });
+    setName(newName);
+  };
+
+  const confirmAddClient = (client: Client) => {
+    const newClients = [...clients, client];
+    setClients(newClients);
+    cy.getElementById(selectedNode).data({
+      clients: newClients,
+    });
+  };
+
+  const confirmModifyClient = (client: Client) => {
+    const newClients = clients.map((c) => {
+      if (c.id === client.id) {
+        return client;
+      }
+      return c;
+    });
+    setClients(newClients);
+    cy.getElementById(selectedNode).data({
+      clients: newClients,
+    });
+  };
+
+  const cancelSaveConfiguration = () => {
+    // setUsage(lastUsage);
+    // setCapacity(lastCapacity);
+  };
+
+  return (
+    <div className="flex flex-col items-center p-4 h-full">
+      <Button
+        endContent={<PencilIcon />}
+        className="bg-transparent mb-4"
+        onPress={onOpenChangeName}
+      >
+        <h1 className="text-2xl font-bold text-ellipsis whitespace-nowrap overflow-hidden max-w-[300px]">
+          {name}
+        </h1>
+      </Button>
+
+      {selectedType == "node" ? (
+        <NodeTab
+          clients={clients}
+          onOpenChangeAddClient={onOpenChangeAddClient}
+          onOpenChangeModifyClient={onOpenChangeModifyClient}
+          setSelectedClient={setSelectedClient}
+        />
+      ) : selectedType == "edge" ? (
+        <EdgeTab
+          usage={usage}
+          setUsage={setUsage}
+          lastUsage={lastUsage}
+          capacity={capacity}
+          setCapacity={setCapacity}
+          lastCapacity={lastCapacity}
+          onOpenConfirmation={onOpenConfirmation}
+        />
+      ) : null}
 
       <ConfirmationModal
         isOpen={isOpenConfirmation}
@@ -174,6 +319,26 @@ export default function TabConfiguracion({
         onOpenChange={onOpenChangeConfirmation}
         onConfirm={confirmSaveConfiguration}
         onCancel={cancelSaveConfiguration}
+      />
+
+      <ChangeNameModal
+        isOpen={isOpenName}
+        onOpenChange={onOpenChangeName}
+        onConfirm={confirmSaveName}
+        name={name}
+      />
+
+      <AddClientModal
+        isOpen={isOpenAddClient}
+        onOpenChange={onOpenChangeAddClient}
+        onConfirm={confirmAddClient}
+      />
+
+      <ModifyClientModal
+        isOpen={isOpenModifyClient}
+        onOpenChange={onOpenChangeModifyClient}
+        onConfirm={confirmModifyClient}
+        selectedClient={selectedClient}
       />
     </div>
   );

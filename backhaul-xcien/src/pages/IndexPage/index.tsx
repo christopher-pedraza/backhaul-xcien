@@ -24,6 +24,7 @@ const IndexPage: FC<Props> = () => {
 
   const [isSidebarOpen, setSidebarIsOpen] = useState(false);
   const [selectedNode, setSelectedNode] = useState<string | null>(null);
+  const [selectedType, setSelectedType] = useState<string | null>(null);
 
   // Node modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -55,13 +56,15 @@ const IndexPage: FC<Props> = () => {
     cy.on("tap", "node", (event) => {
       const id = event.target.id();
       setSelectedNode(id);
+      setSelectedType("node");
       if (!isSidebarOpen) setSidebarIsOpen(true);
     });
-    // cy.on("tap", "edge", (event) => {
-    //   const id = event.target.id();
-    //   setSelectedNode(id);
-    //   if (!isSidebarOpen) setSidebarIsOpen(true);
-    // });
+    cy.on("tap", "edge", (event) => {
+      const id = event.target.id();
+      setSelectedNode(id);
+      setSelectedType("edge");
+      if (!isSidebarOpen) setSidebarIsOpen(true);
+    });
   }
 
   const addNode = () => setIsModalOpen(true);
@@ -162,7 +165,8 @@ const IndexPage: FC<Props> = () => {
       <Sidebar
         isOpen={isSidebarOpen}
         setIsOpen={setSidebarIsOpen}
-        selectedNode={selectedNode}
+        selectedNode={selectedNode || ""}
+        selectedType={selectedType || ""}
       />
 
       <NodeModal
