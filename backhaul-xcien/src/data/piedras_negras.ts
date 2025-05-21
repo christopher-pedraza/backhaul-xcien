@@ -132,6 +132,8 @@ const edges: Edge[] = [
       id: "carrier1000_coreBorderPDN",
       source: "fibranet1000",
       target: "coreBorderPDN",
+      capacity: 10,
+      usage: 0,
     },
   },
   {
@@ -148,6 +150,8 @@ const edges: Edge[] = [
       id: "fibranet500-coreAcuna",
       source: "fibranet500",
       target: "coreAcuna",
+      capacity: 10,
+      usage: 0,
     },
   },
   {
@@ -155,6 +159,8 @@ const edges: Edge[] = [
       id: "coreBorderPDN-swPoEPDN",
       source: "coreBorderPDN",
       target: "swPoEPDN",
+      capacity: 10,
+      usage: 0,
     },
   },
   {
@@ -207,6 +213,8 @@ const edges: Edge[] = [
       id: "RF_B5C_Acuña-Apolo",
       source: "coreAcuna",
       target: "swPoEAcuna",
+      capacity: 10,
+      usage: 0,
     },
   },
   {
@@ -223,6 +231,8 @@ const edges: Edge[] = [
       id: "CoreSispa-SwSispa",
       source: "coreSispa",
       target: "swRB2011Sispa",
+      capacity: 10,
+      usage: 0,
     },
   },
   {
