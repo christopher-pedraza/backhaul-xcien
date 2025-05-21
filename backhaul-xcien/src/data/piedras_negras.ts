@@ -90,7 +90,10 @@ const nodes: Node[] = [
     classes: "switch",
   },
   {
-    data: { id: "swPoESanCarlos", name: "SW PoE\nSan Carlos", clients: [
+    data: {
+      id: "swPoESanCarlos",
+      name: "SW PoE\nSan Carlos",
+      clients: [
         {
           id: "movistarClient1",
           name: "Movistar Client 1",
@@ -115,7 +118,8 @@ const nodes: Node[] = [
           soldCapacity: 1000,
           usage: 300,
         },
-      ] },
+      ],
+    },
     position: { x: -200, y: 400 },
     classes: "switch",
   },
