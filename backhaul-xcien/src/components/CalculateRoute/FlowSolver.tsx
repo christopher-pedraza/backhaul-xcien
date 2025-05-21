@@ -187,21 +187,20 @@ export const useFlowSolver = () => {
 
   useEffect(() => {
     if (!solution || !graph?.cy) return;
-    
+
     const cy = graph.cy;
-    
+
     // Apply the flow values as usage
     for (const { from, to, flow } of solution.flows) {
       const edge = cy.edges(`[source="${from}"][target="${to}"]`);
-      
+
       if (edge.length === 0) continue;
-      
+
       edge.data("usage", flow);
     }
-    
+
     // Update the visualization
     cy.style().update();
-    
   }, [solution, graph?.cy]); // Only run when solution or cy changes
 
   // const changeGraph = useCallback(() => {
@@ -219,14 +218,14 @@ export const useFlowSolver = () => {
   //   for (const { from, to, flow } of solution.flows) {
   //     // Find the corresponding edge in the cytoscape graph
   //     const edge = cy.edges(`[source="${from}"][target="${to}"]`);
-      
+
   //     if (edge.length === 0) {
   //       continue
   //     }
 
   //     edge.data("usage", flow);
   //   }
-    
+
   //   // Update the visualization
   //   cy.style().update();
 
