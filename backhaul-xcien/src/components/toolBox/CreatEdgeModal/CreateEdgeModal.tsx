@@ -29,7 +29,7 @@ const CreateEdgeModal: FC<CreateEdgeModal> = ({
   setUsage,
   handleCreateLink,
   availableNodes,
-  error
+  error,
 }) => {
   if (!isOpen) return null;
 
@@ -44,7 +44,10 @@ const CreateEdgeModal: FC<CreateEdgeModal> = ({
       className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center modal-overlay z-50"
       onClick={handleClickOutside}
     >
-      <div className="bg-white p-6 rounded shadow-lg w-96" onClick={(e) => e.stopPropagation()}>
+      <div
+        className="bg-white p-6 rounded shadow-lg w-96"
+        onClick={(e) => e.stopPropagation()}
+      >
         <h3 className="text-xl mb-4 font-semibold">Create Link</h3>
 
         {error && <div className="text-red-500 text-sm mb-2">{error}</div>}
@@ -60,7 +63,9 @@ const CreateEdgeModal: FC<CreateEdgeModal> = ({
         >
           <option value="">Select source</option>
           {availableNodes.map((id) => (
-            <option key={id} value={id}>{id}</option>
+            <option key={id} value={id}>
+              {id}
+            </option>
           ))}
         </select>
 
@@ -75,7 +80,9 @@ const CreateEdgeModal: FC<CreateEdgeModal> = ({
         >
           <option value="">Select target</option>
           {availableNodes.map((id) => (
-            <option key={id} value={id}>{id}</option>
+            <option key={id} value={id}>
+              {id}
+            </option>
           ))}
         </select>
 
