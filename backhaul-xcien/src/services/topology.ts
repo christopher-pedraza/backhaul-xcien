@@ -3,7 +3,6 @@ import { get, ref } from "firebase/database";
 import { rtdb } from "@/firebaseConfig";
 import { CytoscapeOptions } from "cytoscape";
 
-
 interface TopologyOption {
   id: string;
   name: string;
@@ -20,7 +19,7 @@ export const getTopologyOptions = async (): Promise<TopologyOption[]> => {
 
     const name = c.val() as string;
 
-    options.push({ id, name })
+    options.push({ id, name });
   });
 
   return options;
@@ -56,7 +55,7 @@ export const getTopologyById = async (id: string): Promise<Topology> => {
         source: edge.source,
         target: edge.target,
         capacity: edge.capacity,
-        usage: edge.usage
+        usage: edge.usage,
       },
     }),
   );
