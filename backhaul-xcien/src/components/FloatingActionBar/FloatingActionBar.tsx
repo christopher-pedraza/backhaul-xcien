@@ -1,7 +1,8 @@
-import { Plus, Trash, Play } from "lucide-react";
+import { Plus, Trash, Play, TestTube } from "lucide-react";
 import { FC, useState } from "react";
 
 import CalculateRouteModal from "../CalculateRoute/CalculateRouteModal";
+import { useFlowSolver } from "../CalculateRoute/FlowSolver";
 
 const BottomActions: FC<{
   onCreateNode: () => void;
@@ -9,6 +10,7 @@ const BottomActions: FC<{
   onDelete: () => void;
 }> = ({ onCreateNode, onCreateEdge, onDelete }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const {solutions, loading, error, computeFlow} = useFlowSolver()
 
   const closeDropdown = () => {
     setTimeout(() => {
@@ -20,6 +22,16 @@ const BottomActions: FC<{
       }
     }, 100);
   };
+
+  const onTest = async () => {
+    try {
+      const results = await computeFlow();
+      console.log("Flow calculation results:", results);
+      // Here you could display results or update the graph visually
+    } catch (err) {
+      console.error("Error calculating route:", err);
+    }
+  }
 
   return (
     <>
@@ -87,6 +99,13 @@ const BottomActions: FC<{
             onClick={onDelete}
           >
             <Trash size={20} />
+          </button>
+
+          <button
+            className="p-2 rounded-full bg-gray-500 text-white hover:bg-gray-600"
+            onClick={onTest}
+          >
+            <TestTube size={20} />
           </button>
         </div>
       </div>
