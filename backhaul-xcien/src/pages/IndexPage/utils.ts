@@ -28,7 +28,6 @@ export const getBottomLeftPosition = (cy: Core): { x: number; y: number } => {
   return { x, y };
 };
 
-
 export function getRandomPosition(cy: Core): { x: number; y: number } {
   const RADIUS = 40;
 

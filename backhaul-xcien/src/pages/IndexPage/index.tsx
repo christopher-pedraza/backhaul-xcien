@@ -146,17 +146,17 @@ const IndexPage: FC<Props> = () => {
 
     setError(null);
 
-  cy.add({
-    group: "nodes",
-    data: {
-      id: nodeId,
-      name: newNodeId,
-      capacity,
-      usage,
-    },
-    classes: selectedNodeType, // ✅ Esto es clave
-    position: getBottomLeftPosition(cy),
-  });
+    cy.add({
+      group: "nodes",
+      data: {
+        id: nodeId,
+        name: newNodeId,
+        capacity,
+        usage,
+      },
+      classes: selectedNodeType, // ✅ Esto es clave
+      position: getBottomLeftPosition(cy),
+    });
 
     // Crear enlaces con los nodos seleccionados
     selectedNodes.forEach((targetId) => {
