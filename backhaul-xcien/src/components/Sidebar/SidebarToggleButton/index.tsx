@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Tooltip } from "@heroui/react";
+import { Button } from "@heroui/react";
 
 interface SidebarCloseButtonProps {
   onPress: () => void;
