@@ -15,6 +15,41 @@ import DeleteConfirmModal from "@/components/toolBox/DeleteConfirmModal/DeleteCo
 
 interface Props {}
 
+// 🔢 Función auxiliar: Devuelve el siguiente índice disponible para un enlace
+function getNextEdgeIndex(source: string, target: string, cy: any): number {
+  if (!cy) return 1;
+
+  const existingEdges = cy.edges().filter((edge: any) => {
+    const edgeSource = edge.data("source");
+    const edgeTarget = edge.data("target");
+
+    return (
+      (edgeSource === source && edgeTarget === target) ||
+      (edgeSource === target && edgeTarget === source)
+    );
+  });
+
+  return existingEdges.length + 1;
+}
+
+// 🔍 Función auxiliar: Verifica si ya existe un nodo con ese NOMBRE
+const normalizeName = (name: string): string => {
+  return name.replace(/\s+/g, "").toLowerCase(); // Elimina todos los espacios y convierte a minúsculas
+};
+
+const nodeNameExists = (name: string, cy: any): boolean => {
+  if (!cy || !name.trim()) return false;
+
+  const normalizedNameToCheck = normalizeName(name);
+
+  const exists = cy.nodes().some((node: any) => {
+    const nodeName = node.data("name") || node.id();
+    return normalizeName(nodeName) === normalizedNameToCheck;
+  });
+
+  return exists;
+};
+
 const IndexPage: FC<Props> = () => {
   const { cy } = useCyContext();
   const { topologyOptions, isLoading: isLoadingTopologyOptions } =
@@ -44,7 +79,12 @@ const IndexPage: FC<Props> = () => {
   // Delete modal state
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
-  const availableNodes = cy ? cy.nodes().map((node) => node.id()) : [];
+  const availableNodes = cy
+    ? cy.nodes().map((node) => ({
+        id: node.id(),
+        name: node.data("name") || node.id(),
+      }))
+    : [];
 
   // Set the topology when the selectedTopologyId changes
   useEffect(() => {
@@ -52,12 +92,9 @@ const IndexPage: FC<Props> = () => {
 
     cy.json({ elements: selectedTopology.elements });
     cy.fit(undefined, 50);
-
-    console.log("Topology set:", selectedTopology);
-    console.log("Cy elements:", cy.elements().jsons());
   }, [selectedTopology, cy]);
 
-  // Set event listeners for node and edge taps with proper cleanup
+  // Event listeners for node and edge taps
   useEffect(() => {
     if (!cy) return;
 
@@ -78,7 +115,6 @@ const IndexPage: FC<Props> = () => {
     cy.on("tap", "node", handleNodeTap);
     cy.on("tap", "edge", handleEdgeTap);
 
-    // Cleanup listeners on unmount or when cy changes
     return () => {
       cy.off("tap", "node", handleNodeTap);
       cy.off("tap", "edge", handleEdgeTap);
@@ -90,20 +126,25 @@ const IndexPage: FC<Props> = () => {
 
   const handleCreateNode = () => {
     if (!cy || !newNodeId.trim()) {
-      setError("El ID del nodo es obligatorio");
+      setError("El nombre del nodo es obligatorio");
       return;
     }
 
-    if (cy.getElementById(newNodeId).length > 0) {
-      setError("Ya existe un nodo con ese ID");
+    if (nodeNameExists(newNodeId, cy)) {
+      setError("Ya existe un nodo con este nombre");
       return;
     }
+
+    // ✅ Generamos un ID único incluso si el nombre se repite
+    const nodeId = `node-${Date.now()}`;
 
     setError(null);
+
+    // Añadimos el nodo con nombre personalizado
     cy.add({
       group: "nodes",
       data: {
-        id: newNodeId,
+        id: nodeId,
         name: newNodeId,
         capacity,
         usage,
@@ -113,13 +154,15 @@ const IndexPage: FC<Props> = () => {
 
     // Crear enlaces con los nodos seleccionados
     selectedNodes.forEach((targetId) => {
-      const edgeId = `${newNodeId}-${targetId}`;
+      const index = getNextEdgeIndex(nodeId, targetId, cy);
+      const edgeId = `${nodeId}-${targetId}-${index}`;
+
       if (!cy.getElementById(edgeId).length) {
         cy.add({
           group: "edges",
           data: {
             id: edgeId,
-            source: newNodeId,
+            source: nodeId,
             target: targetId,
             capacity,
             usage,
@@ -141,13 +184,16 @@ const IndexPage: FC<Props> = () => {
       return;
     }
 
-    const edgeId = `${sourceNode}-${targetNode}`;
-    if (cy.getElementById(edgeId).length > 0) {
-      setError("Ya existe una conexión entre estos nodos");
+    if (sourceNode === targetNode) {
+      setError("Origen y destino no pueden ser el mismo nodo");
       return;
     }
 
+    const index = getNextEdgeIndex(sourceNode, targetNode, cy);
+    const edgeId = `${sourceNode}-${targetNode}-${index}`;
+
     setError(null);
+
     cy.add({
       group: "edges",
       data: {
@@ -198,18 +244,14 @@ const IndexPage: FC<Props> = () => {
         selectedType={selectedType || ""}
       />
 
+      {/* Modal para crear nodo */}
       <CreateNodeModal
         isOpen={isModalOpen}
         setIsOpen={setIsModalOpen}
         newNodeId={newNodeId}
         setNewNodeId={setNewNodeId}
-        capacity={capacity}
-        setCapacity={setCapacity}
-        usage={usage}
-        setUsage={setUsage}
-        selectedNodes={selectedNodes}
-        setSelectedNodes={setSelectedNodes}
         handleCreateNode={handleCreateNode}
+        nodeExists={newNodeId.trim() !== "" && nodeNameExists(newNodeId, cy)}
         error={error}
         setError={setError}
       />
@@ -231,7 +273,7 @@ const IndexPage: FC<Props> = () => {
         setError={setError}
       />
 
-      {/* Aquí usamos el componente externo DeleteConfirmModal */}
+      {/* Delete Confirm Modal */}
       <DeleteConfirmModal
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
@@ -244,7 +286,7 @@ const IndexPage: FC<Props> = () => {
         onCreateNode={addNode}
         onCreateEdge={addEdge}
         onDelete={() => setIsDeleteModalOpen(true)}
-        isDeleteDisabled={!selectedNode} // Deshabilita si no hay nodo seleccionado
+        isDeleteDisabled={!selectedNode}
       />
     </div>
   );

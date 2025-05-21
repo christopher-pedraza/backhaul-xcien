@@ -11,6 +11,12 @@ import {
   SelectItem,
 } from "@heroui/react";
 
+// 🔁 Tipo para opciones del dropdown
+interface NodeOption {
+  id: string;
+  name: string;
+}
+
 interface CreateEdgeModalProps {
   isOpen: boolean;
   setIsOpen: (value: boolean) => void;
@@ -23,7 +29,7 @@ interface CreateEdgeModalProps {
   usage: string;
   setUsage: (value: string) => void;
   handleCreateLink: () => void;
-  availableNodes: string[];
+  availableNodes: NodeOption[];
 }
 
 const CreateEdgeModal: FC<CreateEdgeModalProps> = ({
@@ -56,6 +62,7 @@ const CreateEdgeModal: FC<CreateEdgeModalProps> = ({
       <ModalContent>
         <ModalHeader>Crear enlace</ModalHeader>
         <ModalBody className="space-y-4">
+          {/* Nodo Origen */}
           <Select
             isRequired
             label="Nodo origen"
@@ -66,12 +73,14 @@ const CreateEdgeModal: FC<CreateEdgeModalProps> = ({
             }}
           >
             {availableNodes.map((node) => (
-              <SelectItem key={node} value={node}>
-                {node}
+              <SelectItem key={node.id} value={node.id}>
+                {node.name}
+                {/* O usa <span className="whitespace-pre-line">{node.name}</span> si quieres saltos */}
               </SelectItem>
             ))}
           </Select>
 
+          {/* Nodo Destino */}
           <Select
             isRequired
             label="Nodo destino"
@@ -82,12 +91,13 @@ const CreateEdgeModal: FC<CreateEdgeModalProps> = ({
             }}
           >
             {availableNodes.map((node) => (
-              <SelectItem key={node} value={node}>
-                {node}
+              <SelectItem key={node.id} value={node.id}>
+                {node.name}
               </SelectItem>
             ))}
           </Select>
 
+          {/* Capacidad */}
           <Input
             isRequired
             type="number"
@@ -98,6 +108,7 @@ const CreateEdgeModal: FC<CreateEdgeModalProps> = ({
             onChange={(e) => setCapacity(e.target.value)}
           />
 
+          {/* Uso */}
           <Input
             isRequired
             type="number"
@@ -109,18 +120,10 @@ const CreateEdgeModal: FC<CreateEdgeModalProps> = ({
           />
         </ModalBody>
         <ModalFooter>
-          <Button
-            color="default"
-            variant="flat"
-            onPress={() => setIsOpen(false)}
-          >
+          <Button color="default" variant="flat" onPress={() => setIsOpen(false)}>
             Cancelar
           </Button>
-          <Button
-            color="primary"
-            onPress={handleCreateLink}
-            isDisabled={!isFormValid}
-          >
+          <Button color="primary" onPress={handleCreateLink} isDisabled={!isFormValid}>
             Crear enlace
           </Button>
         </ModalFooter>
