@@ -59,7 +59,7 @@ const CreateEdgeModal: FC<CreateEdgeModalProps> = ({
 
   // ✅ Ordena los nodos por nombre alfabéticamente
   const sortedAvailableNodes = [...availableNodes].sort((a, b) =>
-    a.name.localeCompare(b.name, undefined, { sensitivity: 'base' })
+    a.name.localeCompare(b.name, undefined, { sensitivity: "base" }),
   );
 
   return (

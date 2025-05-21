@@ -132,19 +132,19 @@ const IndexPage: FC<Props> = () => {
   const addEdge = () => setIsEdgeModalOpen(true);
 
   const handleCreateNode = () => {
-  if (!cy || !newNodeId.trim()) {
-    setError("El nombre del nodo es obligatorio");
-    return;
-  }
+    if (!cy || !newNodeId.trim()) {
+      setError("El nombre del nodo es obligatorio");
+      return;
+    }
 
-  if (nodeNameExists(newNodeId, cy)) {
-    setError("Ya existe un nodo con este nombre");
-    return;
-  }
+    if (nodeNameExists(newNodeId, cy)) {
+      setError("Ya existe un nodo con este nombre");
+      return;
+    }
 
-  const nodeId = `node-${Date.now()}`;
+    const nodeId = `node-${Date.now()}`;
 
-  setError(null);
+    setError(null);
 
   cy.add({
     group: "nodes",
@@ -158,31 +158,31 @@ const IndexPage: FC<Props> = () => {
     position: getBottomLeftPosition(cy),
   });
 
-  // Crear enlaces con los nodos seleccionados
-  selectedNodes.forEach((targetId) => {
-    const index = getNextEdgeIndex(nodeId, targetId, cy);
-    const edgeId = `${nodeId}-${targetId}-${index}`;
+    // Crear enlaces con los nodos seleccionados
+    selectedNodes.forEach((targetId) => {
+      const index = getNextEdgeIndex(nodeId, targetId, cy);
+      const edgeId = `${nodeId}-${targetId}-${index}`;
 
-    if (!cy.getElementById(edgeId).length) {
-      cy.add({
-        group: "edges",
-        data: {
-          id: edgeId,
-          source: nodeId,
-          target: targetId,
-          capacity,
-          usage,
-        },
-      });
-    }
-  });
+      if (!cy.getElementById(edgeId).length) {
+        cy.add({
+          group: "edges",
+          data: {
+            id: edgeId,
+            source: nodeId,
+            target: targetId,
+            capacity,
+            usage,
+          },
+        });
+      }
+    });
 
-  setNewNodeId("");
-  setCapacity("");
-  setUsage("");
-  setSelectedNodeType("cloud");
-  setIsModalOpen(false);
-};
+    setNewNodeId("");
+    setCapacity("");
+    setUsage("");
+    setSelectedNodeType("cloud");
+    setIsModalOpen(false);
+  };
 
   const handleCreateLink = () => {
     if (!cy || !sourceNode || !targetNode) {
@@ -227,8 +227,8 @@ const IndexPage: FC<Props> = () => {
   };
 
   const elementName = selectedNode
-  ? cy?.getElementById(selectedNode)?.data("name") || selectedNode
-  : "";
+    ? cy?.getElementById(selectedNode)?.data("name") || selectedNode
+    : "";
 
   return (
     <div className="flex-1 flex flex-col bg-dotted relative">
