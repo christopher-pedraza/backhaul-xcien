@@ -1,13 +1,12 @@
 import { FC } from "react";
-import "../CardsChanges/ChangerCard.css"
+import "../CardsChanges/ChangerCard.css";
 
 interface ChangeCardProps {
   title: string;
   type: "success" | "info" | "warning" | "error";
   details?: string[];
   timestamp?: string;
-    cardIndex: number; 
-
+  cardIndex: number;
 }
 
 const ChangeCard: FC<ChangeCardProps> = ({
@@ -35,18 +34,17 @@ const ChangeCard: FC<ChangeCardProps> = ({
   return (
     <div className="outer_container_change-card">
       <div className="flex flex-col gap-2">
-        
         <div className="flex items-center gap-2">
-            {/* ID Box */}
-            <div className={`id-box-change-card ${getTypeColor()} w-6 h-6 flex items-center justify-center rounded-full text-xs font-bold`}>
-                 {cardIndex}
-            </div>
+          {/* ID Box */}
+          <div
+            className={`id-box-change-card ${getTypeColor()} w-6 h-6 flex items-center justify-center rounded-full text-xs font-bold`}
+          >
+            {cardIndex}
+          </div>
 
-            {/* Título */}
-            <h6 className={`titulo-change-card `}>
-                {title}
-            </h6>
-            </div>
+          {/* Título */}
+          <h6 className={`titulo-change-card `}>{title}</h6>
+        </div>
 
         {/* Detalles */}
         {details.length > 0 && (

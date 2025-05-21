@@ -34,7 +34,12 @@ const ChangesList = () => {
       id: 5,
       title: "Cliente agregado",
       type: "success",
-      details: ["OXXO Gas", "Nodo: Carrier Axtel", "Capacidad vendida: 400 → 800", "Uso: 400 → 200"],
+      details: [
+        "OXXO Gas",
+        "Nodo: Carrier Axtel",
+        "Capacidad vendida: 400 → 800",
+        "Uso: 400 → 200",
+      ],
       timestamp: "8:02:38 - 25 de mayo, 2025",
     },
     {
@@ -57,26 +62,24 @@ const ChangesList = () => {
   ];
 
   return (
-<div className="changes-list max-w-2xl mx-auto my-6 relative h-[80vh]">
-  {/* Contenedor con scroll */}
-  <div className="max-h-full overflow-y-auto p-2 space-y-3 relative z-10">
-    {changes.map((change) => (
-  <ChangeCard
-    key={change.id}
-    title={change.title}
-    type={change.type}
-    details={change.details}
-    timestamp={change.timestamp}
-    cardIndex={change.id}
-  />
-))}
-  </div>
+    <div className="changes-list max-w-2xl mx-auto my-6 relative h-[80vh]">
+      {/* Contenedor con scroll */}
+      <div className="max-h-full overflow-y-auto p-2 space-y-3 relative z-10">
+        {changes.map((change) => (
+          <ChangeCard
+            key={change.id}
+            title={change.title}
+            type={change.type}
+            details={change.details}
+            timestamp={change.timestamp}
+            cardIndex={change.id}
+          />
+        ))}
+      </div>
 
-  {/* Degradado al fondo */}
-  <div className="pointer-events-none absolute bottom-0 left-0 w-full h-12 bg-gradient-to-t from-white to-transparent z-20" />
-</div>
-
-
+      {/* Degradado al fondo */}
+      <div className="pointer-events-none absolute bottom-0 left-0 w-full h-12 bg-gradient-to-t from-white to-transparent z-20" />
+    </div>
   );
 };
 
