@@ -78,7 +78,6 @@ const CreateNodeModal: FC<CreateNodeModalProps> = ({
               const [value] = Array.from(keys);
               setSelectedType(value as string);
             }}
-            // ✅ Asegura que muestre el valor seleccionado
             renderValue={() => {
               const selected = nodeTypes.find((t) => t.id === selectedType);
               if (!selected) return "Selecciona un tipo";

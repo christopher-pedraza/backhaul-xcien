@@ -1,9 +1,11 @@
 .navbar {
   display: flex;
   align-items: center;
-  background-color: #051145 !important;
+  background: linear-gradient(180deg, #051145, #1f3a85); /* Degradado de izquierda a derecha */
   color: white;
-  height: 45px !important;
+  height: 50px !important;
+  position: absolute !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Sombra hacia abajo */
 }
 
 .navbar-logo {
@@ -30,7 +32,19 @@
   height: 15px;
   z-index: 99;
   position: relative;
+  border-radius: 100%;
 }
+
+.open-close-button-div2 {
+  width: 100%;
+  background-color: #d3d3d3;
+  cursor: pointer;
+  text-align: center;
+  height: 15px;
+  z-index: 99;
+  position: absolute;
+}
+
 
 .tag-navbar-open-close {
   font-family: "Red Hat Text", sans-serif !important;

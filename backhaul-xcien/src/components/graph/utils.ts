@@ -47,6 +47,7 @@ export const style: CytoscapeOptions["style"] = [
       "text-background-opacity": 1,
       "text-background-color": "#fff",
       "text-background-padding": "2px",
+      "font-family": "Red Hat Text, sans-serif",
     },
   },
 

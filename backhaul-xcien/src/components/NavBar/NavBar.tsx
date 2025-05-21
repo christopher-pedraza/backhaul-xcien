@@ -6,7 +6,6 @@ import { ChevronUp, ChevronDown } from "lucide-react";
 
 const MyNavbar = () => {
   const [visible, setVisible] = useState(true);
-
   const toggleNavbar = () => {
     setVisible(!visible);
   };
@@ -24,14 +23,23 @@ const MyNavbar = () => {
           <div className="navbar-section right">
             <UserBox nombreCompleto="Gerardo Mesa" />
           </div>
+
+          {/* Botón dentro de la navbar */}
+          <div className="open-close-button-div" onClick={toggleNavbar}>
+            <div className="tag-navbar-open-close">
+              {visible ? <ChevronUp size={15} /> : <ChevronDown size={15} />}
+            </div>
+          </div>
         </Navbar>
       </div>
 
-      <div className="open-close-button-div" onClick={toggleNavbar}>
-        <div className="tag-navbar-open-close">
-          {visible ? <ChevronUp size={15} /> : <ChevronDown size={15} />}
+      {!visible && (
+        <div className="open-close-button-div2" onClick={toggleNavbar}>
+          <div className="tag-navbar-open-close">
+            <ChevronDown size={15} />
+          </div>
         </div>
-      </div>
+      )}
     </>
   );
 };
