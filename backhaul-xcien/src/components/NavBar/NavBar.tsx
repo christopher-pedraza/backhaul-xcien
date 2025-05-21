@@ -4,7 +4,6 @@ import "./NavBar.css";
 import UserBox from "../UserBox/UserBox";
 import { ChevronUp, ChevronDown } from "lucide-react";
 
-
 const MyNavbar = () => {
   const [visible, setVisible] = useState(true);
 
@@ -14,8 +13,6 @@ const MyNavbar = () => {
 
   return (
     <>
-      
-
       <div className={`navbar-wrapper ${visible ? "visible" : "hidden"}`}>
         <Navbar className="navbar">
           <div className="navbar-section left" />
@@ -29,13 +26,12 @@ const MyNavbar = () => {
           </div>
         </Navbar>
       </div>
-    	
+
       <div className="open-close-button-div" onClick={toggleNavbar}>
         <div className="tag-navbar-open-close">
-          {visible ? <ChevronUp size={15}  /> : <ChevronDown size={15} />}
+          {visible ? <ChevronUp size={15} /> : <ChevronDown size={15} />}
         </div>
       </div>
-
     </>
   );
 };

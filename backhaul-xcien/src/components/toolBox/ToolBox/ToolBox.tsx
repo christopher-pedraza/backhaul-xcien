@@ -42,7 +42,10 @@ const ToolBox: FC<ToolBoxProps> = ({
         <div className="bg-white p-2 rounded-xl shadow-md flex items-center space-x-4 relative">
           {/* Play button */}
           <div className="relative group">
-            <button className="p-2 rounded-full text-white hover:opacity-90" style={{ backgroundColor: "#32a55e" }}>
+            <button
+              className="p-2 rounded-full text-white hover:opacity-90"
+              style={{ backgroundColor: "#32a55e" }}
+            >
               <Play size={20} />
             </button>
             {/* Dropdown shown on hover */}

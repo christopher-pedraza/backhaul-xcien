@@ -20,8 +20,7 @@ export const style: CytoscapeOptions["style"] = [
       "font-size": 8,
       //"font-family": "Red Hat Mono, monospace",
       "font-weight": 500,
-      "font-family":"Red Hat Text, sans-serif"
-
+      "font-family": "Red Hat Text, sans-serif",
     },
   },
 

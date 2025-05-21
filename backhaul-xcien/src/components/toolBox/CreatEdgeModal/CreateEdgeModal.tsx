@@ -109,10 +109,18 @@ const CreateEdgeModal: FC<CreateEdgeModalProps> = ({
           />
         </ModalBody>
         <ModalFooter>
-          <Button color="default" variant="flat" onPress={() => setIsOpen(false)}>
+          <Button
+            color="default"
+            variant="flat"
+            onPress={() => setIsOpen(false)}
+          >
             Cancelar
           </Button>
-          <Button color="primary" onPress={handleCreateLink} isDisabled={!isFormValid}>
+          <Button
+            color="primary"
+            onPress={handleCreateLink}
+            isDisabled={!isFormValid}
+          >
             Crear enlace
           </Button>
         </ModalFooter>

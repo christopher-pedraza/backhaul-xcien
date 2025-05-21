@@ -1,5 +1,13 @@
 import { FC } from "react";
-import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Button, Input } from "@heroui/react";
+import {
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  Button,
+  Input,
+} from "@heroui/react";
 
 interface CreateNodeModalProps {
   isOpen: boolean;
@@ -30,7 +38,11 @@ const CreateNodeModal: FC<CreateNodeModalProps> = ({
           />
         </ModalBody>
         <ModalFooter>
-          <Button color="default" variant="flat" onPress={() => setIsOpen(false)}>
+          <Button
+            color="default"
+            variant="flat"
+            onPress={() => setIsOpen(false)}
+          >
             Cancelar
           </Button>
           <Button

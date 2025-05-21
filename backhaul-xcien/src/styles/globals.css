@@ -3,7 +3,11 @@
 @tailwind utilities;
 
 .bg-dotted {
-  background-image: radial-gradient(circle, rgba(152, 152, 152, 0.1) 2px, transparent 1.5px);
+  background-image: radial-gradient(
+    circle,
+    rgba(152, 152, 152, 0.1) 2px,
+    transparent 1.5px
+  );
   background-size: 21px 21px;
   background-repeat: repeat;
 }

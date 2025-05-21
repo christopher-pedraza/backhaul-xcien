@@ -1,4 +1,10 @@
-import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button } from "@heroui/react";
+import {
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem,
+  Button,
+} from "@heroui/react";
 import "./UserBox.css";
 
 type UserBox = {
@@ -15,7 +21,7 @@ export default function App({ nombreCompleto }: UserBox) {
   return (
     <Dropdown>
       <DropdownTrigger>
-        <Button className="button_userbox hover:bg-transparent" >
+        <Button className="button_userbox hover:bg-transparent">
           {getNombreFormateado(nombreCompleto)}
         </Button>
       </DropdownTrigger>
@@ -24,5 +30,4 @@ export default function App({ nombreCompleto }: UserBox) {
       </DropdownMenu>
     </Dropdown>
   );
-
 }

@@ -26,7 +26,9 @@ const DeleteConfirmModal: FC<DeleteConfirmModalProps> = ({
   return (
     <Modal isOpen={isOpen} onOpenChange={onClose} placement="center">
       <ModalContent>
-        <ModalHeader>Eliminar {elementType === "node" ? "Nodo" : "Enlace"}</ModalHeader>
+        <ModalHeader>
+          Eliminar {elementType === "node" ? "Nodo" : "Enlace"}
+        </ModalHeader>
 
         <ModalBody className="flex flex-col gap-4">
           <p className="text-gray-700 text-sm leading-relaxed">
