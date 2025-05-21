@@ -10,7 +10,7 @@ const BottomActions: FC<{
   onDelete: () => void;
 }> = ({ onCreateNode, onCreateEdge, onDelete }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const {solutions, loading, error, computeFlow} = useFlowSolver()
+  const { solutions, loading, error, computeFlow } = useFlowSolver();
 
   const closeDropdown = () => {
     setTimeout(() => {
@@ -31,7 +31,7 @@ const BottomActions: FC<{
     } catch (err) {
       console.error("Error calculating route:", err);
     }
-  }
+  };
 
   return (
     <>
