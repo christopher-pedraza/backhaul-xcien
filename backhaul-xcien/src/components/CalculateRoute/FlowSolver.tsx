@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useCyContext } from "@/hooks/useCyContext";
 import GLPK, { LP } from "glpk.js";
 
@@ -15,7 +15,7 @@ export interface FlowSolution {
 }
 
 export const useFlowSolver = () => {
-  const [solutions, setSolutions] = useState<FlowSolution[]>([]);
+  const [solution, setSolution] = useState<FlowSolution>();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -74,7 +74,6 @@ export const useFlowSolver = () => {
       }
 
       const graphData = buildGraphFromCy();
-      console.log(graphData);
 
       const glpk = await GLPK();
       const alpha = 0.7; // Or make this configurable
@@ -173,7 +172,7 @@ export const useFlowSolver = () => {
       const totalCost = result.result.z;
 
       const solution: FlowSolution = { flows, totalCost };
-      setSolutions([solution]);
+      setSolution(solution);
 
       return [solution];
     } catch (err) {
@@ -186,10 +185,58 @@ export const useFlowSolver = () => {
     }
   }, [graph, buildGraphFromCy]);
 
+  useEffect(() => {
+    if (!solution || !graph?.cy) return;
+    
+    const cy = graph.cy;
+    
+    // Apply the flow values as usage
+    for (const { from, to, flow } of solution.flows) {
+      const edge = cy.edges(`[source="${from}"][target="${to}"]`);
+      
+      if (edge.length === 0) continue;
+      
+      edge.data("usage", flow);
+    }
+    
+    // Update the visualization
+    cy.style().update();
+    
+  }, [solution, graph?.cy]); // Only run when solution or cy changes
+
+  // const changeGraph = useCallback(() => {
+  //   if (!graph?.cy) {
+  //     throw new Error("Cytoscape instance not available");
+  //   }
+
+  //   if (!solution) {
+  //     throw new Error("No solution available");
+  //   }
+
+  //   const cy = graph.cy;
+
+  //   // Apply the flow values as usage
+  //   for (const { from, to, flow } of solution.flows) {
+  //     // Find the corresponding edge in the cytoscape graph
+  //     const edge = cy.edges(`[source="${from}"][target="${to}"]`);
+      
+  //     if (edge.length === 0) {
+  //       continue
+  //     }
+
+  //     edge.data("usage", flow);
+  //   }
+    
+  //   // Update the visualization
+  //   cy.style().update();
+
+  // }, [solution]);
+
   return {
-    solutions,
+    solution,
     loading,
     error,
     computeFlow,
+    // changeGraph,
   };
 };

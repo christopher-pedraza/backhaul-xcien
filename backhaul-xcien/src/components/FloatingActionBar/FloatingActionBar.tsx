@@ -10,7 +10,7 @@ const BottomActions: FC<{
   onDelete: () => void;
 }> = ({ onCreateNode, onCreateEdge, onDelete }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { solutions, loading, error, computeFlow } = useFlowSolver();
+  const { solution, loading, error, computeFlow } = useFlowSolver();
 
   const closeDropdown = () => {
     setTimeout(() => {
@@ -26,6 +26,7 @@ const BottomActions: FC<{
   const onTest = async () => {
     try {
       const results = await computeFlow();
+      // changeGraph();
       console.log("Flow calculation results:", results);
       // Here you could display results or update the graph visually
     } catch (err) {
