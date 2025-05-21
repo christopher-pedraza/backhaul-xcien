@@ -29,6 +29,7 @@
     "@tanstack/react-query": "^5.76.1",
     "clsx": "2.1.1",
     "cytoscape": "^3.32.0",
+    "firebase": "^11.8.0",
     "framer-motion": "^11.15.0",
     "lucide-react": "^0.510.0",
     "react": "18.3.1",
