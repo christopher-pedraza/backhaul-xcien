@@ -109,11 +109,19 @@ const CreateNodeModal: FC<CreateNodeModalProps> = ({
         </ModalBody>
 
         <ModalFooter>
-          <Button color="default" variant="flat" onPress={() => setIsOpen(false)}>
+          <Button
+            color="default"
+            variant="flat"
+            onPress={() => setIsOpen(false)}
+          >
             Cancelar
           </Button>
-          <Button color="primary" onPress={handleCreateNode} isDisabled={!isFormValid}>
-            Crear Nodo
+          <Button
+            color="primary"
+            onPress={handleCreateNode}
+            isDisabled={!isFormValid}
+          >
+            Crear
           </Button>
         </ModalFooter>
       </ModalContent>
