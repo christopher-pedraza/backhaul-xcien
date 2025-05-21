@@ -5,6 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "emulators": "firebase emulators:start --import ./emulators-data",
+    "export-data": "firebase emulators:export ./emulators-data",
     "build": "tsc && vite build",
     "lint": "eslint --fix",
     "preview": "vite preview"
