@@ -1,7 +1,11 @@
 .navbar {
   display: flex;
   align-items: center;
-  background: linear-gradient(180deg, #051145, #1f3a85); /* Degradado de izquierda a derecha */
+  background: linear-gradient(
+    180deg,
+    #051145,
+    #1f3a85
+  ); /* Degradado de izquierda a derecha */
   color: white;
   height: 50px !important;
   position: absolute !important;
@@ -44,7 +48,6 @@
   z-index: 99;
   position: absolute;
 }
-
 
 .tag-navbar-open-close {
   font-family: "Red Hat Text", sans-serif !important;
