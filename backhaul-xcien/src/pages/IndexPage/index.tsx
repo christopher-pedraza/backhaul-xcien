@@ -2,7 +2,7 @@ import { FC, useState } from "react";
 import Graph from "@/components/graph";
 import { useCyContext } from "@/hooks/useCyContext";
 import { getRandomPosition } from "./utils";
-import SideBar from "@/components/SideBar/Sidebar";
+import SideBar from "@/components/Sidebar/Sidebar";
 import CreateNodeModal from "@/components/toolBox/CreateNodeModal/CreateNodeModal";
 import LinkModal from "@/components/toolBox/CreatEdgeModal/CreateEdgeModal";
 import FloatingActionBar from "@/components/toolBox/ToolBox/ToolBox";
