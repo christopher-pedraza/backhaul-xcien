@@ -2,7 +2,7 @@
 import { FC, useEffect, useState } from "react";
 import Graph from "@/components/graph";
 import { useCyContext } from "@/hooks/useCyContext";
-import { getRandomPosition } from "./utils";
+import { getRandomPosition, getBottomLeftPosition } from "./utils";
 import Sidebar from "@/components/Sidebar/index";
 import CreateNodeModal from "@/components/toolBox/CreateNodeModal/CreateNodeModal";
 import LinkModal from "@/components/toolBox/CreatEdgeModal/CreateEdgeModal";
@@ -155,7 +155,7 @@ const IndexPage: FC<Props> = () => {
       usage,
     },
     classes: selectedNodeType, // ✅ Esto es clave
-    position: getRandomPosition(cy),
+    position: getBottomLeftPosition(cy),
   });
 
   // Crear enlaces con los nodos seleccionados

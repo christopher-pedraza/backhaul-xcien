@@ -1,5 +1,34 @@
 import { Core, BoundingBox12 } from "cytoscape";
 
+let lastY = 0;
+
+export const getBottomLeftPosition = (cy: Core): { x: number; y: number } => {
+  const margin = 80;
+  const nodeHeight = 60;
+
+  if (!cy) {
+    lastY = lastY ? lastY - nodeHeight : window.innerHeight - margin;
+    return { x: margin, y: lastY };
+  }
+
+  const container = cy.container();
+  if (!container) return { x: margin, y: window.innerHeight - margin };
+
+  const rect = container.getBoundingClientRect();
+  const zoom = cy.zoom();
+  const pan = cy.pan();
+
+  const containerX = -pan.x / zoom;
+  const containerY = -pan.y / zoom;
+
+  // Coloca en esquina inferior izquierda con márgenes
+  const x = containerX + margin;
+  const y = containerY + rect.height / zoom - margin;
+
+  return { x, y };
+};
+
+
 export function getRandomPosition(cy: Core): { x: number; y: number } {
   const RADIUS = 40;
 
