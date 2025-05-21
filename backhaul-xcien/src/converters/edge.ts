@@ -1,4 +1,3 @@
-
 import { Edge } from "@/types/Edge";
 
 interface RtdbEdges {
@@ -20,15 +19,13 @@ interface RtdbEdges {
  * @returns An array of Edge objects formatted for use in the application.
  */
 export const edgesConverter = (edges: RtdbEdges): Edge[] => {
-  return Object.entries(edges).map(
-    ([edgeId, edge]: any) => ({
-      data: {
-        id: edgeId,
-        source: edge.source,
-        target: edge.target,
-        capacity: edge.capacity,
-        usage: edge.usage
-      },
-    }),
-  );
-}
+  return Object.entries(edges).map(([edgeId, edge]: any) => ({
+    data: {
+      id: edgeId,
+      source: edge.source,
+      target: edge.target,
+      capacity: edge.capacity,
+      usage: edge.usage,
+    },
+  }));
+};

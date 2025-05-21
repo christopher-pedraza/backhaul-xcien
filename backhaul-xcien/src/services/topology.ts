@@ -5,7 +5,6 @@ import { CytoscapeOptions } from "cytoscape";
 import { edgesConverter } from "@/converters/edge";
 import { nodesConverter } from "@/converters/node";
 
-
 interface TopologyOption {
   id: string;
   name: string;

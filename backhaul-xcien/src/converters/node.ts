@@ -22,20 +22,19 @@ interface RtdbNodes {
  * @returns An array of Node objects formatted for use in the application.
  */
 export const nodesConverter = (nodes: RtdbNodes): Node[] => {
-  return Object.entries(nodes).map(
-    ([nodeId, node]) => {
-      const clients: Client[] = node.clients ? clientsConverter(node.clients) : [];
+  return Object.entries(nodes).map(([nodeId, node]) => {
+    const clients: Client[] = node.clients
+      ? clientsConverter(node.clients)
+      : [];
 
-      return {
-        data: {
-          id: nodeId,
-          name: node.name,
-          clients: clients,
-        },
-        position: { x: node.x, y: node.y },
-        classes: node.type as NodeClass,
-      }
-    },
-  );
-
-}
+    return {
+      data: {
+        id: nodeId,
+        name: node.name,
+        clients: clients,
+      },
+      position: { x: node.x, y: node.y },
+      classes: node.type as NodeClass,
+    };
+  });
+};

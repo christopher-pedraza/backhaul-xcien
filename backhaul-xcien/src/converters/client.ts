@@ -18,12 +18,10 @@ export interface RtdbClients {
  * @returns An array of Client objects formatted for use in the application.
  */
 export const clientsConverter = (clients: RtdbClients): Client[] => {
-  return Object.entries(clients).map(
-    ([clientId, c]: any) => ({
-      id: clientId,
-      name: c.name,
-      soldCapacity: c.soldCapacity,
-      usage: c.usage,
-    }),
-  );
-}
+  return Object.entries(clients).map(([clientId, c]: any) => ({
+    id: clientId,
+    name: c.name,
+    soldCapacity: c.soldCapacity,
+    usage: c.usage,
+  }));
+};
