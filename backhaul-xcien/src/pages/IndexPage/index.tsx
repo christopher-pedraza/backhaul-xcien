@@ -34,7 +34,7 @@ function getNextEdgeIndex(source: string, target: string, cy: any): number {
 
 // 🔍 Función auxiliar: Verifica si ya existe un nodo con ese NOMBRE
 const normalizeName = (name: string): string => {
-  return name.replace(/\s+/g, "").toLowerCase(); // Elimina todos los espacios y convierte a minúsculas
+  return name.replace(/\s+/g, "").toLowerCase(); // Elimina espacios y convierte a minúsculas
 };
 
 const nodeNameExists = (name: string, cy: any): boolean => {
@@ -42,12 +42,10 @@ const nodeNameExists = (name: string, cy: any): boolean => {
 
   const normalizedNameToCheck = normalizeName(name);
 
-  const exists = cy.nodes().some((node: any) => {
+  return cy.nodes().some((node: any) => {
     const nodeName = node.data("name") || node.id();
     return normalizeName(nodeName) === normalizedNameToCheck;
   });
-
-  return exists;
 };
 
 const IndexPage: FC<Props> = () => {
@@ -86,6 +84,8 @@ const IndexPage: FC<Props> = () => {
       }))
     : [];
 
+  const [selectedNodeType, setSelectedNodeType] = useState<string>("cloud");
+
   // Set the topology when the selectedTopologyId changes
   useEffect(() => {
     if (!selectedTopology || !cy) return;
@@ -121,62 +121,68 @@ const IndexPage: FC<Props> = () => {
     };
   }, [cy, isSidebarOpen]);
 
-  const addNode = () => setIsModalOpen(true);
-  const addEdge = () => setIsEdgeModalOpen(true);
-
-  const handleCreateNode = () => {
-    if (!cy || !newNodeId.trim()) {
-      setError("El nombre del nodo es obligatorio");
-      return;
-    }
-
-    if (nodeNameExists(newNodeId, cy)) {
-      setError("Ya existe un nodo con este nombre");
-      return;
-    }
-
-    // ✅ Generamos un ID único incluso si el nombre se repite
-    const nodeId = `node-${Date.now()}`;
-
-    setError(null);
-
-    // Añadimos el nodo con nombre personalizado
-    cy.add({
-      group: "nodes",
-      data: {
-        id: nodeId,
-        name: newNodeId,
-        capacity,
-        usage,
-      },
-      position: getRandomPosition(cy),
-    });
-
-    // Crear enlaces con los nodos seleccionados
-    selectedNodes.forEach((targetId) => {
-      const index = getNextEdgeIndex(nodeId, targetId, cy);
-      const edgeId = `${nodeId}-${targetId}-${index}`;
-
-      if (!cy.getElementById(edgeId).length) {
-        cy.add({
-          group: "edges",
-          data: {
-            id: edgeId,
-            source: nodeId,
-            target: targetId,
-            capacity,
-            usage,
-          },
-        });
-      }
-    });
-
+  const addNode = () => {
     setNewNodeId("");
     setCapacity("");
     setUsage("");
-    setSelectedNodes([]);
-    setIsModalOpen(false);
+    setSelectedNodeType("cloud"); // Resetear tipo al abrir
+    setIsModalOpen(true);
   };
+
+  const addEdge = () => setIsEdgeModalOpen(true);
+
+  const handleCreateNode = () => {
+  if (!cy || !newNodeId.trim()) {
+    setError("El nombre del nodo es obligatorio");
+    return;
+  }
+
+  if (nodeNameExists(newNodeId, cy)) {
+    setError("Ya existe un nodo con este nombre");
+    return;
+  }
+
+  const nodeId = `node-${Date.now()}`;
+
+  setError(null);
+
+  cy.add({
+    group: "nodes",
+    data: {
+      id: nodeId,
+      name: newNodeId,
+      capacity,
+      usage,
+    },
+    classes: selectedNodeType, // ✅ Esto es clave
+    position: getRandomPosition(cy),
+  });
+
+  // Crear enlaces con los nodos seleccionados
+  selectedNodes.forEach((targetId) => {
+    const index = getNextEdgeIndex(nodeId, targetId, cy);
+    const edgeId = `${nodeId}-${targetId}-${index}`;
+
+    if (!cy.getElementById(edgeId).length) {
+      cy.add({
+        group: "edges",
+        data: {
+          id: edgeId,
+          source: nodeId,
+          target: targetId,
+          capacity,
+          usage,
+        },
+      });
+    }
+  });
+
+  setNewNodeId("");
+  setCapacity("");
+  setUsage("");
+  setSelectedNodeType("cloud");
+  setIsModalOpen(false);
+};
 
   const handleCreateLink = () => {
     if (!cy || !sourceNode || !targetNode) {
@@ -191,8 +197,6 @@ const IndexPage: FC<Props> = () => {
 
     const index = getNextEdgeIndex(sourceNode, targetNode, cy);
     const edgeId = `${sourceNode}-${targetNode}-${index}`;
-
-    setError(null);
 
     cy.add({
       group: "edges",
@@ -221,6 +225,10 @@ const IndexPage: FC<Props> = () => {
       setIsDeleteModalOpen(false);
     }
   };
+
+  const elementName = selectedNode
+  ? cy?.getElementById(selectedNode)?.data("name") || selectedNode
+  : "";
 
   return (
     <div className="flex-1 flex flex-col bg-dotted relative">
@@ -254,6 +262,8 @@ const IndexPage: FC<Props> = () => {
         nodeExists={newNodeId.trim() !== "" && nodeNameExists(newNodeId, cy)}
         error={error}
         setError={setError}
+        selectedType={selectedNodeType}
+        setSelectedType={setSelectedNodeType}
       />
 
       <LinkModal
@@ -279,6 +289,7 @@ const IndexPage: FC<Props> = () => {
         onClose={() => setIsDeleteModalOpen(false)}
         onConfirm={handleDelete}
         elementId={selectedNode}
+        elementName={elementName}
         elementType={selectedType as "node" | "edge"}
       />
 

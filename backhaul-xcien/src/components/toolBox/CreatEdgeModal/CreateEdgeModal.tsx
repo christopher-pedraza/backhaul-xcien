@@ -57,6 +57,11 @@ const CreateEdgeModal: FC<CreateEdgeModalProps> = ({
     Number(capacity) > 0 &&
     Number(usage) >= 0;
 
+  // ✅ Ordena los nodos por nombre alfabéticamente
+  const sortedAvailableNodes = [...availableNodes].sort((a, b) =>
+    a.name.localeCompare(b.name, undefined, { sensitivity: 'base' })
+  );
+
   return (
     <Modal isOpen={isOpen} onOpenChange={setIsOpen} placement="center">
       <ModalContent>
@@ -72,10 +77,9 @@ const CreateEdgeModal: FC<CreateEdgeModalProps> = ({
               setSourceNode(value as string);
             }}
           >
-            {availableNodes.map((node) => (
+            {sortedAvailableNodes.map((node) => (
               <SelectItem key={node.id} value={node.id}>
                 {node.name}
-                {/* O usa <span className="whitespace-pre-line">{node.name}</span> si quieres saltos */}
               </SelectItem>
             ))}
           </Select>
@@ -90,23 +94,12 @@ const CreateEdgeModal: FC<CreateEdgeModalProps> = ({
               setTargetNode(value as string);
             }}
           >
-            {availableNodes.map((node) => (
+            {sortedAvailableNodes.map((node) => (
               <SelectItem key={node.id} value={node.id}>
                 {node.name}
               </SelectItem>
             ))}
           </Select>
-
-          {/* Capacidad */}
-          <Input
-            isRequired
-            type="number"
-            min={1}
-            label="Capacidad"
-            placeholder="Capacidad del enlace"
-            value={capacity}
-            onChange={(e) => setCapacity(e.target.value)}
-          />
 
           {/* Uso */}
           <Input
@@ -117,6 +110,17 @@ const CreateEdgeModal: FC<CreateEdgeModalProps> = ({
             placeholder="Uso actual del enlace"
             value={usage}
             onChange={(e) => setUsage(e.target.value)}
+          />
+
+          {/* Capacidad */}
+          <Input
+            isRequired
+            type="number"
+            min={1}
+            label="Capacidad"
+            placeholder="Capacidad del enlace"
+            value={capacity}
+            onChange={(e) => setCapacity(e.target.value)}
           />
         </ModalBody>
         <ModalFooter>
