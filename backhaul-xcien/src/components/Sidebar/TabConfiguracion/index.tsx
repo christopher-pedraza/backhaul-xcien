@@ -1,17 +1,12 @@
-import {
-  Button,
-  useDisclosure,
-  ScrollShadow,
-  Card,
-  CardBody,
-  CardHeader,
-  Divider,
-} from "@heroui/react";
+import { Button, useDisclosure } from "@heroui/react";
 import { useCyContext } from "@/hooks/useCyContext";
 import { useState, useEffect } from "react";
 
-// Components
-import TabInput from "../TabInput";
+// Tabs
+import EdgeTab from "../EdgeTab";
+import NodeTab from "../NodeTab";
+
+// Modals
 import ConfirmationModal from "../ConfirmationModal";
 import ChangeNameModal from "../ChangeNameModal";
 import AddClientModal from "../AddClientModal";
@@ -22,155 +17,10 @@ import { Client } from "@/types/Client";
 
 // Icons
 import PencilIcon from "../Icons/PencilIcon";
-import { PlusCircleIcon } from "lucide-react";
 
 interface TabConfiguracionProps {
   selectedNode: string;
   selectedType: string;
-}
-
-function EdgeTab({
-  usage,
-  setUsage,
-  lastUsage,
-  capacity,
-  setCapacity,
-  lastCapacity,
-  onOpenConfirmation,
-}: {
-  usage: string;
-  setUsage: (v: string) => void;
-  lastUsage: string;
-  capacity: string;
-  setCapacity: (v: string) => void;
-  lastCapacity: string;
-  onOpenConfirmation: () => void;
-}) {
-  const errorsUsage: Array<string> = [];
-  const errorsCapacity: Array<string> = [];
-
-  const saveEdgeConfiguration = () => {
-    if (errorsUsage.length === 0 && errorsCapacity.length === 0) {
-      onOpenConfirmation();
-    }
-  };
-
-  if (usage === "") {
-    errorsUsage.push("El campo 'Uso' es obligatorio");
-  } else if (isNaN(Number(usage))) {
-    errorsUsage.push("El campo 'Uso' debe ser un número");
-  } else if (Number(usage) < 0) {
-    errorsUsage.push("El campo 'Uso' no puede ser negativo");
-  } else if (Number(usage) > Number(capacity)) {
-    errorsUsage.push("El campo 'Uso' no puede ser mayor que la capacidad");
-  }
-
-  if (capacity === "") {
-    errorsCapacity.push("El campo 'Capacidad' es obligatorio");
-  } else if (isNaN(Number(capacity))) {
-    errorsCapacity.push("El campo 'Capacidad' debe ser un número");
-  } else if (Number(capacity) < 0) {
-    errorsCapacity.push("El campo 'Capacidad' no puede ser negativo");
-  }
-
-  var shouldDisableButton =
-    errorsUsage.length > 0 ||
-    errorsCapacity.length > 0 ||
-    (usage == lastUsage && capacity == lastCapacity);
-
-  return (
-    <>
-      <TabInput
-        label="Uso"
-        value={usage}
-        setValue={setUsage}
-        errors={errorsUsage}
-        hasChanges={usage != lastUsage}
-        isReadOnly={true}
-      />
-      <TabInput
-        label="Capacidad"
-        value={capacity}
-        setValue={setCapacity}
-        errors={errorsCapacity}
-        hasChanges={capacity != lastCapacity}
-      />
-      <Button
-        onPress={saveEdgeConfiguration}
-        className="w-3/4"
-        variant={shouldDisableButton ? "faded" : "ghost"}
-        color={shouldDisableButton ? "default" : "primary"}
-        isDisabled={shouldDisableButton}
-      >
-        Guardar
-      </Button>
-    </>
-  );
-}
-interface NodeTabProps {
-  clients: Array<Client>;
-  onOpenChangeAddClient: () => void;
-  onOpenChangeModifyClient: () => void;
-  setSelectedClient: (client: Client | null) => void;
-}
-
-function NodeTab({
-  clients,
-  onOpenChangeAddClient,
-  onOpenChangeModifyClient,
-  setSelectedClient,
-}: NodeTabProps) {
-  return (
-    <>
-      <Card className="w-full h-[400px]">
-        <CardHeader className="relative text-xl font-bold flex flex-col items-center justify-center">
-          <p>Clientes</p>
-          <Button
-            className="absolute right-2 top-1/8 bg-transparent"
-            isIconOnly
-            onPress={onOpenChangeAddClient}
-          >
-            <PlusCircleIcon />
-          </Button>
-        </CardHeader>
-        <Divider />
-        <CardBody>
-          {clients.length > 0 ? (
-            <ScrollShadow className="overflow-y-auto">
-              {clients.map((client, index) => (
-                <Card className="h-min-[100px] m-4 p-3 relative" key={index}>
-                  <p className="text-lg font-bold">{client.name}</p>
-                  <p className="text-medium">
-                    <strong>Capacidad vendida: </strong>
-                    {client.soldCapacity}
-                  </p>
-                  <p className="text-medium">
-                    <strong> Uso: </strong>
-                    {client.usage}
-                  </p>
-                  <Button
-                    className="absolute right-0 top-0 bg-transparent"
-                    isIconOnly
-                    onPress={() => {
-                      setSelectedClient(client);
-                      onOpenChangeModifyClient();
-                    }}
-                    key={index + 100}
-                  >
-                    <PencilIcon />
-                  </Button>
-                </Card>
-              ))}
-            </ScrollShadow>
-          ) : (
-            <div className="w-full h-full flex flex-col justify-center items-center">
-              <p className="text-lg">El nodo no cuenta con clientes.</p>
-            </div>
-          )}
-        </CardBody>
-      </Card>
-    </>
-  );
 }
 
 export default function TabConfiguracion({
