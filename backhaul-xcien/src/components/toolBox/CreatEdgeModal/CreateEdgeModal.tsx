@@ -1,6 +1,17 @@
 import { FC } from "react";
+import {
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  Button,
+  Input,
+  Select,
+  SelectItem,
+} from "@heroui/react";
 
-interface CreateEdgeModal {
+interface CreateEdgeModalProps {
   isOpen: boolean;
   setIsOpen: (value: boolean) => void;
   sourceNode: string;
@@ -12,11 +23,10 @@ interface CreateEdgeModal {
   usage: string;
   setUsage: (value: string) => void;
   handleCreateLink: () => void;
-  availableNodes: string[]; // Nodos disponibles para dropdown
-  error: string | null;
+  availableNodes: string[];
 }
 
-const CreateEdgeModal: FC<CreateEdgeModal> = ({
+const CreateEdgeModal: FC<CreateEdgeModalProps> = ({
   isOpen,
   setIsOpen,
   sourceNode,
@@ -29,104 +39,85 @@ const CreateEdgeModal: FC<CreateEdgeModal> = ({
   setUsage,
   handleCreateLink,
   availableNodes,
-  error,
 }) => {
-  if (!isOpen) return null;
-
-  const handleClickOutside = (event: React.MouseEvent) => {
-    if ((event.target as HTMLElement).classList.contains("modal-overlay")) {
-      setIsOpen(false);
-    }
-  };
+  const isFormValid =
+    sourceNode.trim() !== "" &&
+    targetNode.trim() !== "" &&
+    sourceNode !== targetNode &&
+    capacity.trim() !== "" &&
+    usage.trim() !== "" &&
+    !isNaN(Number(capacity)) &&
+    !isNaN(Number(usage)) &&
+    Number(capacity) > 0 &&
+    Number(usage) >= 0;
 
   return (
-    <div
-      className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center modal-overlay z-50"
-      onClick={handleClickOutside}
-    >
-      <div
-        className="bg-white p-6 rounded shadow-lg w-96"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <h3 className="text-xl mb-4 font-semibold">Create Link</h3>
-
-        {error && <div className="text-red-500 text-sm mb-2">{error}</div>}
-
-        <label htmlFor="source" className="block mb-2 font-medium">
-          Source Node
-        </label>
-        <select
-          id="source"
-          value={sourceNode}
-          onChange={(e) => setSourceNode(e.target.value)}
-          className="border p-2 mb-4 w-full"
-        >
-          <option value="">Select source</option>
-          {availableNodes.map((id) => (
-            <option key={id} value={id}>
-              {id}
-            </option>
-          ))}
-        </select>
-
-        <label htmlFor="target" className="block mb-2 font-medium">
-          Target Node
-        </label>
-        <select
-          id="target"
-          value={targetNode}
-          onChange={(e) => setTargetNode(e.target.value)}
-          className="border p-2 mb-4 w-full"
-        >
-          <option value="">Select target</option>
-          {availableNodes.map((id) => (
-            <option key={id} value={id}>
-              {id}
-            </option>
-          ))}
-        </select>
-
-        <label htmlFor="capacity" className="block mb-2 font-medium">
-          Capacity
-        </label>
-        <input
-          id="capacity"
-          type="text"
-          value={capacity}
-          onChange={(e) => setCapacity(e.target.value)}
-          className="border p-2 mb-4 w-full"
-          placeholder="Capacity"
-        />
-
-        <label htmlFor="usage" className="block mb-2 font-medium">
-          Usage
-        </label>
-        <input
-          id="usage"
-          type="text"
-          value={usage}
-          onChange={(e) => setUsage(e.target.value)}
-          className="border p-2 mb-4 w-full"
-          placeholder="Usage"
-        />
-
-        <div className="flex justify-between">
-          <button
-            className="bg-gray-500 text-white px-4 py-2 rounded"
-            onClick={() => setIsOpen(false)}
+    <Modal isOpen={isOpen} onOpenChange={setIsOpen} placement="center">
+      <ModalContent>
+        <ModalHeader>Crear enlace</ModalHeader>
+        <ModalBody className="space-y-4">
+          <Select
+            isRequired
+            label="Nodo origen"
+            selectedKeys={[sourceNode]}
+            onSelectionChange={(keys) => {
+              const [value] = Array.from(keys);
+              setSourceNode(value as string);
+            }}
           >
-            Cancel
-          </button>
-          <button
-            className="bg-blue-500 text-white px-4 py-2 rounded disabled:opacity-50"
-            onClick={handleCreateLink}
-            disabled={!sourceNode || !targetNode}
+            {availableNodes.map((node) => (
+              <SelectItem key={node} value={node}>
+                {node}
+              </SelectItem>
+            ))}
+          </Select>
+
+          <Select
+            isRequired
+            label="Nodo destino"
+            selectedKeys={[targetNode]}
+            onSelectionChange={(keys) => {
+              const [value] = Array.from(keys);
+              setTargetNode(value as string);
+            }}
           >
-            Create Link
-          </button>
-        </div>
-      </div>
-    </div>
+            {availableNodes.map((node) => (
+              <SelectItem key={node} value={node}>
+                {node}
+              </SelectItem>
+            ))}
+          </Select>
+
+          <Input
+            isRequired
+            type="number"
+            min={1}
+            label="Capacidad"
+            placeholder="Capacidad del enlace"
+            value={capacity}
+            onChange={(e) => setCapacity(e.target.value)}
+          />
+
+          <Input
+            isRequired
+            type="number"
+            min={0}
+            label="Uso"
+            placeholder="Uso actual del enlace"
+            value={usage}
+            onChange={(e) => setUsage(e.target.value)}
+          />
+        </ModalBody>
+        <ModalFooter>
+          <Button color="default" variant="flat" onPress={() => setIsOpen(false)}>
+            Cancelar
+          </Button>
+          <Button color="primary" onPress={handleCreateLink} isDisabled={!isFormValid}>
+            Crear enlace
+          </Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
   );
 };
 

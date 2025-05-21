@@ -1,6 +1,7 @@
 import { FC } from "react";
+import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Button, Input } from "@heroui/react";
 
-interface CreateNodeModal {
+interface CreateNodeModalProps {
   isOpen: boolean;
   setIsOpen: (value: boolean) => void;
   newNodeId: string;
@@ -8,72 +9,40 @@ interface CreateNodeModal {
   handleCreateNode: () => void;
 }
 
-const CreateNodeModal: FC<CreateNodeModal> = ({
+const CreateNodeModal: FC<CreateNodeModalProps> = ({
   isOpen,
   setIsOpen,
   newNodeId,
   setNewNodeId,
-  // selectedNodes,
-  // setSelectedNodes,
   handleCreateNode,
 }) => {
-  if (!isOpen) return null; // Si no está abierto, no renderizamos nada
-
-  // const handleSelectNode = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   const value = event.target.value;
-  //   if (event.target.checked) {
-  //     setSelectedNodes([...selectedNodes, value]);
-  //   } else {
-  //     setSelectedNodes(selectedNodes.filter((id) => id !== value));
-  //   }
-  // };
-
-  const handleClickOutside = (event: React.MouseEvent) => {
-    if ((event.target as HTMLElement).classList.contains("modal-overlay")) {
-      setIsOpen(false);
-    }
-  };
-
   return (
-    <div
-      className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center modal-overlay"
-      onClick={handleClickOutside}
-    >
-      <div
-        className="bg-white p-6 rounded shadow-lg w-96"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <h3 className="text-xl mb-4">Enter Node ID</h3>
-
-        <label htmlFor="nodeId" className="block mb-2">
-          Node ID <span className="text-red-500">*</span>
-        </label>
-        <input
-          id="nodeId"
-          type="text"
-          value={newNodeId}
-          onChange={(e) => setNewNodeId(e.target.value)}
-          className="border p-2 mb-4 w-full"
-          placeholder="Node ID"
-        />
-
-        <div className="flex justify-between">
-          <button
-            className="bg-gray-500 text-white px-4 py-2 rounded"
-            onClick={() => setIsOpen(false)}
+    <Modal isOpen={isOpen} onOpenChange={setIsOpen} placement="center">
+      <ModalContent>
+        <ModalHeader>Crear nodo</ModalHeader>
+        <ModalBody>
+          <Input
+            isRequired
+            label="ID del Nodo"
+            placeholder="Identificador del nodo"
+            value={newNodeId}
+            onChange={(e) => setNewNodeId(e.target.value)}
+          />
+        </ModalBody>
+        <ModalFooter>
+          <Button color="default" variant="flat" onPress={() => setIsOpen(false)}>
+            Cancelar
+          </Button>
+          <Button
+            color="primary"
+            onPress={handleCreateNode}
+            isDisabled={!newNodeId.trim()}
           >
-            Cancel
-          </button>
-          <button
-            className="bg-blue-500 text-white px-4 py-2 rounded disabled:opacity-50"
-            onClick={handleCreateNode}
-            disabled={!newNodeId.trim()}
-          >
-            Create Node
-          </button>
-        </div>
-      </div>
-    </div>
+            Crear
+          </Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
   );
 };
 

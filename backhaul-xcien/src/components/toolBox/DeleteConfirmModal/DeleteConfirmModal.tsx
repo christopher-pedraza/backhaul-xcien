@@ -1,14 +1,14 @@
 import { FC } from "react";
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Button,
+} from "@heroui/react";
 
-interface DeleteConfirmModal {
+interface DeleteConfirmModalProps {
   isOpen: boolean;
   onClose: () => void;
   onConfirm: () => void;
@@ -16,7 +16,7 @@ interface DeleteConfirmModal {
   elementType: "node" | "edge" | null;
 }
 
-const DeleteConfirmModal: FC<DeleteConfirmModal> = ({
+const DeleteConfirmModal: FC<DeleteConfirmModalProps> = ({
   isOpen,
   onClose,
   onConfirm,
@@ -24,26 +24,34 @@ const DeleteConfirmModal: FC<DeleteConfirmModal> = ({
   elementType,
 }) => {
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>¿Confirmar eliminación?</DialogTitle>
-        </DialogHeader>
-        <p>
-          Estás a punto de eliminar el{" "}
-          {elementType === "node" ? "nodo" : "enlace"}{" "}
-          <strong>{elementId}</strong>.
-        </p>
-        <DialogFooter>
-          <Button variant="destructive" onClick={onConfirm}>
-            Eliminar
-          </Button>
-          <Button variant="secondary" onClick={onClose}>
+    <Modal isOpen={isOpen} onOpenChange={onClose} placement="center">
+      <ModalContent>
+        <ModalHeader>Eliminar {elementType === "node" ? "Nodo" : "Enlace"}</ModalHeader>
+
+        <ModalBody className="flex flex-col gap-4">
+          <p className="text-gray-700 text-sm leading-relaxed">
+            ¿Estás seguro de que deseas eliminar el{" "}
+            <strong>{elementType === "node" ? "nodo" : "enlace"}</strong>{" "}
+            <span className="font-mono bg-gray-100 px-2 py-0.5 rounded text-red-600">
+              {elementId}
+            </span>
+            ?
+          </p>
+          <p className="text-gray-500 text-xs">
+            Esta acción no se puede deshacer.
+          </p>
+        </ModalBody>
+
+        <ModalFooter>
+          <Button color="default" variant="flat" onPress={onClose}>
             Cancelar
           </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+          <Button color="danger" onPress={onConfirm}>
+            Eliminar
+          </Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
   );
 };
 

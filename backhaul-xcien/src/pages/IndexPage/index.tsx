@@ -11,6 +11,7 @@ import MyNavbar from "@/components/NavBar/NavBar";
 import Selector from "@/components/Selector";
 import useTopologyOptions from "@/hooks/topologies/useTopologyOptions";
 import useTopology from "@/hooks/topologies/useTopology";
+import DeleteConfirmModal from "@/components/toolBox/DeleteConfirmModal/DeleteConfirmModal";
 
 interface Props {}
 
@@ -45,50 +46,72 @@ const IndexPage: FC<Props> = () => {
 
   const availableNodes = cy ? cy.nodes().map((node) => node.id()) : [];
 
-  // set the topology when the selectedTopologyId changes
+  // Set the topology when the selectedTopologyId changes
   useEffect(() => {
     if (!selectedTopology || !cy) return;
 
     cy.json({ elements: selectedTopology.elements });
     cy.fit(undefined, 50);
+
+    console.log("Topology set:", selectedTopology);
+    console.log("Cy elements:", cy.elements().jsons());
   }, [selectedTopology, cy]);
 
-  if (cy) {
-    cy.on("tap", "node", (event) => {
+  // Set event listeners for node and edge taps with proper cleanup
+  useEffect(() => {
+    if (!cy) return;
+
+    const handleNodeTap = (event: any) => {
       const id = event.target.id();
       setSelectedNode(id);
       setSelectedType("node");
       if (!isSidebarOpen) setSidebarIsOpen(true);
-    });
-    cy.on("tap", "edge", (event) => {
+    };
+
+    const handleEdgeTap = (event: any) => {
       const id = event.target.id();
       setSelectedNode(id);
       setSelectedType("edge");
       if (!isSidebarOpen) setSidebarIsOpen(true);
-    });
-  }
+    };
+
+    cy.on("tap", "node", handleNodeTap);
+    cy.on("tap", "edge", handleEdgeTap);
+
+    // Cleanup listeners on unmount or when cy changes
+    return () => {
+      cy.off("tap", "node", handleNodeTap);
+      cy.off("tap", "edge", handleEdgeTap);
+    };
+  }, [cy, isSidebarOpen]);
 
   const addNode = () => setIsModalOpen(true);
   const addEdge = () => setIsEdgeModalOpen(true);
 
   const handleCreateNode = () => {
     if (!cy || !newNodeId.trim()) {
-      setError("Node ID is required");
+      setError("El ID del nodo es obligatorio");
       return;
     }
 
     if (cy.getElementById(newNodeId).length > 0) {
-      setError("Node ID already exists");
+      setError("Ya existe un nodo con ese ID");
       return;
     }
 
     setError(null);
     cy.add({
       group: "nodes",
-      data: { id: newNodeId, capacity, usage },
+      data: {
+        id: newNodeId,
+        name: newNodeId,
+        capacity,
+        usage,
+      },
       position: getRandomPosition(cy),
     });
 
+    // Crear enlaces con los nodos seleccionados
     selectedNodes.forEach((targetId) => {
       const edgeId = `${newNodeId}-${targetId}`;
       if (!cy.getElementById(edgeId).length) {
@@ -98,7 +121,8 @@ const IndexPage: FC<Props> = () => {
             id: edgeId,
             source: newNodeId,
             target: targetId,
-            label: `${capacity}/${usage}`,
+            capacity,
+            usage,
           },
         });
       }
@@ -113,13 +137,13 @@ const IndexPage: FC<Props> = () => {
 
   const handleCreateLink = () => {
     if (!cy || !sourceNode || !targetNode) {
-      setError("Source and target nodes are required");
+      setError("Los nodos origen y destino son obligatorios");
       return;
     }
 
     const edgeId = `${sourceNode}-${targetNode}`;
     if (cy.getElementById(edgeId).length > 0) {
-      setError("Edge already exists");
+      setError("Ya existe una conexión entre estos nodos");
       return;
     }
 
@@ -131,6 +155,8 @@ const IndexPage: FC<Props> = () => {
         source: sourceNode,
         target: targetNode,
         label: `${capacity}/${usage}`,
+        capacity,
+        usage,
       },
     });
 
@@ -151,13 +177,12 @@ const IndexPage: FC<Props> = () => {
   };
 
   return (
-    <div className="flex-1 flex flex-col bg-dotted">
+    <div className="flex-1 flex flex-col bg-dotted relative">
+      <MyNavbar />
 
-       <MyNavbar></MyNavbar>
-      
       <Graph />
 
-      <div className="absolute top-2 left-2 z-10 w-[200px]">
+      <div className="absolute top-0 left-0 z-10 mt-[4rem] ml-2 w-1/6">
         <Selector
           options={topologyOptions}
           isLoadingOptions={isLoadingTopologyOptions}
@@ -178,8 +203,17 @@ const IndexPage: FC<Props> = () => {
         setIsOpen={setIsModalOpen}
         newNodeId={newNodeId}
         setNewNodeId={setNewNodeId}
+        capacity={capacity}
+        setCapacity={setCapacity}
+        usage={usage}
+        setUsage={setUsage}
+        selectedNodes={selectedNodes}
+        setSelectedNodes={setSelectedNodes}
         handleCreateNode={handleCreateNode}
+        error={error}
+        setError={setError}
       />
+
       <LinkModal
         isOpen={isEdgeModalOpen}
         setIsOpen={setIsEdgeModalOpen}
@@ -194,39 +228,23 @@ const IndexPage: FC<Props> = () => {
         handleCreateLink={handleCreateLink}
         availableNodes={availableNodes}
         error={error}
+        setError={setError}
       />
-      {/* Modal de Confirmación de Eliminación */}
-      {isDeleteModalOpen && selectedNode && (
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
-          <div className="bg-white rounded-xl p-6 shadow-lg max-w-sm w-full">
-            <h2 className="text-lg font-semibold mb-4">
-              ¿Confirmar eliminación?
-            </h2>
-            <p className="mb-4">
-              Estás a punto de eliminar el elemento{" "}
-              <strong>{selectedNode}</strong>.
-            </p>
-            <div className="flex justify-end space-x-2">
-              <button
-                className="bg-gray-300 hover:bg-gray-400 text-black px-4 py-2 rounded"
-                onClick={() => setIsDeleteModalOpen(false)}
-              >
-                Cancelar
-              </button>
-              <button
-                className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
-                onClick={handleDelete}
-              >
-                Eliminar
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+
+      {/* Aquí usamos el componente externo DeleteConfirmModal */}
+      <DeleteConfirmModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={handleDelete}
+        elementId={selectedNode}
+        elementType={selectedType as "node" | "edge"}
+      />
+
       <FloatingActionBar
         onCreateNode={addNode}
         onCreateEdge={addEdge}
         onDelete={() => setIsDeleteModalOpen(true)}
+        isDeleteDisabled={!selectedNode} // Deshabilita si no hay nodo seleccionado
       />
     </div>
   );

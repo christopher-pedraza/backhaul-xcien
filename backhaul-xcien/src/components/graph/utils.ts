@@ -18,6 +18,10 @@ export const style: CytoscapeOptions["style"] = [
       "text-halign": "center",
       color: textColor,
       "font-size": 8,
+      //"font-family": "Red Hat Mono, monospace",
+      "font-weight": 500,
+      "font-family":"Red Hat Text, sans-serif"
+
     },
   },
 
