@@ -289,7 +289,7 @@ export default function TabConfiguracion({
         className="bg-transparent mb-4"
         onPress={onOpenChangeName}
       >
-        <h1 className="text-2xl font-bold text-ellipsis whitespace-nowrap overflow-hidden max-w-[300px]">
+        <h1 className="text-xl font-bold text-ellipsis whitespace-nowrap overflow-hidden max-w-[300px]">
           {name}
         </h1>
       </Button>
