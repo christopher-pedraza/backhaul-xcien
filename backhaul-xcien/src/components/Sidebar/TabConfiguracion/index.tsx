@@ -3,8 +3,8 @@ import { useCyContext } from "@/hooks/useCyContext";
 import { useState, useEffect } from "react";
 
 // Tabs
-import EdgeTab from "../EdgeTab";
-import NodeTab from "../NodeTab";
+import EdgeTab from "../EdgeConfigurationTab";
+import NodeTab from "../NodeConfigurationTab";
 
 // Modals
 import ConfirmationModal from "../ConfirmationModal";
