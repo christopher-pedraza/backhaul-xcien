@@ -19,6 +19,7 @@
   font-weight: bold;
   font-family: var(--navbar-font, "Audiowide", sans-serif) !important;
   color: white !important;
+  margin-top: 15px;
 }
 
 .navbar a {
