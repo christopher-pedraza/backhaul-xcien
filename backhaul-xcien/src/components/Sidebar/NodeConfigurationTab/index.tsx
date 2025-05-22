@@ -6,28 +6,107 @@ import {
   CardBody,
   CardHeader,
   Divider,
+  useDisclosure,
 } from "@heroui/react";
 
 // Icons
 import { PlusCircleIcon } from "lucide-react";
 import PencilIcon from "../Icons/PencilIcon";
+import { Trash2Icon } from "lucide-react";
 
 // Types
 import { Client } from "@/types/Client";
 
+// Modals
+import RemoveClientModal from "../RemoveClientModal";
+import ModifyClientModal from "../ModifyClientModal";
+import AddClientModal from "../AddClientModal";
+
+// Contexts
+import { useCyContext } from "@/hooks/useCyContext";
+
 interface NodeTabProps {
   clients: Array<Client>;
-  onOpenChangeAddClient: () => void;
-  onOpenChangeModifyClient: () => void;
+  setClients: (clients: Array<Client>) => void;
   setSelectedClient: (client: Client | null) => void;
+  selectedClient?: Client | null;
+  selectedNode: string;
 }
 
 export default function NodeTab({
   clients,
-  onOpenChangeAddClient,
-  onOpenChangeModifyClient,
+  setClients,
   setSelectedClient,
+  selectedClient,
+  selectedNode,
 }: NodeTabProps) {
+  const { cy } = useCyContext();
+  if (!cy) return;
+
+  //
+  // useDisclosure de los modales
+  //
+  const {
+    isOpen: isOpenRemoveClient,
+    onOpen: onOpenRemoveClient,
+    onOpenChange: onOpenChangeRemoveClient,
+  } = useDisclosure();
+  const {
+    isOpen: isOpenModifyClient,
+    // onOpen: onOpenModifyClient,
+    onOpenChange: onOpenChangeModifyClient,
+  } = useDisclosure();
+  const {
+    isOpen: isOpenAddClient,
+    // onOpen: onOpenAddClient,
+    onOpenChange: onOpenChangeAddClient,
+  } = useDisclosure();
+
+  //
+  // Funciones onSuccess para los modales
+  //
+  const handleDeleteClient = (client: Client) => {
+    const updatedClients = clients.filter((c) => c.id !== client.id);
+    cy.getElementById(selectedNode).data({
+      clients: updatedClients,
+    });
+    setClients(updatedClients);
+  };
+
+  const confirmModifyClient = (client: Client) => {
+    const newClients = clients.map((c) => {
+      if (c.id === client.id) {
+        return client;
+      }
+      return c;
+    });
+    setClients(newClients);
+    cy.getElementById(selectedNode).data({
+      clients: newClients,
+    });
+  };
+
+  const confirmAddClient = (client: Client) => {
+    const newClients = [...clients, client];
+    setClients(newClients);
+    cy.getElementById(selectedNode).data({
+      clients: newClients,
+    });
+  };
+
+  //
+  // Funciones para abrir los modales
+  //
+  const onPressRemoveClient = (client: Client) => {
+    setSelectedClient(client);
+    onOpenChangeRemoveClient();
+  };
+
+  const onPressModifyClient = (client: Client) => {
+    setSelectedClient(client);
+    onOpenChangeModifyClient();
+  };
+
   return (
     <>
       <Card className="w-full h-[400px]">
@@ -60,10 +139,19 @@ export default function NodeTab({
                     className="absolute right-0 top-0 bg-transparent"
                     isIconOnly
                     onPress={() => {
-                      setSelectedClient(client);
-                      onOpenChangeModifyClient();
+                      onPressRemoveClient(client);
                     }}
                     key={index + 100}
+                  >
+                    <Trash2Icon color="#bd5348" />
+                  </Button>
+                  <Button
+                    className="absolute right-0 top-9 bg-transparent"
+                    isIconOnly
+                    onPress={() => {
+                      onPressModifyClient(client);
+                    }}
+                    key={index + 200}
                   >
                     <PencilIcon />
                   </Button>
@@ -77,6 +165,32 @@ export default function NodeTab({
           )}
         </CardBody>
       </Card>
+
+      <AddClientModal
+        isOpen={isOpenAddClient}
+        onOpenChange={onOpenChangeAddClient}
+        onConfirm={confirmAddClient}
+      />
+
+      <ModifyClientModal
+        isOpen={isOpenModifyClient}
+        onOpenChange={onOpenChangeModifyClient}
+        onConfirm={confirmModifyClient}
+        selectedClient={selectedClient}
+      />
+
+      <RemoveClientModal
+        isOpen={isOpenRemoveClient}
+        onOpenChange={onOpenChangeRemoveClient}
+        onOpen={onOpenRemoveClient}
+        onConfirm={() => {
+          if (selectedClient) {
+            handleDeleteClient(selectedClient);
+          }
+          onOpenChangeRemoveClient();
+        }}
+        onCancel={() => {}}
+      />
     </>
   );
 }

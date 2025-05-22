@@ -1,32 +1,70 @@
-import { Button } from "@heroui/react";
+import { useState, useEffect } from "react";
+
+// Components
+import { Button, useDisclosure } from "@heroui/react";
 import TabInput from "../TabInput";
 
+// Contexts
+import { useCyContext } from "@/hooks/useCyContext";
+
+// Modals
+import ConfirmationModal from "../ConfirmationModal";
+
 interface EdgeTabProps {
-  usage: string;
-  setUsage: (v: string) => void;
-  lastUsage: string;
-  capacity: string;
-  setCapacity: (v: string) => void;
-  lastCapacity: string;
-  onOpenConfirmation: () => void;
+  selectedNode: string;
 }
 
-export default function EdgeTab({
-  usage,
-  setUsage,
-  lastUsage,
-  capacity,
-  setCapacity,
-  lastCapacity,
-  onOpenConfirmation,
-}: EdgeTabProps) {
+export default function EdgeTab({ selectedNode }: EdgeTabProps) {
+  const { cy } = useCyContext();
+  if (!cy) return null;
+
+  const [node_data, setNodeData] = useState(null);
+  const [usage, setUsage] = useState("");
+  const [capacity, setCapacity] = useState("");
+  const [lastUsage, setLastUsage] = useState("");
+  const [lastCapacity, setLastCapacity] = useState("");
+
   const errorsUsage: Array<string> = [];
   const errorsCapacity: Array<string> = [];
+
+  const {
+    isOpen: isOpenConfirmation,
+    onOpen: onOpenConfirmation,
+    onOpenChange: onOpenChangeConfirmation,
+  } = useDisclosure();
+
+  useEffect(() => {
+    const node = cy.getElementById(selectedNode);
+    if (node) {
+      setNodeData(node.data());
+    }
+  }, [selectedNode, cy]);
+
+  useEffect(() => {
+    if (!node_data) {
+      return;
+    }
+
+    setUsage(node_data["usage"] || "");
+    setCapacity(node_data["capacity"] || "");
+    setLastUsage(node_data["usage"] || "");
+    setLastCapacity(node_data["capacity"] || "");
+  }, [node_data]);
 
   const saveEdgeConfiguration = () => {
     if (errorsUsage.length === 0 && errorsCapacity.length === 0) {
       onOpenConfirmation();
     }
+  };
+
+  const confirmSaveConfiguration = () => {
+    cy.getElementById(selectedNode).data({
+      usage: usage,
+      capacity: capacity,
+      name: name,
+    });
+    setLastUsage(usage);
+    setLastCapacity(capacity);
   };
 
   if (usage === "") {
@@ -78,6 +116,14 @@ export default function EdgeTab({
       >
         Guardar
       </Button>
+
+      <ConfirmationModal
+        isOpen={isOpenConfirmation}
+        onOpen={onOpenConfirmation}
+        onOpenChange={onOpenChangeConfirmation}
+        onConfirm={confirmSaveConfiguration}
+        onCancel={() => {}}
+      />
     </>
   );
 }

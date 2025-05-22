@@ -9,8 +9,6 @@ import NodeTab from "../NodeConfigurationTab";
 // Modals
 import ConfirmationModal from "../ConfirmationModal";
 import ChangeNameModal from "../ChangeNameModal";
-import AddClientModal from "../AddClientModal";
-import ModifyClientModal from "../ModifyClientModal";
 
 // Types
 import { Client } from "@/types/Client";
@@ -31,37 +29,15 @@ export default function TabConfiguracion({
   if (!cy) return null;
 
   const {
-    isOpen: isOpenConfirmation,
-    onOpen: onOpenConfirmation,
-    onOpenChange: onOpenChangeConfirmation,
-  } = useDisclosure();
-
-  const {
     isOpen: isOpenName,
     // onOpen: onOpenName,
     onOpenChange: onOpenChangeName,
   } = useDisclosure();
 
-  const {
-    isOpen: isOpenAddClient,
-    // onOpen: onOpenAddClient,
-    onOpenChange: onOpenChangeAddClient,
-  } = useDisclosure();
-
-  const {
-    isOpen: isOpenModifyClient,
-    // onOpen: onOpenModifyClient,
-    onOpenChange: onOpenChangeModifyClient,
-  } = useDisclosure();
-
   const [node_data, setNodeData] = useState(null);
-  const [usage, setUsage] = useState("");
-  const [capacity, setCapacity] = useState("");
+
   const [name, setName] = useState("");
   const [clients, setClients] = useState<Array<Client>>([]);
-
-  const [lastUsage, setLastUsage] = useState("");
-  const [lastCapacity, setLastCapacity] = useState("");
 
   const [selectedClient, setSelectedClient] = useState<Client | null>(null);
 
@@ -82,54 +58,14 @@ export default function TabConfiguracion({
       setClients(node_data["clients"] || []);
     } else if (selectedType == "edge") {
       setName(node_data["id"]);
-      setUsage(node_data["usage"] || "");
-      setCapacity(node_data["capacity"] || "");
-      setLastUsage(node_data["usage"] || "");
-      setLastCapacity(node_data["capacity"] || "");
     }
   }, [node_data]);
-
-  const confirmSaveConfiguration = () => {
-    cy.getElementById(selectedNode).data({
-      usage: usage,
-      capacity: capacity,
-      name: name,
-    });
-    setLastUsage(usage);
-    setLastCapacity(capacity);
-  };
 
   const confirmSaveName = (newName: string) => {
     cy.getElementById(selectedNode).data({
       name: newName,
     });
     setName(newName);
-  };
-
-  const confirmAddClient = (client: Client) => {
-    const newClients = [...clients, client];
-    setClients(newClients);
-    cy.getElementById(selectedNode).data({
-      clients: newClients,
-    });
-  };
-
-  const confirmModifyClient = (client: Client) => {
-    const newClients = clients.map((c) => {
-      if (c.id === client.id) {
-        return client;
-      }
-      return c;
-    });
-    setClients(newClients);
-    cy.getElementById(selectedNode).data({
-      clients: newClients,
-    });
-  };
-
-  const cancelSaveConfiguration = () => {
-    // setUsage(lastUsage);
-    // setCapacity(lastCapacity);
   };
 
   return (
@@ -147,48 +83,20 @@ export default function TabConfiguracion({
       {selectedType == "node" ? (
         <NodeTab
           clients={clients}
-          onOpenChangeAddClient={onOpenChangeAddClient}
-          onOpenChangeModifyClient={onOpenChangeModifyClient}
+          setClients={setClients}
           setSelectedClient={setSelectedClient}
+          selectedClient={selectedClient}
+          selectedNode={selectedNode}
         />
       ) : selectedType == "edge" ? (
-        <EdgeTab
-          usage={usage}
-          setUsage={setUsage}
-          lastUsage={lastUsage}
-          capacity={capacity}
-          setCapacity={setCapacity}
-          lastCapacity={lastCapacity}
-          onOpenConfirmation={onOpenConfirmation}
-        />
+        <EdgeTab selectedNode={selectedNode} />
       ) : null}
-
-      <ConfirmationModal
-        isOpen={isOpenConfirmation}
-        onOpen={onOpenConfirmation}
-        onOpenChange={onOpenChangeConfirmation}
-        onConfirm={confirmSaveConfiguration}
-        onCancel={cancelSaveConfiguration}
-      />
 
       <ChangeNameModal
         isOpen={isOpenName}
         onOpenChange={onOpenChangeName}
         onConfirm={confirmSaveName}
         name={name}
-      />
-
-      <AddClientModal
-        isOpen={isOpenAddClient}
-        onOpenChange={onOpenChangeAddClient}
-        onConfirm={confirmAddClient}
-      />
-
-      <ModifyClientModal
-        isOpen={isOpenModifyClient}
-        onOpenChange={onOpenChangeModifyClient}
-        onConfirm={confirmModifyClient}
-        selectedClient={selectedClient}
       />
     </div>
   );
