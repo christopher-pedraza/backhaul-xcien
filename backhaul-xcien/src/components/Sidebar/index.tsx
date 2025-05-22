@@ -16,9 +16,6 @@ import SidebarToggleButton from "./SidebarToggleButton";
 import TabConfiguracion from "./TabConfiguracion";
 import TabResumen from "./TabResumen";
 
-// import { useHistoryContext } from "@/hooks/useHistoryContext";
-// import { UserActionType } from "@/context/HistoryContext";
-
 interface SideBarProps {
   isOpen: boolean;
   setIsOpen: (value: boolean | ((prevState: boolean) => boolean)) => void;
@@ -32,8 +29,6 @@ export default function Sidebar({
   selectedNode,
   selectedType,
 }: SideBarProps) {
-  // const { addAction, actions } = useHistoryContext();
-
   const toggleDrawer = () => {
     setIsOpen((prevState) => !prevState);
   };

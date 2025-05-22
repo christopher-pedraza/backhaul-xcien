@@ -26,6 +26,7 @@ import AddClientModal from "../AddClientModal";
 
 // Contexts
 import { useCyContext } from "@/hooks/useCyContext";
+import { ChangeLogContext } from "@/context/ChangeLogContext";
 
 interface NodeTabProps {
   selectedNode: string;

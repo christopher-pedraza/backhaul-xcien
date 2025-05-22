@@ -1,10 +1,12 @@
 import { useContext } from "react";
-import { HistoryContext } from "@/context/HistoryContext";
+import { ChangeLogContext } from "@/context/ChangeLogContext";
 
-export const useHistoryContext = () => {
-  const ctx = useContext(HistoryContext);
+export const useChangeLogContext = () => {
+  const ctx = useContext(ChangeLogContext);
   if (!ctx) {
-    throw new Error("[useHistoryContext] Wrap your app in <HistoryProvider>");
+    throw new Error(
+      "[useChangeLogContext] Wrap your app in <ChangeLogProvider>"
+    );
   }
   return ctx;
 };

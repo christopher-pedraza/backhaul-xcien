@@ -89,16 +89,16 @@ export interface UserAction {
 }
 
 // Interface for the context value
-export interface HistoryContextValue {
+export interface ChangeLogContextValue {
   actions: UserAction[];
   addAction: (action: Omit<UserAction, "timestamp">) => void;
 }
 
-export const HistoryContext = createContext<HistoryContextValue | undefined>(
-  undefined,
-);
+export const ChangeLogContext = createContext<
+  ChangeLogContextValue | undefined
+>(undefined);
 
-export const HistoryProvider = ({ children }: { children: ReactNode }) => {
+export const ChangeLogProvider = ({ children }: { children: ReactNode }) => {
   const [actions, setActions] = useState<UserAction[]>([]);
 
   const addAction = (action: Omit<UserAction, "timestamp">) => {
@@ -111,7 +111,7 @@ export const HistoryProvider = ({ children }: { children: ReactNode }) => {
       })
       .replace(
         /^(\d{2}):(\d{2}):(\d{2})$/,
-        "$1:$2:$3",
+        "$1:$2:$3"
       )} - ${now.getDate().toString().padStart(2, "0")} de ${now.toLocaleString("es-ES", { month: "long" })}, ${now.getFullYear()}`;
 
     const newAction: UserAction = {
@@ -123,8 +123,8 @@ export const HistoryProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <HistoryContext.Provider value={{ actions, addAction }}>
+    <ChangeLogContext.Provider value={{ actions, addAction }}>
       {children}
-    </HistoryContext.Provider>
+    </ChangeLogContext.Provider>
   );
 };
