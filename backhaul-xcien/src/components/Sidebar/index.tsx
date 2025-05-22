@@ -123,8 +123,7 @@ export default function Sidebar({
         </Drawer>
       </>
     );
-  }
-  else {
+  } else {
     return (
       <SidebarToggleButton
         onPress={toggleDrawer}

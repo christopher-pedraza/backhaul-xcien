@@ -1,5 +1,10 @@
 import { useState } from "react";
-import { ChevronDown, ChevronRight, AlertTriangle, AlertOctagon } from "lucide-react";
+import {
+  ChevronDown,
+  ChevronRight,
+  AlertTriangle,
+  AlertOctagon,
+} from "lucide-react";
 
 export default function AlertCard({
   enlace,
@@ -12,7 +17,11 @@ export default function AlertCard({
   const [expanded, setExpanded] = useState(true);
 
   const color = isCritical ? "red" : "yellow";
-  const icon = isCritical ? <AlertOctagon className="w-5 h-5" /> : <AlertTriangle className="w-5 h-5" />;
+  const icon = isCritical ? (
+    <AlertOctagon className="w-5 h-5" />
+  ) : (
+    <AlertTriangle className="w-5 h-5" />
+  );
   const textColor = isCritical ? "text-red-600" : "text-yellow-600";
   const borderColor = isCritical ? "border-red-500" : "border-yellow-400";
   const bgColor = isCritical ? "bg-red-600" : "bg-yellow-400";
@@ -21,7 +30,9 @@ export default function AlertCard({
     <div
       className={`flex border ${borderColor} rounded-xl overflow-hidden shadow-sm`}
     >
-      <div className={`flex flex-col items-center justify-center w-16 ${bgColor} text-white font-bold`}>
+      <div
+        className={`flex flex-col items-center justify-center w-16 ${bgColor} text-white font-bold`}
+      >
         <div className="flex flex-col items-center">
           {icon}
           <span>{porcentaje}%</span>
