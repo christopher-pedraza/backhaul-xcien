@@ -25,16 +25,12 @@ export default function AddClientModal({
   onOpenChange,
   onConfirm,
 }: AddClientModalProps) {
-  const [id, setId] = useState("");
   const [name, setName] = useState("");
   const [soldCapacity, setSoldCapacity] = useState("");
   const [usage, setUsage] = useState("");
 
   const errors: Array<string> = [];
 
-  if (id.length === 0) {
-    errors.push("El ID no puede estar vacío");
-  }
   if (name.length === 0) {
     errors.push("El nombre no puede estar vacío");
   } else if (name.length > 30) {
@@ -53,8 +49,21 @@ export default function AddClientModal({
     errors.push("El uso debe ser un número positivo");
   }
 
+  const generateId = (name: string) => {
+    const baseId = name
+      .toLowerCase()
+      .replace(/[^a-z0-9]/g, "-")
+      .replace(/--+/g, "-")
+      .replace(/^-|-$/g, "");
+    const randomSeq = Math.random().toString(36).substring(2, 8);
+    return `${baseId}-${randomSeq}`;
+  };
+
   const confirm = () => {
     if (errors.length > 0) return;
+    const id = generateId(name);
+    console.log("ID generado:", id);
+
     onConfirm({
       id,
       name,
@@ -62,7 +71,6 @@ export default function AddClientModal({
       usage: Number(usage),
     });
     onOpenChange(false);
-    setId("");
     setName("");
     setSoldCapacity("");
     setUsage("");
@@ -70,7 +78,6 @@ export default function AddClientModal({
 
   const cancel = () => {
     onOpenChange(false);
-    setId("");
     setName("");
     setSoldCapacity("");
     setUsage("");
@@ -89,15 +96,6 @@ export default function AddClientModal({
               Agregar cliente
             </ModalHeader>
             <ModalBody>
-              <Input
-                label="ID"
-                value={id}
-                onValueChange={setId}
-                placeholder="ID único"
-                variant="underlined"
-                size="lg"
-                className="mb-2"
-              />
               <Input
                 label="Nombre"
                 value={name}
