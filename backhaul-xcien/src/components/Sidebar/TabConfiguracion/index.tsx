@@ -75,15 +75,19 @@ export default function TabConfiguracion({
         },
       });
     } else if (selectedType == "edge") {
+      const capacity: string = node_data["capacity"] || "";
+      const strCapacity: string = capacity.toString();
+      const usage: string = node_data["usage"] || "";
+      const strUsage: string = usage.toString();
       addAction({
         type: UserActionType.EDIT_EDGE,
         data: {
-          oldName: node_data?.id || "",
+          oldName: node_data["id"] || "",
           newName: newName,
-          oldCapacity: node_data?.capacity.toString() || "",
-          newCapacity: node_data?.capacity.toString() || "",
-          oldUsage: node_data?.usage.toString() || "",
-          newUsage: node_data?.usage.toString() || "",
+          oldCapacity: strCapacity,
+          newCapacity: strCapacity,
+          oldUsage: strUsage,
+          newUsage: strUsage,
         },
       });
     }

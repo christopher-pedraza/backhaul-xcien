@@ -1,4 +1,4 @@
-import { useState, useEffect, act } from "react";
+import { useState, useEffect } from "react";
 
 // Components
 import {
@@ -89,6 +89,9 @@ export default function NodeTab({ selectedNode, node_data }: NodeTabProps) {
 
   const confirmModifyClient = (client: Client) => {
     const oldClient = clients.find((c) => c.id === client.id);
+    if (!oldClient) {
+      return;
+    }
     const newClients = clients.map((c) => {
       if (c.id === client.id) {
         return client;
@@ -105,10 +108,10 @@ export default function NodeTab({ selectedNode, node_data }: NodeTabProps) {
       data: {
         oldName: oldClient?.name,
         newName: client.name,
-        oldSoldCapacity: oldClient?.soldCapacity,
-        newSoldCapacity: client.soldCapacity,
-        oldUsage: oldClient?.usage,
-        newUsage: client.usage,
+        oldSoldCapacity: oldClient.soldCapacity.toString(),
+        newSoldCapacity: client.soldCapacity.toString(),
+        oldUsage: oldClient.usage.toString(),
+        newUsage: client.usage.toString(),
       },
     });
   };
@@ -125,8 +128,8 @@ export default function NodeTab({ selectedNode, node_data }: NodeTabProps) {
       data: {
         name: client.name,
         nodeName: node_data.name,
-        soldCapacity: client.soldCapacity,
-        usage: client.usage,
+        soldCapacity: client.soldCapacity.toString(),
+        usage: client.usage.toString(),
       },
     });
   };
