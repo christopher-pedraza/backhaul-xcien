@@ -58,7 +58,7 @@ export const useFlowSolver = () => {
     });
 
     const nodes: string[] = cyNodes.map((node) => node.id());
-    const edges: Graph["edges"] = []
+    const edges: Graph["edges"] = [];
 
     for (const edge of cyEdges) {
       const source = edge.source().id();
@@ -66,7 +66,7 @@ export const useFlowSolver = () => {
       const capacity = Number(edge.data("capacity") || 10); // Default capacity if not specified
 
       if (!sinks.includes(source)) {
-        edges.push({ from: source, to: target, capacity })
+        edges.push({ from: source, to: target, capacity });
       }
 
       if (!sinks.includes(target)) {
@@ -79,7 +79,6 @@ export const useFlowSolver = () => {
     //   to: edge.target().id(),
     //   capacity: Number(edge.data("capacity") || 10), // Default capacity if not specified
     // }));
-
 
     const superSink = "sink";
     const superSource = "source";
@@ -94,7 +93,7 @@ export const useFlowSolver = () => {
         from: superSource,
         to: source,
         capacity: totalInflow,
-      }))
+      })),
     );
 
     return {
@@ -106,141 +105,142 @@ export const useFlowSolver = () => {
     } as Graph;
   }, [graph]);
 
-  const computeFlow = useCallback(async (alpha = 0.7) => {
-    setLoading(true);
-    setError(null);
+  const computeFlow = useCallback(
+    async (alpha = 0.7) => {
+      setLoading(true);
+      setError(null);
 
-    if (!graph?.cy) {
-      throw new Error("No graph available");
-    }
+      if (!graph?.cy) {
+        throw new Error("No graph available");
+      }
 
-    const graphData = buildGraphFromCy();
-    const glpk = await GLPK();
-    // const alpha = 0.7; // Or make this configurable
-    const { nodes, edges, totalInflow, sink, incomingFlow } = graphData;
+      const graphData = buildGraphFromCy();
+      const glpk = await GLPK();
+      // const alpha = 0.7; // Or make this configurable
+      const { nodes, edges, totalInflow, sink, incomingFlow } = graphData;
 
-    console.log("---------")
-    console.log("Graph data:");
-    console.log("Nodes:", nodes);
-    console.log("Edges:", edges);
-    console.log("Total Inflow:", totalInflow);
-    console.log("-----");
+      console.log("---------");
+      console.log("Graph data:");
+      console.log("Nodes:", nodes);
+      console.log("Edges:", edges);
+      console.log("Total Inflow:", totalInflow);
+      console.log("-----");
 
+      const lp: LP = {
+        name: "flow-lp",
+        objective: {
+          direction: glpk.GLP_MIN,
+          name: "total_cost",
+          vars: [],
+        },
+        bounds: [],
+        subjectTo: [],
+      };
 
-    const lp: LP = {
-      name: "flow-lp",
-      objective: {
-        direction: glpk.GLP_MIN,
-        name: "total_cost",
-        vars: [],
-      },
-      bounds: [],
-      subjectTo: [],
-    };
+      // Add variables and objective terms
+      for (const { from, to, capacity } of edges) {
+        const fName = `f_${from}->${to}`;
+        const oName = `o_${from}->${to}`;
 
-    // Add variables and objective terms
-    for (const { from, to, capacity } of edges) {
-      const fName = `f_${from}->${to}`;
-      const oName = `o_${from}->${to}`;
-
-      lp.bounds!.push({
-        name: fName,
-        type: glpk.GLP_LO,
-        lb: 0,
-        ub: Infinity,
-      });
-      lp.bounds!.push({
-        name: oName,
-        type: glpk.GLP_LO,
-        lb: 0,
-        ub: Infinity,
-      });
-
-      lp.objective!.vars.push({ name: fName, coef: alpha });
-      lp.objective!.vars.push({ name: oName, coef: 1 - alpha });
-
-      // Overflow constraint: f - o ≤ c  ⇨ f - o - s ≤ c
-      lp.subjectTo!.push({
-        name: `overflow_${from}->${to}`,
-        vars: [
-          { name: fName, coef: 1 },
-          { name: oName, coef: -1 },
-        ],
-        bnds: { type: glpk.GLP_UP, ub: capacity, lb: -Infinity },
-      });
-    }
-
-    // Add flow conservation for non-sink/non-source nodes
-    for (const v of nodes) {
-
-      const inflow = edges
-        .filter((e) => e.to === v)
-        .map((e) => ({ name: `f_${e.from}->${e.to}`, coef: 1 }));
-
-      const outflow = edges
-        .filter((e) => e.from === v)
-        .map((e) => ({ name: `f_${e.from}->${e.to}`, coef: -1 }));
-
-      if (v == sink) {
-        lp.subjectTo!.push({
-          name: `flow_${v}`,
-          vars: [...inflow, ...outflow],
-          bnds: { type: glpk.GLP_FX, lb: totalInflow, ub: totalInflow },
+        lp.bounds!.push({
+          name: fName,
+          type: glpk.GLP_LO,
+          lb: 0,
+          ub: Infinity,
         });
-      } else if (incomingFlow[v]) {
-        const flow = incomingFlow[v];
-        lp.subjectTo!.push({
-          name: `flow_${v}`,
-          vars: [...inflow, ...outflow],
-          bnds: { type: glpk.GLP_FX, lb: -flow, ub: -flow },
+        lp.bounds!.push({
+          name: oName,
+          type: glpk.GLP_LO,
+          lb: 0,
+          ub: Infinity,
         });
-      } else {
+
+        lp.objective!.vars.push({ name: fName, coef: alpha });
+        lp.objective!.vars.push({ name: oName, coef: 1 - alpha });
+
+        // Overflow constraint: f - o ≤ c  ⇨ f - o - s ≤ c
         lp.subjectTo!.push({
-          name: `flow_${v}`,
-          vars: [...inflow, ...outflow],
-          bnds: { type: glpk.GLP_FX, lb: 0, ub: 0 },
+          name: `overflow_${from}->${to}`,
+          vars: [
+            { name: fName, coef: 1 },
+            { name: oName, coef: -1 },
+          ],
+          bnds: { type: glpk.GLP_UP, ub: capacity, lb: -Infinity },
         });
       }
-    }
 
-    // Solve the LP
-    const result = await glpk.solve(lp, { msglev: glpk.GLP_MSG_ERR });
-    console.log("Result:");
-    console.log(result.result);
-    console.log("---------");
+      // Add flow conservation for non-sink/non-source nodes
+      for (const v of nodes) {
+        const inflow = edges
+          .filter((e) => e.to === v)
+          .map((e) => ({ name: `f_${e.from}->${e.to}`, coef: 1 }));
 
-    if (result.result.status !== glpk.GLP_OPT) {
-      throw new Error("No optimal flow found");
-    }
+        const outflow = edges
+          .filter((e) => e.from === v)
+          .map((e) => ({ name: `f_${e.from}->${e.to}`, coef: -1 }));
 
-    // Extract flows
-    const flows: FlowSolution["flows"] = edges
-      .map(({ from, to }) => {
-        const fName = `f_${from}->${to}`;
-        return {
-          from,
-          to,
-          flow: result.result.vars[fName] ?? 0,
-        };
-      })
-      .filter((f) => f.flow > 1e-6); // Filter near-zero flows
+        if (v == sink) {
+          lp.subjectTo!.push({
+            name: `flow_${v}`,
+            vars: [...inflow, ...outflow],
+            bnds: { type: glpk.GLP_FX, lb: totalInflow, ub: totalInflow },
+          });
+        } else if (incomingFlow[v]) {
+          const flow = incomingFlow[v];
+          lp.subjectTo!.push({
+            name: `flow_${v}`,
+            vars: [...inflow, ...outflow],
+            bnds: { type: glpk.GLP_FX, lb: -flow, ub: -flow },
+          });
+        } else {
+          lp.subjectTo!.push({
+            name: `flow_${v}`,
+            vars: [...inflow, ...outflow],
+            bnds: { type: glpk.GLP_FX, lb: 0, ub: 0 },
+          });
+        }
+      }
 
-    const totalCost = result.result.z;
+      // Solve the LP
+      const result = await glpk.solve(lp, { msglev: glpk.GLP_MSG_ERR });
+      console.log("Result:");
+      console.log(result.result);
+      console.log("---------");
 
-    const solution: FlowSolution = { flows, totalCost };
-    setSolution(solution);
-    setLoading(false);
+      if (result.result.status !== glpk.GLP_OPT) {
+        throw new Error("No optimal flow found");
+      }
 
-    return solution;
-  //   } catch (err) {
-  //     const errorMessage = err instanceof Error ? err.message : "Unknown error";
-  //     setError(errorMessage);
-  //     console.error("Flow calculation error:", err);
-  //     return [];
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  }, [graph, buildGraphFromCy]);
+      // Extract flows
+      const flows: FlowSolution["flows"] = edges
+        .map(({ from, to }) => {
+          const fName = `f_${from}->${to}`;
+          return {
+            from,
+            to,
+            flow: result.result.vars[fName] ?? 0,
+          };
+        })
+        .filter((f) => f.flow > 1e-6); // Filter near-zero flows
+
+      const totalCost = result.result.z;
+
+      const solution: FlowSolution = { flows, totalCost };
+      setSolution(solution);
+      setLoading(false);
+
+      return solution;
+      //   } catch (err) {
+      //     const errorMessage = err instanceof Error ? err.message : "Unknown error";
+      //     setError(errorMessage);
+      //     console.error("Flow calculation error:", err);
+      //     return [];
+      //   } finally {
+      //     setLoading(false);
+      //   }
+    },
+    [graph, buildGraphFromCy],
+  );
 
   useEffect(() => {
     if (!solution || !graph?.cy) return;
