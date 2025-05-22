@@ -14,6 +14,7 @@ import SidebarToggleButton from "./SidebarToggleButton";
 
 // Tabs
 import TabConfiguracion from "./TabConfiguracion";
+import TabAlertas from "./TabAlertas";
 import TabResumen from "./TabResumen";
 
 // Contexts
@@ -100,14 +101,16 @@ export default function Sidebar({
                   />
                 </Tab>
                 <Tab
-                  key="soluciones"
+                  key="alertas"
                   title={
                     <div className="flex items-center space-x-2">
                       <NetworkIcon />
-                      <span>Soluciones</span>
+                      <span>Alertas</span>
                     </div>
                   }
-                ></Tab>
+                >
+                  <TabAlertas />
+                </Tab>
                 <Tab
                   key="resumen"
                   title={
