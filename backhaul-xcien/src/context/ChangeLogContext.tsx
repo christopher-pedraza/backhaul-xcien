@@ -73,7 +73,7 @@ interface EditClientActionData {
 // Interface for a user action
 export interface UserAction {
   id: number;
-  title: string;
+  // title: string;
   type: UserActionType;
   timestamp: string;
   data:

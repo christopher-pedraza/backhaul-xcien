@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, act } from "react";
 
 // Components
 import {
@@ -26,7 +26,8 @@ import AddClientModal from "../AddClientModal";
 
 // Contexts
 import { useCyContext } from "@/hooks/useCyContext";
-import { ChangeLogContext } from "@/context/ChangeLogContext";
+import { useChangeLogContext } from "@/hooks/useChangeLogContext";
+import { UserActionType } from "@/context/ChangeLogContext";
 
 interface NodeTabProps {
   selectedNode: string;
@@ -37,6 +38,8 @@ export default function NodeTab({ selectedNode, node_data }: NodeTabProps) {
   const { cy } = useCyContext();
   if (!cy) return;
 
+  const { addAction, actions } = useChangeLogContext();
+
   const [clients, setClients] = useState<Array<Client>>([]);
   const [selectedClient, setSelectedClient] = useState<Client | null>(null);
 
@@ -46,6 +49,10 @@ export default function NodeTab({ selectedNode, node_data }: NodeTabProps) {
     }
     setClients(node_data["clients"] || []);
   }, [node_data]);
+
+  useEffect(() => {
+    console.log("actions", actions);
+  }, [actions]);
 
   //
   // useDisclosure de los modales
@@ -75,9 +82,17 @@ export default function NodeTab({ selectedNode, node_data }: NodeTabProps) {
       clients: updatedClients,
     });
     setClients(updatedClients);
+    // Agregar la acción al ChangeLog
+    addAction({
+      type: UserActionType.REMOVE_CLIENT,
+      data: {
+        name: client.name,
+      },
+    });
   };
 
   const confirmModifyClient = (client: Client) => {
+    const oldClient = clients.find((c) => c.id === client.id);
     const newClients = clients.map((c) => {
       if (c.id === client.id) {
         return client;
@@ -88,6 +103,18 @@ export default function NodeTab({ selectedNode, node_data }: NodeTabProps) {
     cy.getElementById(selectedNode).data({
       clients: newClients,
     });
+    // Agregar la acción al ChangeLog
+    addAction({
+      type: UserActionType.EDIT_CLIENT,
+      data: {
+        oldName: oldClient?.name,
+        newName: client.name,
+        oldSoldCapacity: oldClient?.soldCapacity,
+        newSoldCapacity: client.soldCapacity,
+        oldUsage: oldClient?.usage,
+        newUsage: client.usage,
+      },
+    });
   };
 
   const confirmAddClient = (client: Client) => {
@@ -95,6 +122,16 @@ export default function NodeTab({ selectedNode, node_data }: NodeTabProps) {
     setClients(newClients);
     cy.getElementById(selectedNode).data({
       clients: newClients,
+    });
+    // Agregar la acción al ChangeLog
+    addAction({
+      type: UserActionType.ADD_CLIENT,
+      data: {
+        name: client.name,
+        nodeName: node_data.name,
+        soldCapacity: client.soldCapacity,
+        usage: client.usage,
+      },
     });
   };
 
