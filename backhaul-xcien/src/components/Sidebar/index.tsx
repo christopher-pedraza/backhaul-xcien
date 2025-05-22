@@ -14,6 +14,7 @@ import SidebarToggleButton from "./SidebarToggleButton";
 
 // Tabs
 import TabConfiguracion from "./TabConfiguracion";
+import TabAlertas from "./TabAlertas";
 import TabResumen from "./TabResumen";
 
 interface SideBarProps {
@@ -90,14 +91,16 @@ export default function Sidebar({
                   />
                 </Tab>
                 <Tab
-                  key="soluciones"
+                  key="alertas"
                   title={
                     <div className="flex items-center space-x-2">
                       <NetworkIcon />
-                      <span>Soluciones</span>
+                      <span>Alertas</span>
                     </div>
                   }
-                />
+                >
+                  <TabAlertas />
+                </Tab>
                 <Tab
                   key="resumen"
                   title={
@@ -121,24 +124,6 @@ export default function Sidebar({
       </>
     );
   }
-  // else if (selectedNode) {
-  //   return (
-  //     <SidebarToggleButton
-  //       onPress={toggleDrawer}
-  //       left={undefined}
-  //       right={0}
-  //       icon={
-  //         <OpenDrawerIcon
-  //           fill="currentColor"
-  //           size={24}
-  //           height={24}
-  //           width={24}
-  //         />
-  //       }
-  //       isDisabled={false}
-  //     />
-  //   );
-  // }
   else {
     return (
       <SidebarToggleButton
