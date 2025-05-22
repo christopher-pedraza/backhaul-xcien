@@ -1,3 +1,5 @@
+import { useState, useEffect } from "react";
+
 // Components
 import {
   Button,
@@ -26,22 +28,24 @@ import AddClientModal from "../AddClientModal";
 import { useCyContext } from "@/hooks/useCyContext";
 
 interface NodeTabProps {
-  clients: Array<Client>;
-  setClients: (clients: Array<Client>) => void;
-  setSelectedClient: (client: Client | null) => void;
-  selectedClient?: Client | null;
   selectedNode: string;
+  // TODO: Checar el tipo de node_data
+  node_data: any;
 }
 
-export default function NodeTab({
-  clients,
-  setClients,
-  setSelectedClient,
-  selectedClient,
-  selectedNode,
-}: NodeTabProps) {
+export default function NodeTab({ selectedNode, node_data }: NodeTabProps) {
   const { cy } = useCyContext();
   if (!cy) return;
+
+  const [clients, setClients] = useState<Array<Client>>([]);
+  const [selectedClient, setSelectedClient] = useState<Client | null>(null);
+
+  useEffect(() => {
+    if (!node_data) {
+      return;
+    }
+    setClients(node_data["clients"] || []);
+  }, [node_data]);
 
   //
   // useDisclosure de los modales

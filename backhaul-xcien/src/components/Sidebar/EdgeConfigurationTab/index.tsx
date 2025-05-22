@@ -12,13 +12,14 @@ import ConfirmationModal from "../ConfirmationModal";
 
 interface EdgeTabProps {
   selectedNode: string;
+  // TODO: Checar el tipo de node_data
+  node_data: any;
 }
 
-export default function EdgeTab({ selectedNode }: EdgeTabProps) {
+export default function EdgeTab({ selectedNode, node_data }: EdgeTabProps) {
   const { cy } = useCyContext();
   if (!cy) return null;
 
-  const [node_data, setNodeData] = useState(null);
   const [usage, setUsage] = useState("");
   const [capacity, setCapacity] = useState("");
   const [lastUsage, setLastUsage] = useState("");
@@ -34,17 +35,9 @@ export default function EdgeTab({ selectedNode }: EdgeTabProps) {
   } = useDisclosure();
 
   useEffect(() => {
-    const node = cy.getElementById(selectedNode);
-    if (node) {
-      setNodeData(node.data());
-    }
-  }, [selectedNode, cy]);
-
-  useEffect(() => {
     if (!node_data) {
       return;
     }
-
     setUsage(node_data["usage"] || "");
     setCapacity(node_data["capacity"] || "");
     setLastUsage(node_data["usage"] || "");

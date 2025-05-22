@@ -7,11 +7,7 @@ import EdgeTab from "../EdgeConfigurationTab";
 import NodeTab from "../NodeConfigurationTab";
 
 // Modals
-import ConfirmationModal from "../ConfirmationModal";
 import ChangeNameModal from "../ChangeNameModal";
-
-// Types
-import { Client } from "@/types/Client";
 
 // Icons
 import PencilIcon from "../Icons/PencilIcon";
@@ -37,9 +33,6 @@ export default function TabConfiguracion({
   const [node_data, setNodeData] = useState(null);
 
   const [name, setName] = useState("");
-  const [clients, setClients] = useState<Array<Client>>([]);
-
-  const [selectedClient, setSelectedClient] = useState<Client | null>(null);
 
   useEffect(() => {
     const node = cy.getElementById(selectedNode);
@@ -52,10 +45,8 @@ export default function TabConfiguracion({
     if (!node_data) {
       return;
     }
-
     if (selectedType == "node") {
       setName(node_data["name"] || "");
-      setClients(node_data["clients"] || []);
     } else if (selectedType == "edge") {
       setName(node_data["id"]);
     }
@@ -81,15 +72,9 @@ export default function TabConfiguracion({
       </Button>
 
       {selectedType == "node" ? (
-        <NodeTab
-          clients={clients}
-          setClients={setClients}
-          setSelectedClient={setSelectedClient}
-          selectedClient={selectedClient}
-          selectedNode={selectedNode}
-        />
+        <NodeTab selectedNode={selectedNode} node_data={node_data} />
       ) : selectedType == "edge" ? (
-        <EdgeTab selectedNode={selectedNode} />
+        <EdgeTab selectedNode={selectedNode} node_data={node_data} />
       ) : null}
 
       <ChangeNameModal
