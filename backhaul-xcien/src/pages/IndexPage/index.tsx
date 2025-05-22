@@ -103,6 +103,7 @@ const IndexPage: FC<Props> = () => {
       setSelectedNode(id);
       setSelectedType("node");
       if (!isSidebarOpen) setSidebarIsOpen(true);
+      console.log(cy.getElementById(id).connectedEdges()[0].id());
     };
 
     const handleEdgeTap = (event: any) => {
@@ -114,6 +115,7 @@ const IndexPage: FC<Props> = () => {
 
     cy.on("tap", "node", handleNodeTap);
     cy.on("tap", "edge", handleEdgeTap);
+
 
     return () => {
       cy.off("tap", "node", handleNodeTap);
