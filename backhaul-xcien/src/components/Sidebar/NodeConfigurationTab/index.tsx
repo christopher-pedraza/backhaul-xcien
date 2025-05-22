@@ -30,7 +30,6 @@ import { ChangeLogContext } from "@/context/ChangeLogContext";
 
 interface NodeTabProps {
   selectedNode: string;
-  // TODO: Checar el tipo de node_data
   node_data: any;
 }
 

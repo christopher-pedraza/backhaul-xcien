@@ -12,7 +12,6 @@ import ConfirmationModal from "../ConfirmationModal";
 
 interface EdgeTabProps {
   selectedNode: string;
-  // TODO: Checar el tipo de node_data
   node_data: any;
 }
 
