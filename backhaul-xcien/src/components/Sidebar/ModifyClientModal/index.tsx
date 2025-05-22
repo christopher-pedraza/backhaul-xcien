@@ -42,9 +42,6 @@ export default function ModifyClientModal({
 
   const errors: Array<string> = [];
 
-  if (id.length === 0) {
-    errors.push("El ID no puede estar vacío");
-  }
   if (name.length === 0) {
     errors.push("El nombre no puede estar vacío");
   } else if (name.length > 30) {
@@ -69,7 +66,6 @@ export default function ModifyClientModal({
       usage: Number(usage),
     });
     onOpenChange(false);
-    setId("");
     setName("");
     setSoldCapacity(0);
     setUsage(0);
@@ -77,7 +73,6 @@ export default function ModifyClientModal({
 
   const cancel = () => {
     onOpenChange(false);
-    setId("");
     setName("");
     setSoldCapacity(0);
     setUsage(0);
@@ -96,15 +91,6 @@ export default function ModifyClientModal({
               Modificar cliente
             </ModalHeader>
             <ModalBody>
-              <Input
-                label="ID"
-                value={id}
-                onValueChange={setId}
-                placeholder="ID único"
-                variant="underlined"
-                size="lg"
-                className="mb-2"
-              />
               <Input
                 label="Nombre"
                 value={name}
