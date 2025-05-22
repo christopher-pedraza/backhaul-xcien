@@ -16,6 +16,11 @@ import SidebarToggleButton from "./SidebarToggleButton";
 import TabConfiguracion from "./TabConfiguracion";
 import TabResumen from "./TabResumen";
 
+// Contexts
+import { useChangeLogContext } from "@/hooks/useChangeLogContext";
+
+import { useEffect } from "react";
+
 interface SideBarProps {
   isOpen: boolean;
   setIsOpen: (value: boolean | ((prevState: boolean) => boolean)) => void;
@@ -29,6 +34,11 @@ export default function Sidebar({
   selectedNode,
   selectedType,
 }: SideBarProps) {
+  const { actions } = useChangeLogContext();
+  useEffect(() => {
+    console.log("actions", actions);
+  }, [actions]);
+
   const toggleDrawer = () => {
     setIsOpen((prevState) => !prevState);
   };
@@ -71,7 +81,7 @@ export default function Sidebar({
                 placement="top"
                 classNames={{
                   base: "pt-8",
-                  tab: "h-14",
+                  // tab: "h-14",
                 }}
               >
                 <Tab
@@ -97,7 +107,7 @@ export default function Sidebar({
                       <span>Soluciones</span>
                     </div>
                   }
-                />
+                ></Tab>
                 <Tab
                   key="resumen"
                   title={
@@ -120,26 +130,7 @@ export default function Sidebar({
         </Drawer>
       </>
     );
-  }
-  // else if (selectedNode) {
-  //   return (
-  //     <SidebarToggleButton
-  //       onPress={toggleDrawer}
-  //       left={undefined}
-  //       right={0}
-  //       icon={
-  //         <OpenDrawerIcon
-  //           fill="currentColor"
-  //           size={24}
-  //           height={24}
-  //           width={24}
-  //         />
-  //       }
-  //       isDisabled={false}
-  //     />
-  //   );
-  // }
-  else {
+  } else {
     return (
       <SidebarToggleButton
         onPress={toggleDrawer}
