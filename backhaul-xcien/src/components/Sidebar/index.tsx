@@ -82,7 +82,7 @@ export default function Sidebar({
                 placement="top"
                 classNames={{
                   base: "pt-8",
-                  // tab: "h-14",
+                  tab: "h-10",
                 }}
               >
                 <Tab
