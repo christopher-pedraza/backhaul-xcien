@@ -4,8 +4,14 @@ import GLPK, { LP } from "glpk.js";
 
 export interface Graph {
   nodes: string[];
-  edges: Array<{ from: string; to: string; capacity: number }>;
+  edges: Array<{ 
+    from: string; 
+    to: string; 
+    capacity: number;
+    strictCapacity: boolean;
+  }>;
   sink: string;
+  source: string;
   incomingFlow: Record<string, number>;
   totalInflow: number;
 }
@@ -66,11 +72,11 @@ export const useFlowSolver = () => {
       const capacity = Number(edge.data("capacity") || 10); // Default capacity if not specified
 
       if (!sinks.includes(source)) {
-        edges.push({ from: source, to: target, capacity })
+        edges.push({ from: source, to: target, capacity, strictCapacity: false });
       }
 
       if (!sinks.includes(target)) {
-        edges.push({ from: target, to: source, capacity });
+        edges.push({ from: target, to: source, capacity, strictCapacity: false });
       }
     }
 
@@ -89,11 +95,13 @@ export const useFlowSolver = () => {
         from: sink,
         to: superSink,
         capacity: totalInflow,
+        strictCapacity: true,
       })),
       ...sources.map((source) => ({
         from: superSource,
         to: source,
-        capacity: totalInflow,
+        capacity: incomingFlow[source],
+        strictCapacity: true,
       }))
     );
 
@@ -101,6 +109,7 @@ export const useFlowSolver = () => {
       nodes,
       edges,
       sink: superSink,
+      source: superSource,
       incomingFlow,
       totalInflow,
     } as Graph;
@@ -117,7 +126,7 @@ export const useFlowSolver = () => {
     const graphData = buildGraphFromCy();
     const glpk = await GLPK();
     // const alpha = 0.7; // Or make this configurable
-    const { nodes, edges, totalInflow, sink, incomingFlow } = graphData;
+    const { nodes, edges, totalInflow, sink, source, incomingFlow } = graphData;
 
     console.log("---------")
     console.log("Graph data:");
@@ -139,39 +148,58 @@ export const useFlowSolver = () => {
     };
 
     // Add variables and objective terms
-    for (const { from, to, capacity } of edges) {
+    for (const { from, to, capacity, strictCapacity } of edges) {
       const fName = `f_${from}->${to}`;
-      const oName = `o_${from}->${to}`;
-
+      
+      // Add flow variable
       lp.bounds!.push({
         name: fName,
         type: glpk.GLP_LO,
         lb: 0,
         ub: Infinity,
       });
-      lp.bounds!.push({
-        name: oName,
-        type: glpk.GLP_LO,
-        lb: 0,
-        ub: Infinity,
-      });
 
-      lp.objective!.vars.push({ name: fName, coef: alpha });
-      lp.objective!.vars.push({ name: oName, coef: 1 - alpha });
+      if (strictCapacity) {
+        // For edges that cannot exceed capacity, just add a direct upper bound constraint
+        lp.subjectTo!.push({
+          name: `capacity_${from}->${to}`,
+          vars: [{ name: fName, coef: 1 }],
+          bnds: { type: glpk.GLP_UP, ub: capacity, lb: 0 },
+        });
+        
+        // Add to objective function (no overflow term)
+        lp.objective!.vars.push({ name: fName, coef: alpha });
+      } 
+      else {
+        // For regular edges, use the overflow variable approach
+        const oName = `o_${from}->${to}`;
+        
+        lp.bounds!.push({
+          name: oName,
+          type: glpk.GLP_LO,
+          lb: 0,
+          ub: Infinity,
+        });
 
-      // Overflow constraint: f - o ≤ c  ⇨ f - o - s ≤ c
-      lp.subjectTo!.push({
-        name: `overflow_${from}->${to}`,
-        vars: [
-          { name: fName, coef: 1 },
-          { name: oName, coef: -1 },
-        ],
-        bnds: { type: glpk.GLP_UP, ub: capacity, lb: -Infinity },
-      });
+        lp.objective!.vars.push({ name: fName, coef: alpha });
+        lp.objective!.vars.push({ name: oName, coef: 1 - alpha });
+
+        // Overflow constraint: f - o ≤ c
+        lp.subjectTo!.push({
+          name: `overflow_${from}->${to}`,
+          vars: [
+            { name: fName, coef: 1 },
+            { name: oName, coef: -1 },
+          ],
+          bnds: { type: glpk.GLP_UP, ub: capacity, lb: 0 },
+        });
+      }
     }
 
     // Add flow conservation for non-sink/non-source nodes
     for (const v of nodes) {
+
+      if (v === source) continue;
 
       const inflow = edges
         .filter((e) => e.to === v)
@@ -187,12 +215,12 @@ export const useFlowSolver = () => {
           vars: [...inflow, ...outflow],
           bnds: { type: glpk.GLP_FX, lb: totalInflow, ub: totalInflow },
         });
-      } else if (incomingFlow[v]) {
-        const flow = incomingFlow[v];
+      } else if (v == source) {
+        // const flow = incomingFlow[v];
         lp.subjectTo!.push({
           name: `flow_${v}`,
           vars: [...inflow, ...outflow],
-          bnds: { type: glpk.GLP_FX, lb: -flow, ub: -flow },
+          bnds: { type: glpk.GLP_FX, lb: -totalInflow, ub: -totalInflow },
         });
       } else {
         lp.subjectTo!.push({
@@ -202,6 +230,10 @@ export const useFlowSolver = () => {
         });
       }
     }
+
+    const sourceEdges = edges
+      .filter((e) => e.from === source)
+    console.log("Source edges:", sourceEdges);
 
     // Solve the LP
     const result = await glpk.solve(lp, { msglev: glpk.GLP_MSG_ERR });
