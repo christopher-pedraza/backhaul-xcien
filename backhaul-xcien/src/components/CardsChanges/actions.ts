@@ -1,6 +1,11 @@
-import { UserAction, UserActionType } from "../../../src/context/ChangeLogContext";
+import {
+  UserAction,
+  UserActionType,
+} from "../../../src/context/ChangeLogContext";
 
-export const getActionType = (type: UserActionType): "error" | "info" | "success" => {
+export const getActionType = (
+  type: UserActionType,
+): "error" | "info" | "success" => {
   switch (type) {
     case UserActionType.REMOVE_NODE:
     case UserActionType.REMOVE_EDGE:
@@ -54,7 +59,9 @@ export const getActionDetails = (action: UserAction): string[] => {
     case UserActionType.REMOVE_NODE:
       return [
         `Nodo: ${(action.data as any).name}`,
-        ...(action.data as any).removedEdges.map((edge: string) => `Enlace eliminado: ${edge}`),
+        ...(action.data as any).removedEdges.map(
+          (edge: string) => `Enlace eliminado: ${edge}`,
+        ),
       ];
 
     case UserActionType.ADD_EDGE:

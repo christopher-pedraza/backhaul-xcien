@@ -121,7 +121,6 @@ const IndexPage: FC<Props> = () => {
     cy.on("tap", "node", handleNodeTap);
     cy.on("tap", "edge", handleEdgeTap);
 
-
     return () => {
       cy.off("tap", "node", handleNodeTap);
       cy.off("tap", "edge", handleEdgeTap);
@@ -161,7 +160,7 @@ const IndexPage: FC<Props> = () => {
         capacity,
         usage,
       },
-      classes: selectedNodeType, 
+      classes: selectedNodeType,
       position: getBottomLeftPosition(cy),
     });
 
@@ -243,7 +242,6 @@ const IndexPage: FC<Props> = () => {
 
   const handleDelete = () => {
     if (selectedNode && cy) {
-
       const connectedEdges = cy
         .getElementById(selectedNode)
         .connectedEdges()
@@ -251,25 +249,23 @@ const IndexPage: FC<Props> = () => {
 
       cy.getElementById(selectedNode).remove();
 
-      
-
-      if(selectedType === "edge") {
+      if (selectedType === "edge") {
         addAction({
-        type: UserActionType.REMOVE_EDGE,
-        data: {
-          name: elementName,
+          type: UserActionType.REMOVE_EDGE,
+          data: {
+            name: elementName,
           },
         });
-      } else if(selectedType === "node") {
+      } else if (selectedType === "node") {
         addAction({
           type: UserActionType.REMOVE_NODE,
           data: {
             name: elementName,
             removedEdges: connectedEdges,
-            },
+          },
         });
       }
-      
+
       setSelectedNode(null);
       setSidebarIsOpen(false);
       setIsDeleteModalOpen(false);
