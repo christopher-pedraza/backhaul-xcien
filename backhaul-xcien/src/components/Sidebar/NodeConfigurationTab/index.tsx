@@ -140,7 +140,7 @@ export default function NodeTab({ selectedNode, node_data }: NodeTabProps) {
                     {client.usage}
                   </p>
                   <Button
-                    className="absolute right-0 top-0 bg-transparent"
+                    className="absolute right-0 top-1 bg-transparent"
                     isIconOnly
                     onPress={() => {
                       onPressRemoveClient(client);
@@ -150,7 +150,7 @@ export default function NodeTab({ selectedNode, node_data }: NodeTabProps) {
                     <Trash2Icon color="#bd5348" />
                   </Button>
                   <Button
-                    className="absolute right-0 top-9 bg-transparent"
+                    className="absolute right-0 top-10 bg-transparent"
                     isIconOnly
                     onPress={() => {
                       onPressModifyClient(client);
