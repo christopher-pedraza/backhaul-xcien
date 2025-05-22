@@ -19,10 +19,6 @@ interface AddNodeActionData {
 interface EditNodeActionData {
   oldName: string;
   newName: string;
-  oldCapacity: string;
-  newCapacity: string;
-  oldUsage: string;
-  newUsage: string;
 }
 
 interface RemoveNodeActionData {

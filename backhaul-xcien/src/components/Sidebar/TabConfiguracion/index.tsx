@@ -12,6 +12,10 @@ import ChangeNameModal from "../ChangeNameModal";
 // Icons
 import PencilIcon from "../Icons/PencilIcon";
 
+// Contexts
+import { useChangeLogContext } from "@/hooks/useChangeLogContext";
+import { UserActionType } from "@/context/ChangeLogContext";
+
 interface TabConfiguracionProps {
   selectedNode: string;
   selectedType: string;
@@ -23,6 +27,8 @@ export default function TabConfiguracion({
 }: TabConfiguracionProps) {
   const { cy } = useCyContext();
   if (!cy) return null;
+
+  const { addAction } = useChangeLogContext();
 
   const {
     isOpen: isOpenName,
@@ -53,10 +59,34 @@ export default function TabConfiguracion({
   }, [node_data]);
 
   const confirmSaveName = (newName: string) => {
+    if (!node_data) {
+      return;
+    }
     cy.getElementById(selectedNode).data({
       name: newName,
     });
     setName(newName);
+    if (selectedType == "node") {
+      addAction({
+        type: UserActionType.EDIT_NODE,
+        data: {
+          oldName: name,
+          newName: newName,
+        },
+      });
+    } else if (selectedType == "edge") {
+      addAction({
+        type: UserActionType.EDIT_EDGE,
+        data: {
+          oldName: node_data?.id || "",
+          newName: newName,
+          oldCapacity: node_data?.capacity.toString() || "",
+          newCapacity: node_data?.capacity.toString() || "",
+          oldUsage: node_data?.usage.toString() || "",
+          newUsage: node_data?.usage.toString() || "",
+        },
+      });
+    }
   };
 
   return (

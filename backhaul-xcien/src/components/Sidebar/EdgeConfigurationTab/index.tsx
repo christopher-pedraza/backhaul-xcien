@@ -65,12 +65,12 @@ export default function EdgeTab({ selectedNode, node_data }: EdgeTabProps) {
     addAction({
       type: UserActionType.EDIT_EDGE,
       data: {
-        oldName: node_data?.name || "",
-        newName: node_data?.name || "",
-        oldCapacity: lastCapacity,
-        newCapacity: capacity,
-        oldUsage: lastUsage,
-        newUsage: usage,
+        oldName: node_data?.id || "",
+        newName: node_data?.id || "",
+        oldCapacity: lastCapacity.toString(),
+        newCapacity: capacity.toString(),
+        oldUsage: lastUsage.toString(),
+        newUsage: usage.toString(),
       },
     });
   };

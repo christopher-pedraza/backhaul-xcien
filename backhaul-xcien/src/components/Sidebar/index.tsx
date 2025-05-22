@@ -16,6 +16,11 @@ import SidebarToggleButton from "./SidebarToggleButton";
 import TabConfiguracion from "./TabConfiguracion";
 import TabResumen from "./TabResumen";
 
+// Contexts
+import { useChangeLogContext } from "@/hooks/useChangeLogContext";
+
+import { useEffect } from "react";
+
 interface SideBarProps {
   isOpen: boolean;
   setIsOpen: (value: boolean | ((prevState: boolean) => boolean)) => void;
@@ -29,6 +34,11 @@ export default function Sidebar({
   selectedNode,
   selectedType,
 }: SideBarProps) {
+  const { actions } = useChangeLogContext();
+  useEffect(() => {
+    console.log("actions", actions);
+  }, [actions]);
+
   const toggleDrawer = () => {
     setIsOpen((prevState) => !prevState);
   };
