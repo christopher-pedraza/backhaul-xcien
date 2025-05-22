@@ -40,7 +40,11 @@ export default function AlertCard({
           </button>
         </div>
 
-        {expanded && (
+        <div
+          className={`transition-all duration-500 ease-in-out overflow-hidden ${
+            expanded ? "max-h-40" : "max-h-0"
+          }`}
+        >
           <div className="mt-2 text-sm">
             <div>
               Predicción de uso:{" "}
@@ -54,7 +58,7 @@ export default function AlertCard({
               </span>
             </div>
           </div>
-        )}
+        </div>
       </div>
     </div>
   );

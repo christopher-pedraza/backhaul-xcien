@@ -19,7 +19,7 @@ const TabAlertas: React.FC = () => {
   ];
 
   return (
-    <div className="p-4">
+    <div className="p-4 space-y-4">
       <AlertCard
         enlace="Conexión Sur"
         porcentaje={85}
