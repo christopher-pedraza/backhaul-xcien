@@ -13,6 +13,9 @@ import useTopologyOptions from "@/hooks/topologies/useTopologyOptions";
 import useTopology from "@/hooks/topologies/useTopology";
 import DeleteConfirmModal from "@/components/toolBox/DeleteConfirmModal/DeleteConfirmModal";
 
+import { useChangeLogContext } from "@/hooks/useChangeLogContext";
+import { UserActionType } from "@/context/ChangeLogContext";
+
 interface Props {}
 
 // 🔢 Función auxiliar: Devuelve el siguiente índice disponible para un enlace
@@ -74,6 +77,8 @@ const IndexPage: FC<Props> = () => {
   const [sourceNode, setSourceNode] = useState("");
   const [targetNode, setTargetNode] = useState("");
 
+  const { addAction } = useChangeLogContext();
+
   // Delete modal state
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
@@ -116,6 +121,7 @@ const IndexPage: FC<Props> = () => {
     cy.on("tap", "node", handleNodeTap);
     cy.on("tap", "edge", handleEdgeTap);
 
+
     return () => {
       cy.off("tap", "node", handleNodeTap);
       cy.off("tap", "edge", handleEdgeTap);
@@ -155,8 +161,15 @@ const IndexPage: FC<Props> = () => {
         capacity,
         usage,
       },
-      classes: selectedNodeType, // ✅ Esto es clave
+      classes: selectedNodeType, 
       position: getBottomLeftPosition(cy),
+    });
+
+    addAction({
+      type: UserActionType.ADD_NODE,
+      data: {
+        name: newNodeId,
+      },
     });
 
     // Crear enlaces con los nodos seleccionados
@@ -211,6 +224,16 @@ const IndexPage: FC<Props> = () => {
       },
     });
 
+    addAction({
+      type: UserActionType.ADD_EDGE,
+      data: {
+        source: sourceNode,
+        target: targetNode,
+        capacity: capacity,
+        usage: usage,
+      },
+    });
+
     setSourceNode("");
     setTargetNode("");
     setCapacity("");
@@ -220,7 +243,33 @@ const IndexPage: FC<Props> = () => {
 
   const handleDelete = () => {
     if (selectedNode && cy) {
+
+      const connectedEdges = cy
+        .getElementById(selectedNode)
+        .connectedEdges()
+        .map((edge: any) => edge.id());
+
       cy.getElementById(selectedNode).remove();
+
+      
+
+      if(selectedType === "edge") {
+        addAction({
+        type: UserActionType.REMOVE_EDGE,
+        data: {
+          name: elementName,
+          },
+        });
+      } else if(selectedType === "node") {
+        addAction({
+          type: UserActionType.REMOVE_NODE,
+          data: {
+            name: elementName,
+            removedEdges: connectedEdges,
+            },
+        });
+      }
+      
       setSelectedNode(null);
       setSidebarIsOpen(false);
       setIsDeleteModalOpen(false);
