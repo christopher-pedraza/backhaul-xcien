@@ -6,6 +6,8 @@ import TabInput from "../TabInput";
 
 // Contexts
 import { useCyContext } from "@/hooks/useCyContext";
+import { useChangeLogContext } from "@/hooks/useChangeLogContext";
+import { UserActionType } from "@/context/ChangeLogContext";
 
 // Modals
 import ConfirmationModal from "../ConfirmationModal";
@@ -18,6 +20,8 @@ interface EdgeTabProps {
 export default function EdgeTab({ selectedNode, node_data }: EdgeTabProps) {
   const { cy } = useCyContext();
   if (!cy) return null;
+
+  const { addAction } = useChangeLogContext();
 
   const [usage, setUsage] = useState("");
   const [capacity, setCapacity] = useState("");
@@ -53,10 +57,22 @@ export default function EdgeTab({ selectedNode, node_data }: EdgeTabProps) {
     cy.getElementById(selectedNode).data({
       usage: usage,
       capacity: capacity,
-      name: name,
+      name: node_data?.name || "",
     });
     setLastUsage(usage);
     setLastCapacity(capacity);
+    // Agregar la acción al ChangeLog
+    addAction({
+      type: UserActionType.EDIT_EDGE,
+      data: {
+        oldName: node_data?.name || "",
+        newName: node_data?.name || "",
+        oldCapacity: lastCapacity,
+        newCapacity: capacity,
+        oldUsage: lastUsage,
+        newUsage: usage,
+      },
+    });
   };
 
   if (usage === "") {

@@ -38,7 +38,7 @@ export default function NodeTab({ selectedNode, node_data }: NodeTabProps) {
   const { cy } = useCyContext();
   if (!cy) return;
 
-  const { addAction, actions } = useChangeLogContext();
+  const { addAction } = useChangeLogContext();
 
   const [clients, setClients] = useState<Array<Client>>([]);
   const [selectedClient, setSelectedClient] = useState<Client | null>(null);
@@ -49,10 +49,6 @@ export default function NodeTab({ selectedNode, node_data }: NodeTabProps) {
     }
     setClients(node_data["clients"] || []);
   }, [node_data]);
-
-  useEffect(() => {
-    console.log("actions", actions);
-  }, [actions]);
 
   //
   // useDisclosure de los modales

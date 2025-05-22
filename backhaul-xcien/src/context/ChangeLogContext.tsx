@@ -101,7 +101,7 @@ export const ChangeLogContext = createContext<
 export const ChangeLogProvider = ({ children }: { children: ReactNode }) => {
   const [actions, setActions] = useState<UserAction[]>([]);
 
-  const addAction = (action: Omit<UserAction, "timestamp">) => {
+  const addAction = (action: Omit<UserAction, "timestamp" | "id">) => {
     const now = new Date();
     const formattedTimestamp = `${now
       .toLocaleTimeString("es-ES", {
