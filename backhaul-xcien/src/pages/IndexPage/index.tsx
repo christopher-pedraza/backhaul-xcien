@@ -116,7 +116,6 @@ const IndexPage: FC<Props> = () => {
     cy.on("tap", "node", handleNodeTap);
     cy.on("tap", "edge", handleEdgeTap);
 
-
     return () => {
       cy.off("tap", "node", handleNodeTap);
       cy.off("tap", "edge", handleEdgeTap);
