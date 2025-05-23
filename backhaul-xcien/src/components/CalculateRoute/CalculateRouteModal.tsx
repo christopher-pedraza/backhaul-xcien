@@ -10,7 +10,6 @@ interface CalculateRouteModalProps {
   onClose: () => void;
 }
 
-
 const CalculateRouteModal: FC<CalculateRouteModalProps> = ({
   isOpen,
   onClose,
