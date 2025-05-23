@@ -65,7 +65,7 @@ export default function TabConfiguracion({
     cy.getElementById(selectedNode).data({
       name: newName,
     });
-    setName(newName);
+
     if (selectedType == "node") {
       if(name != newName) {   
         addAction({
@@ -75,6 +75,7 @@ export default function TabConfiguracion({
             newName: newName,
           },
         });
+        setName(newName);
       }
     } else if (selectedType == "edge") {
       const capacity: string = node_data["capacity"] || "";
