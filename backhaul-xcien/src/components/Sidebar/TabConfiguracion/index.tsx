@@ -67,7 +67,7 @@ export default function TabConfiguracion({
     });
     setName(newName);
     if (selectedType == "node") {
-      if(name != newName) {   
+      if (name != newName) {
         addAction({
           type: UserActionType.EDIT_NODE,
           data: {
