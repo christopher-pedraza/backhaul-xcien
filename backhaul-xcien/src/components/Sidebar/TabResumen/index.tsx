@@ -8,8 +8,7 @@ interface TabResumenProps {
   cambiosConsumoA: any[];
 }
 
-export default function TabResumen({
-}: TabResumenProps) {
+export default function TabResumen({}: TabResumenProps) {
   return (
     <div>
       <div className="title-changes-tab">
