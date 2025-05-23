@@ -1,13 +1,22 @@
 import { Plus, Trash, Play } from "lucide-react";
-import { FC, useState } from "react";
+import { FC } from "react";
+import { useState } from "react";
 
-import CalculateRouteModal from "../CalculateRoute/CalculateRouteModal";
+import CalculateRouteModal from "../../CalculateRoute/CalculateRouteModal";
 
-const BottomActions: FC<{
+interface ToolBoxProps {
   onCreateNode: () => void;
   onCreateEdge: () => void;
   onDelete: () => void;
-}> = ({ onCreateNode, onCreateEdge, onDelete }) => {
+  isDeleteDisabled: boolean;
+}
+
+const ToolBox: FC<ToolBoxProps> = ({
+  onCreateNode,
+  onCreateEdge,
+  onDelete,
+  isDeleteDisabled,
+}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
@@ -30,9 +39,13 @@ const BottomActions: FC<{
 
           {/* Group wrapper for + and its dropdown */}
           <div className="relative group">
-            <button className="p-2 rounded-full bg-blue-500 text-white hover:bg-blue-600">
+            <button
+              className="p-2 rounded-full text-white hover:opacity-90"
+              style={{ backgroundColor: "#1633b0" }}
+            >
               <Plus size={20} />
             </button>
+
             {/* Dropdown shown on hover */}
             <div className="absolute bottom-10 left-1/2 -translate-x-1/2 bg-white border rounded shadow-md opacity-0 group-hover:opacity-100 group-hover:visible transition-all duration-200 invisible z-50 w-32">
               <button
@@ -52,8 +65,14 @@ const BottomActions: FC<{
 
           {/* Delete button */}
           <button
-            className="p-2 rounded-full bg-red-500 text-white hover:bg-red-600"
-            onClick={onDelete}
+            className={`p-2 rounded-full text-white ${
+              isDeleteDisabled
+                ? "opacity-50 cursor-not-allowed"
+                : "hover:opacity-90"
+            }`}
+            style={{ backgroundColor: "#b60e35" }}
+            onClick={isDeleteDisabled ? undefined : onDelete}
+            disabled={isDeleteDisabled}
           >
             <Trash size={20} />
           </button>
@@ -63,4 +82,4 @@ const BottomActions: FC<{
   );
 };
 
-export default BottomActions;
+export default ToolBox;

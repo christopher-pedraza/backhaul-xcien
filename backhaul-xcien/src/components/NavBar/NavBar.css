@@ -1,0 +1,67 @@
+.navbar {
+  display: flex;
+  align-items: center;
+  background: linear-gradient(
+    180deg,
+    #051145,
+    #1f3a85
+  ); /* Degradado de izquierda a derecha */
+  color: white;
+  height: 50px !important;
+  position: absolute !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Sombra hacia abajo */
+}
+
+.navbar-logo {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-weight: bold;
+  font-family: var(--navbar-font, "Audiowide", sans-serif) !important;
+  color: white !important;
+  margin-top: 15px;
+}
+
+.navbar a {
+  color: inherit;
+  text-decoration: none;
+  margin: 0 1rem;
+  transition: color 0.3s ease;
+}
+
+.open-close-button-div {
+  width: 100%;
+  background-color: #d3d3d3;
+  cursor: pointer;
+  text-align: center;
+  height: 15px;
+  z-index: 99;
+  position: relative;
+  border-radius: 100%;
+}
+
+.open-close-button-div2 {
+  width: 100%;
+  background-color: #d3d3d3;
+  cursor: pointer;
+  text-align: center;
+  height: 15px;
+  z-index: 99;
+  position: absolute;
+}
+
+.tag-navbar-open-close {
+  font-family: "Red Hat Text", sans-serif !important;
+  color: #051145 !important;
+  display: flex;
+  justify-content: center; /* centra horizontalmente */
+  align-items: center; /* centra verticalmente */
+  width: 100%;
+}
+
+.navbar-section.right {
+  margin-left: auto;
+  display: flex;
+  align-items: center; /* para centrar verticalmente si quieres */
+  margin-left: 105%;
+}

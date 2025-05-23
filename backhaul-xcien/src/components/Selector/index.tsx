@@ -38,6 +38,7 @@ const Selector: FC<Props> = ({
       onChange={handleSelectionChange}
       selectedKeys={[selectedValue]}
       selectionMode="single"
+      className="shadow shadow-gray-400 rounded-lg"
     >
       {isLoadingOptions ? (
         <SelectItem key="loading">Cargando…</SelectItem>

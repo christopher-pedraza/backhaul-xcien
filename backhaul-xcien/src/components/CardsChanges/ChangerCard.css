@@ -1,0 +1,33 @@
+.outer_container_change-card {
+  background-color: #ffffff !important;
+  margin-top: 15px !important;
+  border-radius: 7px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  padding: 10px !important;
+  font-family: "Red Hat Text", sans-serif !important;
+  align-content: center !important;
+}
+
+.titulo-change-card {
+  border-radius: 5px !important;
+  width: 90% !important;
+  height: 25px;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  position: relative;
+  background-color: rgb(227, 227, 227);
+  font-size: small !important;
+  border: 0px solid rgb(224, 224, 224);
+  font-weight: 600;
+}
+
+.id-box-change-card {
+  border-radius: 5px !important;
+  padding: 5px !important;
+  width: 10% !important;
+  position: relative;
+  background-color: rgb(255, 255, 255);
+  color: rgb(255, 255, 255) !important;
+  border: 0px solid rgb(203, 203, 203);
+}

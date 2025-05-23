@@ -2,16 +2,54 @@
 import { FC, useEffect, useState } from "react";
 import Graph from "@/components/graph";
 import { useCyContext } from "@/hooks/useCyContext";
-import { getRandomPosition } from "./utils";
-import Sidebar from "@/components/Sidebar";
-import NodeModal from "@/components/modal/modal";
-import LinkModal from "@/components/modal2/modal2";
-import FloatingActionBar from "@/components/FloatingActionBar/FloatingActionBar";
+import { getRandomPosition, getBottomLeftPosition } from "./utils";
+import Sidebar from "@/components/Sidebar/index";
+import CreateNodeModal from "@/components/toolBox/CreateNodeModal/CreateNodeModal";
+import LinkModal from "@/components/toolBox/CreatEdgeModal/CreateEdgeModal";
+import FloatingActionBar from "@/components/toolBox/ToolBox/ToolBox";
+import MyNavbar from "@/components/NavBar/NavBar";
 import Selector from "@/components/Selector";
 import useTopologyOptions from "@/hooks/topologies/useTopologyOptions";
 import useTopology from "@/hooks/topologies/useTopology";
+import DeleteConfirmModal from "@/components/toolBox/DeleteConfirmModal/DeleteConfirmModal";
+
+import { useChangeLogContext } from "@/hooks/useChangeLogContext";
+import { UserActionType } from "@/context/ChangeLogContext";
 
 interface Props {}
+
+// Función auxiliar: Devuelve el siguiente índice disponible para un enlace
+function getNextEdgeIndex(source: string, target: string, cy: any): number {
+  if (!cy) return 1;
+
+  const existingEdges = cy.edges().filter((edge: any) => {
+    const edgeSource = edge.data("source");
+    const edgeTarget = edge.data("target");
+
+    return (
+      (edgeSource === source && edgeTarget === target) ||
+      (edgeSource === target && edgeTarget === source)
+    );
+  });
+
+  return existingEdges.length + 1;
+}
+
+// 🔍 Función auxiliar: Verifica si ya existe un nodo con ese NOMBRE
+const normalizeName = (name: string): string => {
+  return name.replace(/\s+/g, "").toLowerCase(); // Elimina espacios y convierte a minúsculas
+};
+
+const nodeNameExists = (name: string, cy: any): boolean => {
+  if (!cy || !name.trim()) return false;
+
+  const normalizedNameToCheck = normalizeName(name);
+
+  return cy.nodes().some((node: any) => {
+    const nodeName = node.data("name") || node.id();
+    return normalizeName(nodeName) === normalizedNameToCheck;
+  });
+};
 
 const IndexPage: FC<Props> = () => {
   const { cy } = useCyContext();
@@ -39,12 +77,21 @@ const IndexPage: FC<Props> = () => {
   const [sourceNode, setSourceNode] = useState("");
   const [targetNode, setTargetNode] = useState("");
 
+  const { addAction } = useChangeLogContext();
+
   // Delete modal state
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
-  const availableNodes = cy ? cy.nodes().map((node) => node.id()) : [];
+  const availableNodes = cy
+    ? cy.nodes().map((node) => ({
+        id: node.id(),
+        name: node.data("name") || node.id(),
+      }))
+    : [];
 
-  // set the topology when the selectedTopologyId changes
+  const [selectedNodeType, setSelectedNodeType] = useState<string>("cloud");
+
+  // Set the topology when the selectedTopologyId changes
   useEffect(() => {
     if (!selectedTopology || !cy) return;
 
@@ -52,52 +99,92 @@ const IndexPage: FC<Props> = () => {
     cy.fit(undefined, 50);
   }, [selectedTopology, cy]);
 
-  if (cy) {
-    cy.on("tap", "node", (event) => {
+  // Event listeners for node and edge taps
+  useEffect(() => {
+    if (!cy) return;
+
+    const handleNodeTap = (event: any) => {
       const id = event.target.id();
       setSelectedNode(id);
       setSelectedType("node");
       if (!isSidebarOpen) setSidebarIsOpen(true);
-    });
-    cy.on("tap", "edge", (event) => {
+      console.log(cy.getElementById(id).connectedEdges()[0].id());
+    };
+
+    const handleEdgeTap = (event: any) => {
       const id = event.target.id();
       setSelectedNode(id);
       setSelectedType("edge");
       if (!isSidebarOpen) setSidebarIsOpen(true);
-    });
-  }
+    };
 
-  const addNode = () => setIsModalOpen(true);
+    cy.on("tap", "node", handleNodeTap);
+    cy.on("tap", "edge", handleEdgeTap);
+
+    return () => {
+      cy.off("tap", "node", handleNodeTap);
+      cy.off("tap", "edge", handleEdgeTap);
+    };
+  }, [cy, isSidebarOpen]);
+
+  const addNode = () => {
+    setNewNodeId("");
+    setCapacity("");
+    setUsage("");
+    setSelectedNodeType("cloud"); // Resetear tipo al abrir
+    setIsModalOpen(true);
+  };
+
   const addEdge = () => setIsEdgeModalOpen(true);
 
   const handleCreateNode = () => {
     if (!cy || !newNodeId.trim()) {
-      setError("Node ID is required");
+      setError("El nombre del nodo es obligatorio");
       return;
     }
 
-    if (cy.getElementById(newNodeId).length > 0) {
-      setError("Node ID already exists");
+    if (nodeNameExists(newNodeId, cy)) {
+      setError("Ya existe un nodo con este nombre");
       return;
     }
+
+    const nodeId = `node-${Date.now()}`;
 
     setError(null);
+
     cy.add({
       group: "nodes",
-      data: { id: newNodeId, capacity, usage },
-      position: getRandomPosition(cy),
+      data: {
+        id: nodeId,
+        name: newNodeId,
+        capacity,
+        usage,
+      },
+      classes: selectedNodeType,
+      position: getBottomLeftPosition(cy),
     });
 
+    addAction({
+      type: UserActionType.ADD_NODE,
+      data: {
+        name: newNodeId,
+      },
+    });
+
+    // Crear enlaces con los nodos seleccionados
     selectedNodes.forEach((targetId) => {
-      const edgeId = `${newNodeId}-${targetId}`;
+      const index = getNextEdgeIndex(nodeId, targetId, cy);
+      const edgeId = `${nodeId}-${targetId}-${index}`;
+
       if (!cy.getElementById(edgeId).length) {
         cy.add({
           group: "edges",
           data: {
             id: edgeId,
-            source: newNodeId,
+            source: nodeId,
             target: targetId,
-            label: `${capacity}/${usage}`,
+            capacity,
+            usage,
           },
         });
       }
@@ -106,23 +193,24 @@ const IndexPage: FC<Props> = () => {
     setNewNodeId("");
     setCapacity("");
     setUsage("");
-    setSelectedNodes([]);
+    setSelectedNodeType("cloud");
     setIsModalOpen(false);
   };
 
   const handleCreateLink = () => {
     if (!cy || !sourceNode || !targetNode) {
-      setError("Source and target nodes are required");
+      setError("Los nodos origen y destino son obligatorios");
       return;
     }
 
-    const edgeId = `${sourceNode}-${targetNode}`;
-    if (cy.getElementById(edgeId).length > 0) {
-      setError("Edge already exists");
+    if (sourceNode === targetNode) {
+      setError("Origen y destino no pueden ser el mismo nodo");
       return;
     }
 
-    setError(null);
+    const index = getNextEdgeIndex(sourceNode, targetNode, cy);
+    const edgeId = `${sourceNode}-${targetNode}-${index}`;
+
     cy.add({
       group: "edges",
       data: {
@@ -130,6 +218,18 @@ const IndexPage: FC<Props> = () => {
         source: sourceNode,
         target: targetNode,
         label: `${capacity}/${usage}`,
+        capacity,
+        usage,
+      },
+    });
+
+    addAction({
+      type: UserActionType.ADD_EDGE,
+      data: {
+        source: sourceNode,
+        target: targetNode,
+        capacity: capacity,
+        usage: usage,
       },
     });
 
@@ -142,18 +242,47 @@ const IndexPage: FC<Props> = () => {
 
   const handleDelete = () => {
     if (selectedNode && cy) {
+      const connectedEdges = cy
+        .getElementById(selectedNode)
+        .connectedEdges()
+        .map((edge: any) => edge.id());
+
       cy.getElementById(selectedNode).remove();
+
+      if (selectedType === "edge") {
+        addAction({
+          type: UserActionType.REMOVE_EDGE,
+          data: {
+            name: elementName,
+          },
+        });
+      } else if (selectedType === "node") {
+        addAction({
+          type: UserActionType.REMOVE_NODE,
+          data: {
+            name: elementName,
+            removedEdges: connectedEdges,
+          },
+        });
+      }
+
       setSelectedNode(null);
       setSidebarIsOpen(false);
       setIsDeleteModalOpen(false);
     }
   };
 
+  const elementName = selectedNode
+    ? cy?.getElementById(selectedNode)?.data("name") || selectedNode
+    : "";
+
   return (
-    <div className="relative flex-1 flex flex-col">
+    <div className="flex-1 flex flex-col bg-dotted relative">
+      <MyNavbar />
+
       <Graph />
 
-      <div className="absolute top-2 left-2 z-10 w-[200px]">
+      <div className="absolute top-0 left-0 z-10 mt-[4rem] ml-2 w-1/6">
         <Selector
           options={topologyOptions}
           isLoadingOptions={isLoadingTopologyOptions}
@@ -169,20 +298,20 @@ const IndexPage: FC<Props> = () => {
         selectedType={selectedType || ""}
       />
 
-      <NodeModal
+      {/* Modal para crear nodo */}
+      <CreateNodeModal
         isOpen={isModalOpen}
         setIsOpen={setIsModalOpen}
         newNodeId={newNodeId}
         setNewNodeId={setNewNodeId}
-        capacity={capacity}
-        setCapacity={setCapacity}
-        usage={usage}
-        setUsage={setUsage}
-        selectedNodes={selectedNodes}
-        setSelectedNodes={setSelectedNodes}
         handleCreateNode={handleCreateNode}
-        availableNodes={availableNodes}
+        nodeExists={newNodeId.trim() !== "" && nodeNameExists(newNodeId, cy)}
+        error={error}
+        setError={setError}
+        selectedType={selectedNodeType}
+        setSelectedType={setSelectedNodeType}
       />
+
       <LinkModal
         isOpen={isEdgeModalOpen}
         setIsOpen={setIsEdgeModalOpen}
@@ -197,39 +326,24 @@ const IndexPage: FC<Props> = () => {
         handleCreateLink={handleCreateLink}
         availableNodes={availableNodes}
         error={error}
+        setError={setError}
       />
-      {/* Modal de Confirmación de Eliminación */}
-      {isDeleteModalOpen && selectedNode && (
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
-          <div className="bg-white rounded-xl p-6 shadow-lg max-w-sm w-full">
-            <h2 className="text-lg font-semibold mb-4">
-              ¿Confirmar eliminación?
-            </h2>
-            <p className="mb-4">
-              Estás a punto de eliminar el elemento{" "}
-              <strong>{selectedNode}</strong>.
-            </p>
-            <div className="flex justify-end space-x-2">
-              <button
-                className="bg-gray-300 hover:bg-gray-400 text-black px-4 py-2 rounded"
-                onClick={() => setIsDeleteModalOpen(false)}
-              >
-                Cancelar
-              </button>
-              <button
-                className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
-                onClick={handleDelete}
-              >
-                Eliminar
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+
+      {/* Delete Confirm Modal */}
+      <DeleteConfirmModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={handleDelete}
+        elementId={selectedNode}
+        elementName={elementName}
+        elementType={selectedType as "node" | "edge"}
+      />
+
       <FloatingActionBar
         onCreateNode={addNode}
         onCreateEdge={addEdge}
         onDelete={() => setIsDeleteModalOpen(true)}
+        isDeleteDisabled={!selectedNode}
       />
     </div>
   );
