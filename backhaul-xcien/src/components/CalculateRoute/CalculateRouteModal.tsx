@@ -2,6 +2,9 @@ import { FC, useState, useRef, useEffect } from "react";
 import { Slider } from "@heroui/slider";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 
+import { useFlowSolver } from "./FlowSolver";
+import { useAlerts } from "@/context/AlertContext";
+
 interface CalculateRouteModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -16,6 +19,20 @@ const CalculateRouteModal: FC<CalculateRouteModalProps> = ({
 
   // Estado para controlar si se está calculando la ruta
   const [isCalculating, setIsCalculating] = useState(false);
+
+  const { setAlertsFromResults } = useAlerts();
+
+  const { solution, loading, computeFlow } = useFlowSolver();
+
+  const onTest = async () => {
+    try {
+      const results = await computeFlow();
+      console.log("Flow calculation results:", results);
+      setAlertsFromResults(results);
+    } catch (err) {
+      console.error("Error calculating route:", err);
+    }
+  };
 
   const modalRef = useRef<HTMLDivElement>(null);
 
@@ -129,10 +146,11 @@ const CalculateRouteModal: FC<CalculateRouteModalProps> = ({
               onClick={() => {
                 setIsCalculating(true); // Cambia el estado a calcular
                 setTimeout(() => {
+                  onTest(); // Llama a la función de calculo de flujo
                   console.log("Ruta calculada");
                   setIsCalculating(false); // Simula el cálculo después de 5 segundos
                   onClose(); // Cierra el modal
-                }, 5000);
+                }, 2000);
               }}
             >
               Calcular Ruta

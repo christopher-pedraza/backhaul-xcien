@@ -13,7 +13,7 @@ export default function AlertCard({
   capacidadActual,
   capacidadRecomendada,
 }) {
-  const isCritical = porcentaje > 100;
+  const isCritical = porcentaje > 99;
   const [expanded, setExpanded] = useState(true);
 
   const color = isCritical ? "red" : "yellow";
@@ -59,7 +59,9 @@ export default function AlertCard({
           <div className="mt-2 text-sm">
             <div>
               Predicción de uso:{" "}
-              <span className={`${textColor} font-semibold`}>{uso}%</span>
+              <span className={`${textColor} font-semibold`}>
+                {porcentaje}%
+              </span>
             </div>
             <div className="mt-1">
               Se recomienda aumentar capacidad de:
