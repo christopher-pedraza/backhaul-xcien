@@ -8,32 +8,7 @@ const nodes: Node[] = [
     data: {
       id: "movistar",
       name: "Carrier\nMovistar",
-      clients: [
-        {
-          id: "movistarClient1",
-          name: "Movistar Client 1",
-          soldCapacity: 1000,
-          usage: 300,
-        },
-        {
-          id: "movistarClient2",
-          name: "Movistar Client 2",
-          soldCapacity: 1000,
-          usage: 300,
-        },
-        {
-          id: "movistarClient3",
-          name: "Movistar Client 3",
-          soldCapacity: 1000,
-          usage: 300,
-        },
-        {
-          id: "movistarClient4",
-          name: "Movistar Client 4",
-          soldCapacity: 1000,
-          usage: 300,
-        },
-      ],
+      clients: [],
     },
     position: { x: -100, y: 0 },
     classes: "cloud",
@@ -115,7 +90,36 @@ const nodes: Node[] = [
     classes: "switch",
   },
   {
-    data: { id: "swPoESanCarlos", name: "SW PoE\nSan Carlos", clients: [] },
+    data: {
+      id: "swPoESanCarlos",
+      name: "SW PoE\nSan Carlos",
+      clients: [
+        {
+          id: "movistarClient1",
+          name: "Movistar Client 1",
+          soldCapacity: 1000,
+          usage: 300,
+        },
+        {
+          id: "movistarClient2",
+          name: "Movistar Client 2",
+          soldCapacity: 1000,
+          usage: 300,
+        },
+        {
+          id: "movistarClient3",
+          name: "Movistar Client 3",
+          soldCapacity: 1000,
+          usage: 300,
+        },
+        {
+          id: "movistarClient4",
+          name: "Movistar Client 4",
+          soldCapacity: 1000,
+          usage: 300,
+        },
+      ],
+    },
     position: { x: -200, y: 400 },
     classes: "switch",
   },
@@ -132,6 +136,8 @@ const edges: Edge[] = [
       id: "carrier1000_coreBorderPDN",
       source: "fibranet1000",
       target: "coreBorderPDN",
+      capacity: 10,
+      usage: 0,
     },
   },
   {
@@ -140,7 +146,7 @@ const edges: Edge[] = [
       source: "movistar",
       target: "coreBorderPDN",
       capacity: 700,
-      usage: 500,
+      usage: 0,
     },
   },
   {
@@ -148,6 +154,8 @@ const edges: Edge[] = [
       id: "fibranet500-coreAcuna",
       source: "fibranet500",
       target: "coreAcuna",
+      capacity: 10,
+      usage: 0,
     },
   },
   {
@@ -155,6 +163,8 @@ const edges: Edge[] = [
       id: "coreBorderPDN-swPoEPDN",
       source: "coreBorderPDN",
       target: "swPoEPDN",
+      capacity: 10,
+      usage: 0,
     },
   },
   {
@@ -207,6 +217,8 @@ const edges: Edge[] = [
       id: "RF_B5C_Acuña-Apolo",
       source: "coreAcuna",
       target: "swPoEAcuna",
+      capacity: 10,
+      usage: 0,
     },
   },
   {
@@ -223,6 +235,8 @@ const edges: Edge[] = [
       id: "CoreSispa-SwSispa",
       source: "coreSispa",
       target: "swRB2011Sispa",
+      capacity: 10,
+      usage: 0,
     },
   },
   {
