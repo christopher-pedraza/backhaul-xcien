@@ -105,7 +105,8 @@ export default function NodeTab({ selectedNode, node_data }: NodeTabProps) {
     });
     // Agregar la acción al ChangeLog
     const nameChanged = oldClient?.name !== client.name;
-    const soldCapacityChanged = oldClient.soldCapacity.toString() !== client.soldCapacity.toString();
+    const soldCapacityChanged =
+      oldClient.soldCapacity.toString() !== client.soldCapacity.toString();
     const usageChanged = oldClient.usage.toString() !== client.usage.toString();
 
     if (nameChanged || soldCapacityChanged || usageChanged) {
@@ -121,7 +122,7 @@ export default function NodeTab({ selectedNode, node_data }: NodeTabProps) {
           nodeName: node_data.name,
         },
       });
-}
+    }
   };
 
   const confirmAddClient = (client: Client) => {

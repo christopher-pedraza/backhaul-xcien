@@ -67,7 +67,7 @@ export default function TabConfiguracion({
     });
     setName(newName);
     if (selectedType == "node") {
-      if(node_data["name"] != newName) {   
+      if (node_data["name"] != newName) {
         addAction({
           type: UserActionType.EDIT_NODE,
           data: {
@@ -75,30 +75,31 @@ export default function TabConfiguracion({
             newName: newName,
           },
         });
-    }
+      }
     } else if (selectedType == "edge") {
       const capacity: string = node_data["capacity"] || "";
       const strCapacity: string = capacity.toString();
       const usage: string = node_data["usage"] || "";
       const strUsage: string = usage.toString();
 
-      const nameChanged =  node_data["id"] !== newName;
+      const nameChanged = node_data["id"] !== newName;
       const capacityChanged = strCapacity !== strCapacity;
       const usageChanged = strUsage !== strUsage;
 
-  if (nameChanged || capacityChanged || usageChanged) {
-      addAction({
-        type: UserActionType.EDIT_EDGE,
-        data: {
-          oldName: node_data["id"] || "",
-          newName: newName,
-          oldCapacity: strCapacity,
-          newCapacity: strCapacity,
-          oldUsage: strUsage,
-          newUsage: strUsage,
-        },
-      });
-    }}
+      if (nameChanged || capacityChanged || usageChanged) {
+        addAction({
+          type: UserActionType.EDIT_EDGE,
+          data: {
+            oldName: node_data["id"] || "",
+            newName: newName,
+            oldCapacity: strCapacity,
+            newCapacity: strCapacity,
+            oldUsage: strUsage,
+            newUsage: strUsage,
+          },
+        });
+      }
+    }
   };
 
   return (

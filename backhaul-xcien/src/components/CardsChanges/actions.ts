@@ -60,7 +60,9 @@ export const getActionDetails = (action: UserAction): string[] => {
       return [
         `Nodo: ${(action.data as any).name}`,
         "\n-------------------------------------------\n",
-        ...(action.data as any).removedEdges.map((edge: string) => `- Enlace eliminado: ${edge}`),
+        ...(action.data as any).removedEdges.map(
+          (edge: string) => `- Enlace eliminado: ${edge}`,
+        ),
       ];
 
     case UserActionType.ADD_EDGE:
@@ -72,17 +74,17 @@ export const getActionDetails = (action: UserAction): string[] => {
       ];
 
     case UserActionType.EDIT_EDGE:
-        const { oldName, newName, oldCapacity, newCapacity } = action.data as any;
-        const capacityChange =
-            oldCapacity === newCapacity
-            ? ``
-            : `Capacidad: ${oldCapacity} → ${newCapacity}`;
+      const { oldName, newName, oldCapacity, newCapacity } = action.data as any;
+      const capacityChange =
+        oldCapacity === newCapacity
+          ? ``
+          : `Capacidad: ${oldCapacity} → ${newCapacity}`;
 
-        return [
-            `Nombre anterior: ${oldName}`,
-            `Nuevo nombre: ${newName}`,
-            capacityChange,
-    ];
+      return [
+        `Nombre anterior: ${oldName}`,
+        `Nuevo nombre: ${newName}`,
+        capacityChange,
+      ];
 
     case UserActionType.REMOVE_EDGE:
       return [`Enlace: ${(action.data as any).name}`];
@@ -96,40 +98,44 @@ export const getActionDetails = (action: UserAction): string[] => {
       ];
 
     case UserActionType.REMOVE_CLIENT:
-      return [`Cliente: ${(action.data as any).name}`, `Localizado en: ${(action.data as any).nodeName}`];
+      return [
+        `Cliente: ${(action.data as any).name}`,
+        `Localizado en: ${(action.data as any).nodeName}`,
+      ];
 
     case UserActionType.EDIT_CLIENT: {
-    const {
+      const {
         oldName,
         newName,
         oldSoldCapacity,
         newSoldCapacity,
         oldUsage,
         newUsage,
-        nodeName
-    } = action.data as any;
+        nodeName,
+      } = action.data as any;
 
-    const changes: string[] = [];
+      const changes: string[] = [];
 
-    if (oldName !== newName) {
+      if (oldName !== newName) {
         changes.push(`Nombre anterior: ${oldName}`);
         changes.push(`Nuevo nombre: ${newName}`);
-    } else {
+      } else {
         changes.push(`Nombre: ${oldName}`);
-    }
+      }
 
-    changes.push(`Localizado en: ${nodeName}`);
+      changes.push(`Localizado en: ${nodeName}`);
 
-    if (oldSoldCapacity !== newSoldCapacity) {
-        changes.push(`Capacidad vendida: ${oldSoldCapacity} → ${newSoldCapacity}`);
-    }
+      if (oldSoldCapacity !== newSoldCapacity) {
+        changes.push(
+          `Capacidad vendida: ${oldSoldCapacity} → ${newSoldCapacity}`,
+        );
+      }
 
-    if (oldUsage !== newUsage) {
+      if (oldUsage !== newUsage) {
         changes.push(`Uso: ${oldUsage} → ${newUsage}`);
-    }
-    
+      }
 
-    return changes;
+      return changes;
     }
 
     default:
