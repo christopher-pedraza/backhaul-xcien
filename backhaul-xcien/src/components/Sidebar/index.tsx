@@ -8,6 +8,7 @@ import SettingsIcon from "./Icons/SettingsIcon";
 import NetworkIcon from "./Icons/NetworkIcon";
 import CloseDrawerIcon from "./Icons/CloseDrawerIcon";
 import OpenDrawerIcon from "./Icons/OpenDrawerIcon";
+import HistoryIcon from "./Icons/HistoryIcon";
 
 // Components
 import SidebarToggleButton from "./SidebarToggleButton";
@@ -112,8 +113,8 @@ export default function Sidebar({
                   key="resumen"
                   title={
                     <div className="flex items-center space-x-2">
-                      <ClipboardIcon />
-                      <span>Resumen</span>
+                      <HistoryIcon />
+                      <span>Cambios</span>
                     </div>
                   }
                 >

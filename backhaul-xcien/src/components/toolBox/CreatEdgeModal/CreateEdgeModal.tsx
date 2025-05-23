@@ -11,9 +11,6 @@ import {
   SelectItem,
 } from "@heroui/react";
 
-import { useChangeLogContext } from "@/hooks/useChangeLogContext";
-import { UserActionType } from "@/context/ChangeLogContext";
-
 // Tipo para opciones del dropdown
 interface NodeOption {
   id: string;
@@ -64,8 +61,6 @@ const CreateEdgeModal: FC<CreateEdgeModalProps> = ({
   const sortedAvailableNodes = [...availableNodes].sort((a, b) =>
     a.name.localeCompare(b.name, undefined, { sensitivity: "base" }),
   );
-
-  const { addAction } = useChangeLogContext();
 
   return (
     <Modal isOpen={isOpen} onOpenChange={setIsOpen} placement="center">

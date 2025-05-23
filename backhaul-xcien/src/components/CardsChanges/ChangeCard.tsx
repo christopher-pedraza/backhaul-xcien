@@ -43,17 +43,25 @@ const ChangeCard: FC<ChangeCardProps> = ({
           </div>
 
           {/* Título */}
-          <h6 className={`titulo-change-card `}>{title}</h6>
+          <h6 className={`titulo-change-card ${getTypeColor()}`}>{title}</h6>
         </div>
 
         {/* Detalles */}
         {details.length > 0 && (
           <ul className="text-sm text-gray-700 mt-1">
-            {details.map((detail, i) => (
-              <li key={i}>{detail}</li>
-            ))}
+            {details.map((detail, i) => {
+            const [label, ...rest] = detail.split(":");
+            const value = rest.join(":").trim(); // para valores con ":" en medio
+
+            return (
+              <li key={i}>
+                <span style={{ fontWeight: 550 }}>{label}:</span> {value}
+              </li>
+            );
+       })}
           </ul>
         )}
+
 
         {/* Timestamp */}
         {timestamp && (

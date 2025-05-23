@@ -18,7 +18,7 @@ import { UserActionType } from "@/context/ChangeLogContext";
 
 interface Props {}
 
-// 🔢 Función auxiliar: Devuelve el siguiente índice disponible para un enlace
+// Función auxiliar: Devuelve el siguiente índice disponible para un enlace
 function getNextEdgeIndex(source: string, target: string, cy: any): number {
   if (!cy) return 1;
 
@@ -250,8 +250,6 @@ const IndexPage: FC<Props> = () => {
         .map((edge: any) => edge.id());
 
       cy.getElementById(selectedNode).remove();
-
-      
 
       if(selectedType === "edge") {
         addAction({

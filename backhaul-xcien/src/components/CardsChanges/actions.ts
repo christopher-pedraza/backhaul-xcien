@@ -54,7 +54,8 @@ export const getActionDetails = (action: UserAction): string[] => {
     case UserActionType.REMOVE_NODE:
       return [
         `Nodo: ${(action.data as any).name}`,
-        ...(action.data as any).removedEdges.map((edge: string) => `Enlace eliminado: ${edge}`),
+        "\n-------------------------------------------\n",
+        ...(action.data as any).removedEdges.map((edge: string) => `- Enlace eliminado: ${edge}`),
       ];
 
     case UserActionType.ADD_EDGE:
@@ -66,12 +67,17 @@ export const getActionDetails = (action: UserAction): string[] => {
       ];
 
     case UserActionType.EDIT_EDGE:
-      return [
-        `Nombre anterior: ${(action.data as any).oldName}`,
-        `Nuevo nombre: ${(action.data as any).newName}`,
-        `Capacidad: ${(action.data as any).oldCapacity} → ${(action.data as any).newCapacity}`,
-        `Uso: ${(action.data as any).oldUsage} → ${(action.data as any).newUsage}`,
-      ];
+        const { oldName, newName, oldCapacity, newCapacity } = action.data as any;
+        const capacityChange =
+            oldCapacity === newCapacity
+            ? ``
+            : `Capacidad: ${oldCapacity} → ${newCapacity}`;
+
+        return [
+            `Nombre anterior: ${oldName}`,
+            `Nuevo nombre: ${newName}`,
+            capacityChange,
+    ];
 
     case UserActionType.REMOVE_EDGE:
       return [`Enlace: ${(action.data as any).name}`];
@@ -79,21 +85,47 @@ export const getActionDetails = (action: UserAction): string[] => {
     case UserActionType.ADD_CLIENT:
       return [
         `Cliente: ${(action.data as any).name}`,
-        `Nodo: ${(action.data as any).nodeName}`,
+        `Localizado en: ${(action.data as any).nodeName}`,
         `Capacidad vendida: ${(action.data as any).soldCapacity}`,
         `Uso: ${(action.data as any).usage}`,
       ];
 
     case UserActionType.REMOVE_CLIENT:
-      return [`Cliente: ${(action.data as any).name}`];
+      return [`Cliente: ${(action.data as any).name}`, `Localizado en: ${(action.data as any).nodeName}`];
 
-    case UserActionType.EDIT_CLIENT:
-      return [
-        `Nombre anterior: ${(action.data as any).oldName}`,
-        `Nuevo nombre: ${(action.data as any).newName}`,
-        `Capacidad vendida: ${(action.data as any).oldSoldCapacity} → ${(action.data as any).newSoldCapacity}`,
-        `Uso: ${(action.data as any).oldUsage} → ${(action.data as any).newUsage}`,
-      ];
+    case UserActionType.EDIT_CLIENT: {
+    const {
+        oldName,
+        newName,
+        oldSoldCapacity,
+        newSoldCapacity,
+        oldUsage,
+        newUsage,
+        nodeName
+    } = action.data as any;
+
+    const changes: string[] = [];
+
+    if (oldName !== newName) {
+        changes.push(`Nombre anterior: ${oldName}`);
+        changes.push(`Nuevo nombre: ${newName}`);
+    } else {
+        changes.push(`Nombre: ${oldName}`);
+    }
+
+    changes.push(`Localizado en: ${nodeName}`);
+
+    if (oldSoldCapacity !== newSoldCapacity) {
+        changes.push(`Capacidad vendida: ${oldSoldCapacity} → ${newSoldCapacity}`);
+    }
+
+    if (oldUsage !== newUsage) {
+        changes.push(`Uso: ${oldUsage} → ${newUsage}`);
+    }
+    
+
+    return changes;
+    }
 
     default:
       return ["Sin detalles"];

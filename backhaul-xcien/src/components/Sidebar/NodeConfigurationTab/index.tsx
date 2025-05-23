@@ -83,6 +83,7 @@ export default function NodeTab({ selectedNode, node_data }: NodeTabProps) {
       type: UserActionType.REMOVE_CLIENT,
       data: {
         name: client.name,
+        nodeName: node_data.name,
       },
     });
   };
@@ -103,17 +104,24 @@ export default function NodeTab({ selectedNode, node_data }: NodeTabProps) {
       clients: newClients,
     });
     // Agregar la acción al ChangeLog
-    addAction({
-      type: UserActionType.EDIT_CLIENT,
-      data: {
-        oldName: oldClient?.name,
-        newName: client.name,
-        oldSoldCapacity: oldClient.soldCapacity.toString(),
-        newSoldCapacity: client.soldCapacity.toString(),
-        oldUsage: oldClient.usage.toString(),
-        newUsage: client.usage.toString(),
-      },
-    });
+    const nameChanged = oldClient?.name !== client.name;
+    const soldCapacityChanged = oldClient.soldCapacity.toString() !== client.soldCapacity.toString();
+    const usageChanged = oldClient.usage.toString() !== client.usage.toString();
+
+    if (nameChanged || soldCapacityChanged || usageChanged) {
+      addAction({
+        type: UserActionType.EDIT_CLIENT,
+        data: {
+          oldName: oldClient?.name,
+          newName: client.name,
+          oldSoldCapacity: oldClient.soldCapacity.toString(),
+          newSoldCapacity: client.soldCapacity.toString(),
+          oldUsage: oldClient.usage.toString(),
+          newUsage: client.usage.toString(),
+          nodeName: node_data.name,
+        },
+      });
+}
   };
 
   const confirmAddClient = (client: Client) => {

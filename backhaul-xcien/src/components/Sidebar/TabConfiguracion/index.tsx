@@ -67,18 +67,26 @@ export default function TabConfiguracion({
     });
     setName(newName);
     if (selectedType == "node") {
-      addAction({
-        type: UserActionType.EDIT_NODE,
-        data: {
-          oldName: name,
-          newName: newName,
-        },
-      });
+      if(node_data["name"] != newName) {   
+        addAction({
+          type: UserActionType.EDIT_NODE,
+          data: {
+            oldName: name,
+            newName: newName,
+          },
+        });
+    }
     } else if (selectedType == "edge") {
       const capacity: string = node_data["capacity"] || "";
       const strCapacity: string = capacity.toString();
       const usage: string = node_data["usage"] || "";
       const strUsage: string = usage.toString();
+
+      const nameChanged =  node_data["id"] !== newName;
+      const capacityChanged = strCapacity !== strCapacity;
+      const usageChanged = strUsage !== strUsage;
+
+  if (nameChanged || capacityChanged || usageChanged) {
       addAction({
         type: UserActionType.EDIT_EDGE,
         data: {
@@ -90,7 +98,7 @@ export default function TabConfiguracion({
           newUsage: strUsage,
         },
       });
-    }
+    }}
   };
 
   return (
