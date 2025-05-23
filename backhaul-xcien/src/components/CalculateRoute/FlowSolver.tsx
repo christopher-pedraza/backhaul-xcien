@@ -134,8 +134,7 @@ export const useFlowSolver = () => {
 
       const graphData = buildGraphFromCy();
       const glpk = await GLPK();
-      const { nodes, edges, totalInflow, sink, source } =
-        graphData;
+      const { nodes, edges, totalInflow, sink, source } = graphData;
 
       // console.log("---------");
       // console.log("Graph data:");
@@ -243,7 +242,6 @@ export const useFlowSolver = () => {
       const recommendations: Record<string, SimulationRecommendation> = {};
 
       for (const { from, to, capacity, edgeId } of edges) {
-
         if (from === source || to === sink) {
           continue; // Skip source and sink edges
         }
@@ -255,9 +253,11 @@ export const useFlowSolver = () => {
         const recomm: SimulationRecommendation = {
           edgeId: data.id,
           prevUsage: data.usage || 0,
-          newUsage: (result.result.vars[varName1] || 0) + (result.result.vars[varName2] || 0),
+          newUsage:
+            (result.result.vars[varName1] || 0) +
+            (result.result.vars[varName2] || 0),
           capacity,
-        }
+        };
 
         recommendations[edgeId] = recomm;
       }
