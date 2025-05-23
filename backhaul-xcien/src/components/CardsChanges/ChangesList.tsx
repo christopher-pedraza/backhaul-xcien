@@ -2,8 +2,11 @@
 import { useContext } from "react";
 import ChangeCard from "../CardsChanges/ChangeCard";
 import { ChangeLogContext } from "../../../src/context/ChangeLogContext";
-import { getActionType, getActionTitle, getActionDetails } from "../CardsChanges/actions";
-
+import {
+  getActionType,
+  getActionTitle,
+  getActionDetails,
+} from "../CardsChanges/actions";
 
 const ChangesList = () => {
   const context = useContext(ChangeLogContext);

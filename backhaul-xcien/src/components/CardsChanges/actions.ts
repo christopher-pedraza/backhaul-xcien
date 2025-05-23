@@ -1,6 +1,11 @@
-import { UserAction, UserActionType } from "../../../src/context/ChangeLogContext";
+import {
+  UserAction,
+  UserActionType,
+} from "../../../src/context/ChangeLogContext";
 
-export const getActionType = (type: UserActionType): "error" | "info" | "success" => {
+export const getActionType = (
+  type: UserActionType,
+): "error" | "info" | "success" => {
   switch (type) {
     case UserActionType.REMOVE_NODE:
     case UserActionType.REMOVE_EDGE:
