@@ -9,6 +9,7 @@ export interface Graph {
     to: string;
     capacity: number;
     strictCapacity: boolean;
+    edgeId: string;
   }>;
   sink: string;
   source: string;
@@ -16,15 +17,16 @@ export interface Graph {
   totalInflow: number;
 }
 
-export interface FlowSolution {
-  flows: Array<{ from: string; to: string; flow: number }>;
-  totalCost: number;
+export interface SimulationRecommendation {
+  edgeId: string;
+  prevUsage: number;
+  newUsage: number;
+  capacity: number;
 }
 
 export const useFlowSolver = () => {
-  const [solution, setSolution] = useState<FlowSolution>();
+  const [solution, setSolution] = useState<SimulationRecommendation[]>();
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   const graph = useCyContext();
 
@@ -76,6 +78,7 @@ export const useFlowSolver = () => {
           from: source,
           to: target,
           capacity,
+          edgeId: edge.id(),
           strictCapacity: false,
         });
       }
@@ -85,16 +88,11 @@ export const useFlowSolver = () => {
           from: target,
           to: source,
           capacity,
+          edgeId: edge.id(),
           strictCapacity: false,
         });
       }
     }
-
-    // cyEdges.map((edge) => ({
-    //   from: edge.source().id(),
-    //   to: edge.target().id(),
-    //   capacity: Number(edge.data("capacity") || 10), // Default capacity if not specified
-    // }));
 
     const superSink = "sink";
     const superSource = "source";
@@ -104,12 +102,14 @@ export const useFlowSolver = () => {
         from: sink,
         to: superSink,
         capacity: totalInflow,
+        edgeId: `${sink}->${superSink}`,
         strictCapacity: true,
       })),
       ...sources.map((source) => ({
         from: superSource,
         to: source,
         capacity: incomingFlow[source],
+        edgeId: `${superSource}->${source}`,
         strictCapacity: true,
       })),
     );
@@ -125,9 +125,8 @@ export const useFlowSolver = () => {
   }, [graph]);
 
   const computeFlow = useCallback(
-    async (alpha = 0.7) => {
+    async (jump_weight = 0.5) => {
       setLoading(true);
-      setError(null);
 
       if (!graph?.cy) {
         throw new Error("No graph available");
@@ -135,16 +134,15 @@ export const useFlowSolver = () => {
 
       const graphData = buildGraphFromCy();
       const glpk = await GLPK();
-      // const alpha = 0.7; // Or make this configurable
-      const { nodes, edges, totalInflow, sink, source, incomingFlow } =
+      const { nodes, edges, totalInflow, sink, source } =
         graphData;
 
-      console.log("---------");
-      console.log("Graph data:");
-      console.log("Nodes:", nodes);
-      console.log("Edges:", edges);
-      console.log("Total Inflow:", totalInflow);
-      console.log("-----");
+      // console.log("---------");
+      // console.log("Graph data:");
+      // console.log("Nodes:", nodes);
+      // console.log("Edges:", edges);
+      // console.log("Total Inflow:", totalInflow);
+      // console.log("-----");
 
       const lp: LP = {
         name: "flow-lp",
@@ -178,7 +176,7 @@ export const useFlowSolver = () => {
           });
 
           // Add to objective function (no overflow term)
-          lp.objective!.vars.push({ name: fName, coef: alpha });
+          lp.objective!.vars.push({ name: fName, coef: jump_weight });
         } else {
           // For regular edges, use the overflow variable approach
           const oName = `o_${from}->${to}`;
@@ -190,8 +188,8 @@ export const useFlowSolver = () => {
             ub: Infinity,
           });
 
-          lp.objective!.vars.push({ name: fName, coef: alpha });
-          lp.objective!.vars.push({ name: oName, coef: 1 - alpha });
+          lp.objective!.vars.push({ name: fName, coef: jump_weight });
+          lp.objective!.vars.push({ name: oName, coef: 1 - jump_weight });
 
           // Overflow constraint: f - o ≤ c
           lp.subjectTo!.push({
@@ -223,13 +221,6 @@ export const useFlowSolver = () => {
             vars: [...inflow, ...outflow],
             bnds: { type: glpk.GLP_FX, lb: totalInflow, ub: totalInflow },
           });
-        } else if (v == source) {
-          // const flow = incomingFlow[v];
-          lp.subjectTo!.push({
-            name: `flow_${v}`,
-            vars: [...inflow, ...outflow],
-            bnds: { type: glpk.GLP_FX, lb: -totalInflow, ub: -totalInflow },
-          });
         } else {
           lp.subjectTo!.push({
             name: `flow_${v}`,
@@ -239,46 +230,42 @@ export const useFlowSolver = () => {
         }
       }
 
-      const sourceEdges = edges.filter((e) => e.from === source);
-      console.log("Source edges:", sourceEdges);
-
       // Solve the LP
       const result = await glpk.solve(lp, { msglev: glpk.GLP_MSG_ERR });
-      console.log("Result:");
-      console.log(result.result);
-      console.log("---------");
+      // console.log("Result:");
+      // console.log(result.result);
+      // console.log("---------");
 
       if (result.result.status !== glpk.GLP_OPT) {
         throw new Error("No optimal flow found");
       }
 
-      // Extract flows
-      const flows: FlowSolution["flows"] = edges
-        .map(({ from, to }) => {
-          const fName = `f_${from}->${to}`;
-          return {
-            from,
-            to,
-            flow: result.result.vars[fName] ?? 0,
-          };
-        })
-        .filter((f) => f.flow > 1e-6); // Filter near-zero flows
+      const recommendations: Record<string, SimulationRecommendation> = {};
 
-      const totalCost = result.result.z;
+      for (const { from, to, capacity, edgeId } of edges) {
 
-      const solution: FlowSolution = { flows, totalCost };
-      setSolution(solution);
+        if (from === source || to === sink) {
+          continue; // Skip source and sink edges
+        }
+
+        let edge = graph.cy.edges(`[id="${edgeId}"]`);
+        let varName1 = `f_${from}->${to}`;
+        let varName2 = `f_${to}->${from}`;
+        const data = edge.data();
+        const recomm: SimulationRecommendation = {
+          edgeId: data.id,
+          prevUsage: data.usage || 0,
+          newUsage: (result.result.vars[varName1] || 0) + (result.result.vars[varName2] || 0),
+          capacity,
+        }
+
+        recommendations[edgeId] = recomm;
+      }
+
+      setSolution(Object.values(recommendations));
       setLoading(false);
 
-      return solution;
-      //   } catch (err) {
-      //     const errorMessage = err instanceof Error ? err.message : "Unknown error";
-      //     setError(errorMessage);
-      //     console.error("Flow calculation error:", err);
-      //     return [];
-      //   } finally {
-      //     setLoading(false);
-      //   }
+      return Object.values(recommendations);
     },
     [graph, buildGraphFromCy],
   );
@@ -287,20 +274,13 @@ export const useFlowSolver = () => {
     if (!solution || !graph?.cy) return;
 
     const cy = graph.cy;
-    console.log("Updating graph with solution...");
-    console.log("Solution flows:");
-    console.log(solution.flows);
-    console.log(cy.edges().data());
 
     // Apply the flow values as usage
-    for (const { from, to, flow } of solution.flows) {
-      const edge1 = cy.edges(`[source="${from}"][target="${to}"]`);
-      const edge2 = cy.edges(`[source="${to}"][target="${from}"]`);
+    for (const recomm of solution) {
+      const edge = cy.edges(`[id="${recomm.edgeId}"]`);
 
-      if (edge1.length > 0) {
-        edge1.data("usage", flow);
-      } else if (edge2.length > 0) {
-        edge2.data("usage", flow);
+      if (edge.length > 0) {
+        edge.data("usage", recomm.newUsage);
       }
     }
 
@@ -308,39 +288,9 @@ export const useFlowSolver = () => {
     cy.style().update();
   }, [solution, graph?.cy]); // Only run when solution or cy changes
 
-  // const changeGraph = useCallback(() => {
-  //   if (!graph?.cy) {
-  //     throw new Error("Cytoscape instance not available");
-  //   }
-
-  //   if (!solution) {
-  //     throw new Error("No solution available");
-  //   }
-
-  //   const cy = graph.cy;
-
-  //   // Apply the flow values as usage
-  //   for (const { from, to, flow } of solution.flows) {
-  //     // Find the corresponding edge in the cytoscape graph
-  //     const edge = cy.edges(`[source="${from}"][target="${to}"]`);
-
-  //     if (edge.length === 0) {
-  //       continue
-  //     }
-
-  //     edge.data("usage", flow);
-  //   }
-
-  //   // Update the visualization
-  //   cy.style().update();
-
-  // }, [solution]);
-
   return {
     solution,
     loading,
-    error,
     computeFlow,
-    // changeGraph,
   };
 };
