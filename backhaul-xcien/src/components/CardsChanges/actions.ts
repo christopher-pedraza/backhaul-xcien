@@ -73,19 +73,15 @@ export const getActionDetails = (action: UserAction): string[] => {
       ];
 
     case UserActionType.EDIT_EDGE:
-    const { oldName, newName, oldCapacity, newCapacity } = action.data as any;
+      const { oldName, newName, oldCapacity, newCapacity } = action.data as any;
 
-    const lines = [
-        `Nombre anterior: ${oldName}`,
-        `Nuevo nombre: ${newName}`,
-    ];
+      const lines = [`Nombre anterior: ${oldName}`, `Nuevo nombre: ${newName}`];
 
-    if (oldCapacity !== newCapacity) {
+      if (oldCapacity !== newCapacity) {
         lines.push(`Capacidad: ${oldCapacity} → ${newCapacity}`);
-    }
+      }
 
-    return lines;
-
+      return lines;
 
     case UserActionType.REMOVE_EDGE:
       return [`Enlace: ${(action.data as any).name}`];
