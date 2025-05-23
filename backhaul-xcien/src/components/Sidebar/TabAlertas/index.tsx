@@ -1,5 +1,5 @@
 import React from "react";
-import AlertCard from "../AlertCard"; 
+import AlertCard from "../AlertCard";
 import { useAlerts } from "@/context/AlertContext";
 
 const TabAlertas: React.FC = () => {
