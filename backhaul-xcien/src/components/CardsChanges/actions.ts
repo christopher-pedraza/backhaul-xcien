@@ -59,9 +59,8 @@ export const getActionDetails = (action: UserAction): string[] => {
     case UserActionType.REMOVE_NODE:
       return [
         `Nodo: ${(action.data as any).name}`,
-        "\n-------------------------------------------\n",
         ...(action.data as any).removedEdges.map(
-          (edge: string) => `- Enlace eliminado: ${edge}`,
+          (edge: string) => `Enlace eliminado: ${edge}`,
         ),
       ];
 
