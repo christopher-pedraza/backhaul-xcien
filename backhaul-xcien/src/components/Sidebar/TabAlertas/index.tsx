@@ -1,39 +1,27 @@
 import React from "react";
-import AlertCard from "../AlertCard"; // Importamos el componente AlertCard
+import AlertCard from "../AlertCard"; 
+import { useAlerts } from "@/context/AlertContext";
 
 const TabAlertas: React.FC = () => {
   // Datos de las alertas
-  const alertsData = [
-    {
-      title: "Enlace: Conexión Sur",
-      usagePercentage: 85,
-      recommendation: "Se recomienda aumentar capacidad de: 200MB → 500MB",
-      isCritical: false,
-    },
-    {
-      title: "Enlace: Conexión Paz",
-      usagePercentage: 105,
-      recommendation: "Se recomienda aumentar capacidad de: 300MB → 800MB",
-      isCritical: true,
-    },
-  ];
+  const { alertCards } = useAlerts();
 
   return (
     <div className="p-4 space-y-4">
-      <AlertCard
-        enlace="Conexión Sur"
-        porcentaje={85}
-        uso={85}
-        capacidadActual="200MB"
-        capacidadRecomendada="500MB"
-      />
-      <AlertCard
-        enlace="Conexión Paz"
-        porcentaje={105}
-        uso={105}
-        capacidadActual="300MB"
-        capacidadRecomendada="800MB"
-      />
+      {alertCards.length === 0 ? (
+        <p className="text-sm text-gray-500">No hay alertas por mostrar.</p>
+      ) : (
+        alertCards.map((alert) => (
+          <AlertCard
+            key={alert.enlace}
+            enlace={alert.enlace}
+            porcentaje={alert.porcentaje}
+            uso={alert.uso}
+            capacidadActual={alert.capacidadActual}
+            capacidadRecomendada={alert.capacidadRecomendada}
+          />
+        ))
+      )}
     </div>
   );
 };

@@ -2,6 +2,7 @@
 import { FC, useEffect, useState } from "react";
 import Graph from "@/components/graph";
 import { useCyContext } from "@/hooks/useCyContext";
+import { AlertProvider } from "@/context/AlertContext";
 import { getRandomPosition, getBottomLeftPosition } from "./utils";
 import Sidebar from "@/components/Sidebar/index";
 import CreateNodeModal from "@/components/toolBox/CreateNodeModal/CreateNodeModal";
@@ -290,61 +291,62 @@ const IndexPage: FC<Props> = () => {
           setSelectedValue={setSelectedTopologyId}
         />
       </div>
+      <AlertProvider>
+        <Sidebar
+          isOpen={isSidebarOpen}
+          setIsOpen={setSidebarIsOpen}
+          selectedNode={selectedNode || ""}
+          selectedType={selectedType || ""}
+        />
 
-      <Sidebar
-        isOpen={isSidebarOpen}
-        setIsOpen={setSidebarIsOpen}
-        selectedNode={selectedNode || ""}
-        selectedType={selectedType || ""}
-      />
+        {/* Modal para crear nodo */}
+        <CreateNodeModal
+          isOpen={isModalOpen}
+          setIsOpen={setIsModalOpen}
+          newNodeId={newNodeId}
+          setNewNodeId={setNewNodeId}
+          handleCreateNode={handleCreateNode}
+          nodeExists={newNodeId.trim() !== "" && nodeNameExists(newNodeId, cy)}
+          error={error}
+          setError={setError}
+          selectedType={selectedNodeType}
+          setSelectedType={setSelectedNodeType}
+        />
 
-      {/* Modal para crear nodo */}
-      <CreateNodeModal
-        isOpen={isModalOpen}
-        setIsOpen={setIsModalOpen}
-        newNodeId={newNodeId}
-        setNewNodeId={setNewNodeId}
-        handleCreateNode={handleCreateNode}
-        nodeExists={newNodeId.trim() !== "" && nodeNameExists(newNodeId, cy)}
-        error={error}
-        setError={setError}
-        selectedType={selectedNodeType}
-        setSelectedType={setSelectedNodeType}
-      />
+        <LinkModal
+          isOpen={isEdgeModalOpen}
+          setIsOpen={setIsEdgeModalOpen}
+          sourceNode={sourceNode}
+          setSourceNode={setSourceNode}
+          targetNode={targetNode}
+          setTargetNode={setTargetNode}
+          capacity={capacity}
+          setCapacity={setCapacity}
+          usage={usage}
+          setUsage={setUsage}
+          handleCreateLink={handleCreateLink}
+          availableNodes={availableNodes}
+          error={error}
+          setError={setError}
+        />
 
-      <LinkModal
-        isOpen={isEdgeModalOpen}
-        setIsOpen={setIsEdgeModalOpen}
-        sourceNode={sourceNode}
-        setSourceNode={setSourceNode}
-        targetNode={targetNode}
-        setTargetNode={setTargetNode}
-        capacity={capacity}
-        setCapacity={setCapacity}
-        usage={usage}
-        setUsage={setUsage}
-        handleCreateLink={handleCreateLink}
-        availableNodes={availableNodes}
-        error={error}
-        setError={setError}
-      />
+        {/* Delete Confirm Modal */}
+        <DeleteConfirmModal
+          isOpen={isDeleteModalOpen}
+          onClose={() => setIsDeleteModalOpen(false)}
+          onConfirm={handleDelete}
+          elementId={selectedNode}
+          elementName={elementName}
+          elementType={selectedType as "node" | "edge"}
+        />
 
-      {/* Delete Confirm Modal */}
-      <DeleteConfirmModal
-        isOpen={isDeleteModalOpen}
-        onClose={() => setIsDeleteModalOpen(false)}
-        onConfirm={handleDelete}
-        elementId={selectedNode}
-        elementName={elementName}
-        elementType={selectedType as "node" | "edge"}
-      />
-
-      <FloatingActionBar
-        onCreateNode={addNode}
-        onCreateEdge={addEdge}
-        onDelete={() => setIsDeleteModalOpen(true)}
-        isDeleteDisabled={!selectedNode}
-      />
+        <FloatingActionBar
+          onCreateNode={addNode}
+          onCreateEdge={addEdge}
+          onDelete={() => setIsDeleteModalOpen(true)}
+          isDeleteDisabled={!selectedNode}
+        />
+      </AlertProvider>
     </div>
   );
 };

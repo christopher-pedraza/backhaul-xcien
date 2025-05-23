@@ -3,6 +3,7 @@ import { Slider } from "@heroui/slider";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 
 import { useFlowSolver } from "./FlowSolver";
+import { useAlerts } from "@/context/AlertContext";
 
 interface CalculateRouteModalProps {
   isOpen: boolean;
@@ -20,11 +21,15 @@ const CalculateRouteModal: FC<CalculateRouteModalProps> = ({
   // Estado para controlar si se está calculando la ruta
   const [isCalculating, setIsCalculating] = useState(false);
 
+  const { setAlertsFromResults } = useAlerts();
+
   const { solution, loading, computeFlow } = useFlowSolver();
+
   const onTest = async () => {
     try {
       const results = await computeFlow();
       console.log("Flow calculation results:", results);
+      setAlertsFromResults(results);
     } catch (err) {
       console.error("Error calculating route:", err);
     }
