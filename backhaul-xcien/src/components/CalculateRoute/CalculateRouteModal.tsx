@@ -144,13 +144,13 @@ const CalculateRouteModal: FC<CalculateRouteModalProps> = ({
             <button
               className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition duration-300 ease-in-out"
               onClick={() => {
-                onTest(); // Llama a la función de calculo de flujo
                 setIsCalculating(true); // Cambia el estado a calcular
                 setTimeout(() => {
+                  onTest(); // Llama a la función de calculo de flujo
                   console.log("Ruta calculada");
                   setIsCalculating(false); // Simula el cálculo después de 5 segundos
                   onClose(); // Cierra el modal
-                }, 4000);
+                }, 2000);
               }}
             >
               Calcular Ruta

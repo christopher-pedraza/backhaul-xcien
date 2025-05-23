@@ -7,7 +7,7 @@ const TabAlertas: React.FC = () => {
   const { alertCards } = useAlerts();
 
   return (
-    <div className="p-4 space-y-4">
+    <div className="p-4 space-y-4 overflow-y-auto max-h-[85vh] pr-2">
       {alertCards.length === 0 ? (
         <p className="text-sm text-gray-500">No hay alertas por mostrar.</p>
       ) : (
