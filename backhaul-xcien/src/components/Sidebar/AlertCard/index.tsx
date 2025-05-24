@@ -6,15 +6,23 @@ import {
   AlertOctagon,
 } from "lucide-react";
 
+type AlertCardProps = {
+  enlace: string;
+  porcentaje: number;
+  uso: string;
+  capacidadActual: string;
+  capacidadRecomendada: string;
+};
+
 export default function AlertCard({
   enlace,
   porcentaje,
   uso,
   capacidadActual,
   capacidadRecomendada,
-}) {
+}: AlertCardProps) {
   const isCritical = porcentaje > 99;
-  const [expanded, setExpanded] = useState(true);
+  const [expanded, setExpanded] = useState(false);
 
   const color = isCritical ? "red" : "yellow";
   const icon = isCritical ? (
