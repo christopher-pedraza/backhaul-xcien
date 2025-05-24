@@ -3,7 +3,7 @@ import { FC, useEffect, useState } from "react";
 import Graph from "@/components/graph";
 import { useCyContext } from "@/hooks/useCyContext";
 import { AlertProvider } from "@/context/AlertContext";
-import { getRandomPosition, getBottomLeftPosition } from "./utils";
+import { getBottomLeftPosition } from "./utils";
 import Sidebar from "@/components/Sidebar/index";
 import CreateNodeModal from "@/components/toolBox/CreateNodeModal/CreateNodeModal";
 import LinkModal from "@/components/toolBox/CreatEdgeModal/CreateEdgeModal";
