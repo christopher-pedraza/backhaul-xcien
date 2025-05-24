@@ -10,6 +10,7 @@ import {
   Divider,
   useDisclosure,
 } from "@heroui/react";
+import TabInput from "../TabInput";
 
 // Icons
 import { PlusCircleIcon } from "lucide-react";
@@ -156,8 +157,21 @@ export default function NodeTab({ selectedNode, node_data }: NodeTabProps) {
     onOpenChangeModifyClient();
   };
 
+  const cantidadVendidaTotal = clients.reduce(
+    (total, client) => total + client.soldCapacity,
+    0 as number
+  );
+
   return (
     <>
+      <TabInput
+        label="Cantidad vendida total"
+        value={cantidadVendidaTotal.toString()}
+        setValue={() => {}}
+        isReadOnly={true}
+        variant="bordered"
+        labelPlacement="outside"
+      />
       <Card className="w-full h-[400px]">
         <CardHeader className="relative text-xl font-bold flex flex-col items-center justify-center">
           <p>Clientes</p>
