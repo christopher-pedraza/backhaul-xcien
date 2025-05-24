@@ -278,7 +278,7 @@ const IndexPage: FC<Props> = () => {
     : "";
 
   return (
-    <div className="flex-1 flex flex-col bg-dotted relative">
+    <div className="flex-1 flex flex-col bg-dotted relative overflow-hidden">
       <MyNavbar />
 
       <Graph />
@@ -292,12 +292,14 @@ const IndexPage: FC<Props> = () => {
         />
       </div>
       <AlertProvider>
-        <Sidebar
-          isOpen={isSidebarOpen}
-          setIsOpen={setSidebarIsOpen}
-          selectedNode={selectedNode || ""}
-          selectedType={selectedType || ""}
-        />
+        <div className="">
+          <Sidebar
+            isOpen={isSidebarOpen}
+            setIsOpen={setSidebarIsOpen}
+            selectedNode={selectedNode || ""}
+            selectedType={selectedType || ""}
+          />
+        </div>
 
         {/* Modal para crear nodo */}
         <CreateNodeModal

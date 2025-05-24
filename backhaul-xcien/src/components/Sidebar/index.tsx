@@ -40,38 +40,40 @@ export default function Sidebar({
     console.log("actions", actions);
   }, [actions]);
 
-  const [isRotating, setIsRotating] = useState(false);
-  const [isClosing, setIsClosing] = useState(false);
+  const [openButtonRotation, setOpenButtonRotation] = useState(0);
+  const [showOpenButton, setShowOpenButton] = useState(true);
+  const [disableOpenButton, setDisableOpenButton] = useState(false);
 
-  // Animate open button rotation when opening
+  // Animate open button rotation before opening drawer
   const handleOpenButton = () => {
-    setIsRotating(true);
+    setDisableOpenButton(true);
+    setOpenButtonRotation(180);
     setTimeout(() => {
-      setIsRotating(false);
-      toggleDrawer();
+      setIsOpen((prev) => !prev);
+      setShowOpenButton(false); // Hide button while drawer is open
+      setDisableOpenButton(false);
     }, 300); // match icon transition duration
   };
 
-  // Animate close button rotation when closing (triggered by Drawer onClose)
+  // After drawer closes, rotate open button back and show it
   const handleDrawerClose = () => {
-    setIsClosing(true);
+    setDisableOpenButton(true);
+    setIsOpen((prev) => !prev);
     setTimeout(() => {
-      toggleDrawer();
-      setIsClosing(false);
-    }, 300); // match icon transition duration
-  };
-
-  const toggleDrawer = () => {
-    setIsOpen((prevState) => !prevState);
+      setOpenButtonRotation(0);
+      setShowOpenButton(true);
+      setDisableOpenButton(false);
+    }, 500); // match drawer close duration
   };
 
   return (
     <>
       <Drawer
         open={isOpen}
+        onClose={handleDrawerClose}
         direction="right"
         size={"450px"}
-        duration={1000}
+        duration={500}
         enableOverlay={false}
         style={{
           borderRadius: "15px 0px 0px 15px",
@@ -88,7 +90,6 @@ export default function Sidebar({
               size={24}
               height={24}
               width={24}
-              rotate={isClosing ? 180 : 0}
             />
           }
           isDisabled={false}
@@ -156,11 +157,11 @@ export default function Sidebar({
             size={24}
             height={24}
             width={24}
-            rotate={isRotating ? 180 : 0}
+            rotate={openButtonRotation}
           />
         }
-        isDisabled={false}
-        isVisible={!isOpen}
+        isDisabled={disableOpenButton}
+        isVisible={showOpenButton}
       />
     </>
   );
