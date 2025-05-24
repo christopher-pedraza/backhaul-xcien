@@ -17,9 +17,6 @@ import TabConfiguracion from "./TabConfiguracion";
 import TabAlertas from "./TabAlertas";
 import TabResumen from "./TabResumen";
 
-// Contexts
-import { useChangeLogContext } from "@/hooks/useChangeLogContext";
-
 import { useEffect, useState } from "react";
 
 interface SideBarProps {
@@ -27,6 +24,8 @@ interface SideBarProps {
   setIsOpen: (value: boolean | ((prevState: boolean) => boolean)) => void;
   selectedNode: string;
   selectedType: string;
+  wasTapped: boolean;
+  setWasTapped: (value: boolean) => void;
 }
 
 export default function Sidebar({
@@ -34,11 +33,15 @@ export default function Sidebar({
   setIsOpen,
   selectedNode,
   selectedType,
+  wasTapped,
+  setWasTapped,
 }: SideBarProps) {
-  const { actions } = useChangeLogContext();
   useEffect(() => {
-    console.log("actions", actions);
-  }, [actions]);
+    if (wasTapped) {
+      setWasTapped(false);
+      handleOpenButton();
+    }
+  }, [wasTapped]);
 
   const [openButtonRotation, setOpenButtonRotation] = useState(0);
   const [showOpenButton, setShowOpenButton] = useState(true);

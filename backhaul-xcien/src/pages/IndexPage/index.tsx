@@ -62,6 +62,7 @@ const IndexPage: FC<Props> = () => {
   const { data: selectedTopology } = useTopology(selectedTopologyId);
 
   const [isSidebarOpen, setSidebarIsOpen] = useState(false);
+  const [wasTapped, setWasTapped] = useState(false);
   const [selectedNode, setSelectedNode] = useState<string | null>(null);
   const [selectedType, setSelectedType] = useState<string | null>(null);
 
@@ -108,15 +109,18 @@ const IndexPage: FC<Props> = () => {
       const id = event.target.id();
       setSelectedNode(id);
       setSelectedType("node");
-      if (!isSidebarOpen) setSidebarIsOpen(true);
-      console.log(cy.getElementById(id).connectedEdges()[0].id());
+      if (!isSidebarOpen) {
+        setWasTapped(true);
+      }
     };
 
     const handleEdgeTap = (event: any) => {
       const id = event.target.id();
       setSelectedNode(id);
       setSelectedType("edge");
-      if (!isSidebarOpen) setSidebarIsOpen(true);
+      if (!isSidebarOpen) {
+        setWasTapped(true);
+      }
     };
 
     cy.on("tap", "node", handleNodeTap);
@@ -292,14 +296,14 @@ const IndexPage: FC<Props> = () => {
         />
       </div>
       <AlertProvider>
-        <div className="">
-          <Sidebar
-            isOpen={isSidebarOpen}
-            setIsOpen={setSidebarIsOpen}
-            selectedNode={selectedNode || ""}
-            selectedType={selectedType || ""}
-          />
-        </div>
+        <Sidebar
+          isOpen={isSidebarOpen}
+          setIsOpen={setSidebarIsOpen}
+          wasTapped={wasTapped}
+          setWasTapped={setWasTapped}
+          selectedNode={selectedNode || ""}
+          selectedType={selectedType || ""}
+        />
 
         {/* Modal para crear nodo */}
         <CreateNodeModal
