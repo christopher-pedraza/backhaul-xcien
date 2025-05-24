@@ -38,14 +38,17 @@ export default function Sidebar({
 }: SideBarProps) {
   useEffect(() => {
     if (wasTapped) {
+      if (!isOpen) handleOpenButton();
+      setSelected("configuracion");
       setWasTapped(false);
-      handleOpenButton();
     }
   }, [wasTapped]);
 
   const [openButtonRotation, setOpenButtonRotation] = useState(0);
   const [showOpenButton, setShowOpenButton] = useState(true);
   const [disableOpenButton, setDisableOpenButton] = useState(false);
+
+  const [selected, setSelected] = useState("alertas");
 
   // Animate open button rotation before opening drawer
   const handleOpenButton = () => {
@@ -108,6 +111,8 @@ export default function Sidebar({
                 base: "pt-8",
                 tab: "h-10",
               }}
+              selectedKey={selected}
+              onSelectionChange={(key) => setSelected(String(key))}
             >
               <Tab
                 key="configuracion"

@@ -109,8 +109,8 @@ const IndexPage: FC<Props> = () => {
       const id = event.target.id();
       setSelectedNode(id);
       setSelectedType("node");
+      setWasTapped(true);
       if (!isSidebarOpen) {
-        setWasTapped(true);
       }
     };
 
@@ -118,8 +118,8 @@ const IndexPage: FC<Props> = () => {
       const id = event.target.id();
       setSelectedNode(id);
       setSelectedType("edge");
+      setWasTapped(true);
       if (!isSidebarOpen) {
-        setWasTapped(true);
       }
     };
 
