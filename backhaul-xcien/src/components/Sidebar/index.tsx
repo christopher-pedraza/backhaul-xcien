@@ -4,10 +4,11 @@ import { Tabs, Tab } from "@heroui/react";
 
 // Iconos
 import SettingsIcon from "./Icons/SettingsIcon";
-import NetworkIcon from "./Icons/NetworkIcon";
+// import NetworkIcon from "./Icons/NetworkIcon";
 import CloseDrawerIcon from "./Icons/CloseDrawerIcon";
 import OpenDrawerIcon from "./Icons/OpenDrawerIcon";
 import HistoryIcon from "./Icons/HistoryIcon";
+import { AlertTriangleIcon } from "lucide-react";
 
 // Components
 import SidebarToggleButton from "./SidebarToggleButton";
@@ -141,7 +142,7 @@ export default function Sidebar({
                 key="alertas"
                 title={
                   <div className="flex items-center space-x-2">
-                    <NetworkIcon />
+                    <AlertTriangleIcon />
                     <span>Alertas</span>
                   </div>
                 }
