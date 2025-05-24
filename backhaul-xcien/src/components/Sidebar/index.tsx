@@ -41,11 +41,9 @@ export default function Sidebar({
   }, [actions]);
 
   const [isRotating, setIsRotating] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
 
-  const toggleDrawer = () => {
-    setIsOpen((prevState) => !prevState);
-  };
-
+  // Animate open button rotation when opening
   const handleOpenButton = () => {
     setIsRotating(true);
     setTimeout(() => {
@@ -54,14 +52,26 @@ export default function Sidebar({
     }, 300); // match icon transition duration
   };
 
+  // Animate close button rotation when closing (triggered by Drawer onClose)
+  const handleDrawerClose = () => {
+    setIsClosing(true);
+    setTimeout(() => {
+      toggleDrawer();
+      setIsClosing(false);
+    }, 300); // match icon transition duration
+  };
+
+  const toggleDrawer = () => {
+    setIsOpen((prevState) => !prevState);
+  };
+
   return (
     <>
       <Drawer
         open={isOpen}
-        onClose={toggleDrawer}
         direction="right"
         size={"450px"}
-        duration={500}
+        duration={1000}
         enableOverlay={false}
         style={{
           borderRadius: "15px 0px 0px 15px",
@@ -69,7 +79,7 @@ export default function Sidebar({
         zIndex={100}
       >
         <SidebarToggleButton
-          onPress={toggleDrawer}
+          onPress={handleDrawerClose}
           left={-40}
           right={undefined}
           icon={
@@ -78,6 +88,7 @@ export default function Sidebar({
               size={24}
               height={24}
               width={24}
+              rotate={isClosing ? 180 : 0}
             />
           }
           isDisabled={false}

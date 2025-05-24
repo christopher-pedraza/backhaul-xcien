@@ -3,7 +3,7 @@ export default function OpenDrawerIcon({
   size,
   height,
   width,
-  rotate = 0, // new prop
+  rotate = 0,
   ...props
 }: {
   fill?: string;

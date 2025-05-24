@@ -3,12 +3,14 @@ export default function CloseDrawerIcon({
   size,
   height,
   width,
+  rotate = 0,
   ...props
 }: {
   fill?: string;
   size?: number;
   height?: number;
   width?: number;
+  rotate?: number;
   [key: string]: any;
 }) {
   return (
@@ -18,6 +20,11 @@ export default function CloseDrawerIcon({
       viewBox="0 0 24 24"
       width={size || width || 24}
       xmlns="http://www.w3.org/2000/svg"
+      style={{
+        transition: "transform 0.3s",
+        transform: `rotate(${rotate}deg)`,
+        transformOrigin: "50% 50%",
+      }}
       {...props}
     >
       <g
