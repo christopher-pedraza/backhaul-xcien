@@ -48,7 +48,7 @@ export default function EdgeTab({ selectedNode, node_data }: EdgeTabProps) {
   }, [node_data]);
 
   const saveEdgeConfiguration = () => {
-    if (errorsUsage.length === 0 && errorsCapacity.length === 0) {
+    if (errorsCapacity.length === 0) {
       onOpenConfirmation();
     }
   };
@@ -94,9 +94,7 @@ export default function EdgeTab({ selectedNode, node_data }: EdgeTabProps) {
   }
 
   var shouldDisableButton =
-    errorsUsage.length > 0 ||
-    errorsCapacity.length > 0 ||
-    (usage == lastUsage && capacity == lastCapacity);
+    errorsCapacity.length > 0 || capacity == lastCapacity;
 
   return (
     <>
@@ -104,9 +102,9 @@ export default function EdgeTab({ selectedNode, node_data }: EdgeTabProps) {
         label="Uso"
         value={usage}
         setValue={setUsage}
-        errors={errorsUsage}
-        hasChanges={usage != lastUsage}
         isReadOnly={true}
+        variant="bordered"
+        labelPlacement="outside"
       />
       <TabInput
         label="Capacidad"
