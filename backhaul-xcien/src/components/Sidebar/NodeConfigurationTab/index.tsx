@@ -159,7 +159,7 @@ export default function NodeTab({ selectedNode, node_data }: NodeTabProps) {
 
   const cantidadVendidaTotal = clients.reduce(
     (total, client) => total + client.soldCapacity,
-    0 as number
+    0 as number,
   );
 
   return (
