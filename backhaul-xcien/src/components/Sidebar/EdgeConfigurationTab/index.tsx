@@ -28,7 +28,6 @@ export default function EdgeTab({ selectedNode, node_data }: EdgeTabProps) {
   const [lastUsage, setLastUsage] = useState("");
   const [lastCapacity, setLastCapacity] = useState("");
 
-  const errorsUsage: Array<string> = [];
   const errorsCapacity: Array<string> = [];
 
   const {
@@ -74,22 +73,14 @@ export default function EdgeTab({ selectedNode, node_data }: EdgeTabProps) {
     });
   };
 
-  if (usage === "") {
-    errorsUsage.push("El campo 'Uso' es obligatorio");
-  } else if (isNaN(Number(usage))) {
-    errorsUsage.push("El campo 'Uso' debe ser un número");
-  } else if (Number(usage) < 0) {
-    errorsUsage.push("El campo 'Uso' no puede ser negativo");
-  } else if (Number(usage) > Number(capacity)) {
-    errorsUsage.push("El campo 'Uso' no puede ser mayor que la capacidad");
-  }
-
-  if (capacity === "") {
-    errorsCapacity.push("El campo 'Capacidad' es obligatorio");
-  } else if (isNaN(Number(capacity))) {
-    errorsCapacity.push("El campo 'Capacidad' debe ser un número");
-  } else if (Number(capacity) < 0) {
-    errorsCapacity.push("El campo 'Capacidad' no puede ser negativo");
+  if (node_data) {
+    if (capacity === "") {
+      errorsCapacity.push("El campo 'Capacidad' es obligatorio");
+    } else if (isNaN(Number(capacity))) {
+      errorsCapacity.push("El campo 'Capacidad' debe ser un número");
+    } else if (Number(capacity) < 0) {
+      errorsCapacity.push("El campo 'Capacidad' no puede ser negativo");
+    }
   }
 
   var shouldDisableButton =
