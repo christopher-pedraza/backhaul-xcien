@@ -111,7 +111,7 @@ export const useFlowSolver = () => {
         capacity: incomingFlow[source],
         edgeId: `${superSource}->${source}`,
         strictCapacity: true,
-      })),
+      }))
     );
 
     return {
@@ -273,7 +273,7 @@ export const useFlowSolver = () => {
 
       return Object.values(recommendations);
     },
-    [graph, buildGraphFromCy],
+    [graph, buildGraphFromCy]
   );
 
   useEffect(() => {

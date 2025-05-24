@@ -57,7 +57,6 @@ export default function EdgeTab({ selectedNode, node_data }: EdgeTabProps) {
     cy.getElementById(selectedNode).data({
       usage: usage,
       capacity: capacity,
-      name: node_data?.name || "",
     });
     setLastUsage(usage);
     setLastCapacity(capacity);
