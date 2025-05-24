@@ -1,14 +1,16 @@
-export default function CloseDrawerIcon({
+export default function OpenDrawerIcon({
   fill = "currentColor",
   size,
   height,
   width,
+  rotate = 0, // new prop
   ...props
 }: {
   fill?: string;
   size?: number;
   height?: number;
   width?: number;
+  rotate?: number;
   [key: string]: any;
 }) {
   return (
@@ -18,6 +20,10 @@ export default function CloseDrawerIcon({
       viewBox="0 0 24 24"
       width={size || width || 24}
       xmlns="http://www.w3.org/2000/svg"
+      style={{
+        transition: "transform 0.3s",
+        transform: `rotate(${rotate}deg)`,
+      }}
       {...props}
     >
       <g

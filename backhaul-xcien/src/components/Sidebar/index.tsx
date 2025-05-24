@@ -20,7 +20,7 @@ import TabResumen from "./TabResumen";
 // Contexts
 import { useChangeLogContext } from "@/hooks/useChangeLogContext";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 interface SideBarProps {
   isOpen: boolean;
@@ -40,8 +40,18 @@ export default function Sidebar({
     console.log("actions", actions);
   }, [actions]);
 
+  const [isRotating, setIsRotating] = useState(false);
+
   const toggleDrawer = () => {
     setIsOpen((prevState) => !prevState);
+  };
+
+  const handleOpenButton = () => {
+    setIsRotating(true);
+    setTimeout(() => {
+      setIsRotating(false);
+      toggleDrawer();
+    }, 300); // match icon transition duration
   };
 
   return (
@@ -126,7 +136,7 @@ export default function Sidebar({
         </div>
       </Drawer>
       <SidebarToggleButton
-        onPress={toggleDrawer}
+        onPress={handleOpenButton}
         left={undefined}
         right={0}
         icon={
@@ -135,9 +145,11 @@ export default function Sidebar({
             size={24}
             height={24}
             width={24}
+            rotate={isRotating ? 180 : 0}
           />
         }
         isDisabled={false}
+        isVisible={!isOpen}
       />
     </>
   );
