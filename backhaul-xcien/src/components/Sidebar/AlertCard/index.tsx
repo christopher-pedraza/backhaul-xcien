@@ -15,6 +15,8 @@ type AlertCardProps = {
   uso: string;
   capacidadActual: string;
   capacidadRecomendada: string;
+  setSelectedNode: (value: string) => void;
+  setSelectedType: (value: string) => void;
 };
 
 export default function AlertCard({
@@ -23,6 +25,8 @@ export default function AlertCard({
   uso,
   capacidadActual,
   capacidadRecomendada,
+  setSelectedNode,
+  setSelectedType,
 }: AlertCardProps) {
   const { cy } = useCyContext();
 
@@ -43,6 +47,8 @@ export default function AlertCard({
     const edge = cy?.getElementById(enlace);
     if (!edge) return;
     edge.select();
+    setSelectedNode(enlace);
+    setSelectedType("edge");
     cy?.animate(
       {
         center: { eles: edge },

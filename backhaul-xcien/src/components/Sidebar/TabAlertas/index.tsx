@@ -1,8 +1,15 @@
-import React from "react";
 import AlertCard from "../AlertCard";
 import { useAlerts } from "@/context/AlertContext";
 
-const TabAlertas: React.FC = () => {
+interface TabAlertasProps {
+  setSelectedNode: (value: string) => void;
+  setSelectedType: (value: string) => void;
+}
+
+export default function TabAlertas({
+  setSelectedNode,
+  setSelectedType,
+}: TabAlertasProps) {
   // Datos de las alertas
   const { alertCards } = useAlerts();
 
@@ -20,12 +27,12 @@ const TabAlertas: React.FC = () => {
               uso={alert.uso}
               capacidadActual={alert.capacidadActual}
               capacidadRecomendada={alert.capacidadRecomendada}
+              setSelectedNode={setSelectedNode}
+              setSelectedType={setSelectedType}
             />
           ))
         )}
       </div>
     </div>
   );
-};
-
-export default TabAlertas;
+}

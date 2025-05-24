@@ -29,6 +29,8 @@ interface SideBarProps {
   selectedType: string;
   wasTapped: boolean;
   setWasTapped: (value: boolean) => void;
+  setSelectedNode: (value: string) => void;
+  setSelectedType: (value: string) => void;
 }
 
 export default function Sidebar({
@@ -38,6 +40,8 @@ export default function Sidebar({
   selectedType,
   wasTapped,
   setWasTapped,
+  setSelectedNode,
+  setSelectedType,
 }: SideBarProps) {
   useEffect(() => {
     if (wasTapped) {
@@ -147,7 +151,10 @@ export default function Sidebar({
                   </div>
                 }
               >
-                <TabAlertas />
+                <TabAlertas
+                  setSelectedNode={setSelectedNode}
+                  setSelectedType={setSelectedType}
+                />
               </Tab>
               <Tab
                 key="resumen"

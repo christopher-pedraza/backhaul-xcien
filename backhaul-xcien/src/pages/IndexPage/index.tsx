@@ -303,6 +303,8 @@ const IndexPage: FC<Props> = () => {
           setWasTapped={setWasTapped}
           selectedNode={selectedNode || ""}
           selectedType={selectedType || ""}
+          setSelectedNode={setSelectedNode}
+          setSelectedType={setSelectedType}
         />
 
         {/* Modal para crear nodo */}
