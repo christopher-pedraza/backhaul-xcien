@@ -47,7 +47,7 @@ export default function AlertCard({
       {
         center: { eles: edge },
       },
-      { duration: 800 }
+      { duration: 800 },
     );
     const originalColor = edge.style("line-color");
     const flashColor = isCritical ? "#ef4444" : "#facc15";
@@ -56,18 +56,18 @@ export default function AlertCard({
     setTimeout(() => {
       edge.animate(
         { style: { "line-color": originalColor } },
-        { duration: 500 }
+        { duration: 500 },
       );
       // Second flash
       setTimeout(() => {
         edge.animate(
           { style: { "line-color": flashColor } },
-          { duration: 500 }
+          { duration: 500 },
         );
         setTimeout(() => {
           edge.animate(
             { style: { "line-color": originalColor } },
-            { duration: 500 }
+            { duration: 500 },
           );
         }, 1000);
       }, 1000);
