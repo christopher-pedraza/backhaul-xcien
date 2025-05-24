@@ -13,7 +13,7 @@ import {
 import TabInput from "../TabInput";
 
 // Icons
-import { PlusCircleIcon } from "lucide-react";
+import { CircleAlert, PlusCircleIcon } from "lucide-react";
 import PencilIcon from "../Icons/PencilIcon";
 import { Trash2Icon } from "lucide-react";
 
@@ -159,7 +159,7 @@ export default function NodeTab({ selectedNode, node_data }: NodeTabProps) {
 
   const cantidadVendidaTotal = clients.reduce(
     (total, client) => total + client.soldCapacity,
-    0 as number,
+    0 as number
   );
 
   return (
@@ -174,7 +174,7 @@ export default function NodeTab({ selectedNode, node_data }: NodeTabProps) {
       />
       <Card className="w-full h-[400px]">
         <CardHeader className="relative text-xl font-bold flex flex-col items-center justify-center">
-          <p>Clientes</p>
+          <p>Puntos de acceso</p>
           <Button
             className="absolute right-2 top-1/8 bg-transparent"
             isIconOnly
@@ -222,8 +222,13 @@ export default function NodeTab({ selectedNode, node_data }: NodeTabProps) {
               ))}
             </ScrollShadow>
           ) : (
-            <div className="w-full h-full flex flex-col justify-center items-center">
-              <p className="text-lg">El nodo no cuenta con clientes.</p>
+            <div className="w-full h-full flex flex-col justify-center items-center overflow-hidden">
+              <div className="w-[250px] flex flex-col justify-center items-center">
+                <CircleAlert className="text-gray-500" width={60} height={60} />
+                <p className="text-xl text-center text-gray-500 text-wrap">
+                  El nodo no cuenta con puntos de acceso.
+                </p>
+              </div>
             </div>
           )}
         </CardBody>

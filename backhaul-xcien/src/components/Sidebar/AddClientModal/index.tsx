@@ -93,14 +93,14 @@ export default function AddClientModal({
         {(_) => (
           <>
             <ModalHeader className="flex flex-col gap-1">
-              Agregar cliente
+              Agregar punto de acceso
             </ModalHeader>
             <ModalBody>
               <Input
                 label="Nombre"
                 value={name}
                 onValueChange={setName}
-                placeholder="Nombre del cliente"
+                placeholder="Nombre del punto de acceso"
                 variant="underlined"
                 size="lg"
                 className="mb-2"

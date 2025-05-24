@@ -88,14 +88,14 @@ export default function ModifyClientModal({
         {(_) => (
           <>
             <ModalHeader className="flex flex-col gap-1">
-              Modificar cliente
+              Modificar punto de acceso
             </ModalHeader>
             <ModalBody>
               <Input
                 label="Nombre"
                 value={name}
                 onValueChange={setName}
-                placeholder="Nombre del cliente"
+                placeholder="Nombre del punto de acceso"
                 variant="underlined"
                 size="lg"
                 className="mb-2"

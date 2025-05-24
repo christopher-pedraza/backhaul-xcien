@@ -4,7 +4,7 @@ import {
 } from "../../../src/context/ChangeLogContext";
 
 export const getActionType = (
-  type: UserActionType,
+  type: UserActionType
 ): "error" | "info" | "success" => {
   switch (type) {
     case UserActionType.REMOVE_NODE:
@@ -35,11 +35,11 @@ export const getActionTitle = (action: UserAction): string => {
     case UserActionType.EDIT_EDGE:
       return "Enlace editado";
     case UserActionType.ADD_CLIENT:
-      return "Cliente agregado";
+      return "Punto de acceso agregado";
     case UserActionType.REMOVE_CLIENT:
-      return "Cliente eliminado";
+      return "Punto de acceso eliminado";
     case UserActionType.EDIT_CLIENT:
-      return "Cliente editado";
+      return "Punto de acceso editado";
     default:
       return "Cambio";
   }
@@ -60,7 +60,7 @@ export const getActionDetails = (action: UserAction): string[] => {
       return [
         `Nodo: ${(action.data as any).name}`,
         ...(action.data as any).removedEdges.map(
-          (edge: string) => `Enlace eliminado: ${edge}`,
+          (edge: string) => `Enlace eliminado: ${edge}`
         ),
       ];
 
@@ -124,7 +124,7 @@ export const getActionDetails = (action: UserAction): string[] => {
 
       if (oldSoldCapacity !== newSoldCapacity) {
         changes.push(
-          `Capacidad vendida: ${oldSoldCapacity} → ${newSoldCapacity}`,
+          `Capacidad vendida: ${oldSoldCapacity} → ${newSoldCapacity}`
         );
       }
 

@@ -41,13 +41,13 @@ export default function ConfirmationModal({
         {(_) => (
           <>
             <ModalHeader className="flex flex-col gap-1">
-              ¿Eliminar cliente?
+              ¿Eliminar punto de acceso?
             </ModalHeader>
             <ModalBody>
               <p>
-                ¿Estás seguro de que deseas eliminar este cliente? Esta acción
-                no se puede deshacer y se eliminarán todos los datos asociados a
-                este.
+                ¿Estás seguro de que deseas eliminar este punto de acceso? Esta
+                acción no se puede deshacer y se eliminarán todos los datos
+                asociados a este.
               </p>
             </ModalBody>
             <ModalFooter>
