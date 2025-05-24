@@ -191,13 +191,19 @@ export const useFlowSolver = () => {
           lp.objective!.vars.push({ name: oName, coef: 1 - jump_weight });
 
           // Overflow constraint: f - o ≤ c
+          let upperbound = capacity;
+          if (upperbound > 500) {
+            upperbound *= 0.8;
+          } else {
+            upperbound *= 0.5;
+          }
           lp.subjectTo!.push({
             name: `overflow_${from}->${to}`,
             vars: [
               { name: fName, coef: 1 },
               { name: oName, coef: -1 },
             ],
-            bnds: { type: glpk.GLP_UP, ub: capacity, lb: 0 },
+            bnds: { type: glpk.GLP_UP, ub: upperbound, lb: 0 },
           });
         }
       }
