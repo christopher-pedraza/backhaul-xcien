@@ -4,7 +4,7 @@ import {
 } from "../../../src/context/ChangeLogContext";
 
 export const getActionType = (
-  type: UserActionType
+  type: UserActionType,
 ): "error" | "info" | "success" => {
   switch (type) {
     case UserActionType.REMOVE_NODE:
@@ -60,7 +60,7 @@ export const getActionDetails = (action: UserAction): string[] => {
       return [
         `Nodo: ${(action.data as any).name}`,
         ...(action.data as any).removedEdges.map(
-          (edge: string) => `Enlace eliminado: ${edge}`
+          (edge: string) => `Enlace eliminado: ${edge}`,
         ),
       ];
 
@@ -124,7 +124,7 @@ export const getActionDetails = (action: UserAction): string[] => {
 
       if (oldSoldCapacity !== newSoldCapacity) {
         changes.push(
-          `Capacidad vendida: ${oldSoldCapacity} → ${newSoldCapacity}`
+          `Capacidad vendida: ${oldSoldCapacity} → ${newSoldCapacity}`,
         );
       }
 
