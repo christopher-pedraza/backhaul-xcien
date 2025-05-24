@@ -2,7 +2,7 @@ import { FC, useState, useRef, useEffect } from "react";
 import { Slider } from "@heroui/slider";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 
-import { useFlowSolver } from "../../hooks/FlowSolver";
+import { useFlowSolver } from "@/hooks/FlowSolver";
 import { useAlerts } from "@/context/AlertContext";
 
 interface CalculateRouteModalProps {
