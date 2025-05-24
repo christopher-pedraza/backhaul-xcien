@@ -6,6 +6,9 @@ import {
   AlertOctagon,
 } from "lucide-react";
 
+// contexts
+import { useCyContext } from "@/hooks/useCyContext";
+
 type AlertCardProps = {
   enlace: string;
   porcentaje: number;
@@ -21,6 +24,8 @@ export default function AlertCard({
   capacidadActual,
   capacidadRecomendada,
 }: AlertCardProps) {
+  const { cy } = useCyContext();
+
   const isCritical = porcentaje > 99;
   const [expanded, setExpanded] = useState(false);
 
@@ -33,6 +38,41 @@ export default function AlertCard({
   const textColor = isCritical ? "text-red-600" : "text-yellow-600";
   const borderColor = isCritical ? "border-red-500" : "border-yellow-400";
   const bgColor = isCritical ? "bg-red-600" : "bg-yellow-400";
+
+  const handleSelectEdge = () => {
+    const edge = cy?.getElementById(enlace);
+    if (!edge) return;
+    edge.select();
+    cy?.animate(
+      {
+        center: { eles: edge },
+      },
+      { duration: 800 }
+    );
+    const originalColor = edge.style("line-color");
+    const flashColor = isCritical ? "#ef4444" : "#facc15";
+    // First flash
+    edge.animate({ style: { "line-color": flashColor } }, { duration: 500 });
+    setTimeout(() => {
+      edge.animate(
+        { style: { "line-color": originalColor } },
+        { duration: 500 }
+      );
+      // Second flash
+      setTimeout(() => {
+        edge.animate(
+          { style: { "line-color": flashColor } },
+          { duration: 500 }
+        );
+        setTimeout(() => {
+          edge.animate(
+            { style: { "line-color": originalColor } },
+            { duration: 500 }
+          );
+        }, 1000);
+      }, 1000);
+    }, 1000);
+  };
 
   return (
     <div
@@ -49,7 +89,7 @@ export default function AlertCard({
 
       <div className="flex-1 p-4">
         <div className="flex justify-between items-center font-semibold">
-          <span>Enlace: {enlace}</span>
+          <span onClick={handleSelectEdge}>Enlace: {enlace}</span>
           <button onClick={() => setExpanded(!expanded)}>
             {expanded ? (
               <ChevronDown className="w-5 h-5" />
