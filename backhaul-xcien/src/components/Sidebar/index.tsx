@@ -17,7 +17,9 @@ import TabConfiguracion from "./TabConfiguracion";
 import TabAlertas from "./TabAlertas";
 import TabResumen from "./TabResumen";
 
+// Hooks
 import { useEffect, useState } from "react";
+import { useAlerts } from "@/context/AlertContext";
 
 interface SideBarProps {
   isOpen: boolean;
@@ -43,6 +45,12 @@ export default function Sidebar({
       setWasTapped(false);
     }
   }, [wasTapped]);
+
+  const { alertCards } = useAlerts();
+
+  useEffect(() => {
+    setSelected("alertas");
+  }, [alertCards]);
 
   const [openButtonRotation, setOpenButtonRotation] = useState(0);
   const [showOpenButton, setShowOpenButton] = useState(true);
