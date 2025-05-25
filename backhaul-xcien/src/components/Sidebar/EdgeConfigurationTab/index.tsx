@@ -28,7 +28,6 @@ export default function EdgeTab({ selectedNode, node_data }: EdgeTabProps) {
   const [lastUsage, setLastUsage] = useState("");
   const [lastCapacity, setLastCapacity] = useState("");
 
-  const errorsUsage: Array<string> = [];
   const errorsCapacity: Array<string> = [];
 
   const {
@@ -48,7 +47,7 @@ export default function EdgeTab({ selectedNode, node_data }: EdgeTabProps) {
   }, [node_data]);
 
   const saveEdgeConfiguration = () => {
-    if (errorsUsage.length === 0 && errorsCapacity.length === 0) {
+    if (errorsCapacity.length === 0) {
       onOpenConfirmation();
     }
   };
@@ -57,7 +56,6 @@ export default function EdgeTab({ selectedNode, node_data }: EdgeTabProps) {
     cy.getElementById(selectedNode).data({
       usage: usage,
       capacity: capacity,
-      name: node_data?.name || "",
     });
     setLastUsage(usage);
     setLastCapacity(capacity);
@@ -75,28 +73,18 @@ export default function EdgeTab({ selectedNode, node_data }: EdgeTabProps) {
     });
   };
 
-  if (usage === "") {
-    errorsUsage.push("El campo 'Uso' es obligatorio");
-  } else if (isNaN(Number(usage))) {
-    errorsUsage.push("El campo 'Uso' debe ser un número");
-  } else if (Number(usage) < 0) {
-    errorsUsage.push("El campo 'Uso' no puede ser negativo");
-  } else if (Number(usage) > Number(capacity)) {
-    errorsUsage.push("El campo 'Uso' no puede ser mayor que la capacidad");
-  }
-
-  if (capacity === "") {
-    errorsCapacity.push("El campo 'Capacidad' es obligatorio");
-  } else if (isNaN(Number(capacity))) {
-    errorsCapacity.push("El campo 'Capacidad' debe ser un número");
-  } else if (Number(capacity) < 0) {
-    errorsCapacity.push("El campo 'Capacidad' no puede ser negativo");
+  if (node_data) {
+    if (capacity === "") {
+      errorsCapacity.push("El campo 'Capacidad' es obligatorio");
+    } else if (isNaN(Number(capacity))) {
+      errorsCapacity.push("El campo 'Capacidad' debe ser un número");
+    } else if (Number(capacity) < 0) {
+      errorsCapacity.push("El campo 'Capacidad' no puede ser negativo");
+    }
   }
 
   var shouldDisableButton =
-    errorsUsage.length > 0 ||
-    errorsCapacity.length > 0 ||
-    (usage == lastUsage && capacity == lastCapacity);
+    errorsCapacity.length > 0 || capacity == lastCapacity;
 
   return (
     <>
@@ -104,9 +92,9 @@ export default function EdgeTab({ selectedNode, node_data }: EdgeTabProps) {
         label="Uso"
         value={usage}
         setValue={setUsage}
-        errors={errorsUsage}
-        hasChanges={usage != lastUsage}
         isReadOnly={true}
+        variant="bordered"
+        labelPlacement="outside"
       />
       <TabInput
         label="Capacidad"

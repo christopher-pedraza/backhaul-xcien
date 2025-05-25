@@ -7,17 +7,22 @@ interface SidebarCloseButtonProps {
   right?: number;
   icon: any;
   isDisabled: boolean;
+  isVisible?: boolean; // Add isVisible prop for animation
 }
 
 const SidebarToggleButton = React.forwardRef<
   HTMLButtonElement,
   SidebarCloseButtonProps
->(({ onPress, left, right, icon, isDisabled }, ref) => {
+>(({ onPress, left, right, icon, isDisabled, isVisible = true }, ref) => {
   return (
     <Button
       isIconOnly
       onPress={onPress}
-      className="bg-transparent"
+      className={`bg-transparent transition-all duration-300 ease-in-out ${
+        isVisible
+          ? "opacity-100 translate-x-0 pointer-events-auto"
+          : "opacity-0 translate-x-4 pointer-events-none"
+      }`}
       disableRipple
       disableAnimation
       radius="none"

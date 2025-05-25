@@ -35,11 +35,11 @@ export const getActionTitle = (action: UserAction): string => {
     case UserActionType.EDIT_EDGE:
       return "Enlace editado";
     case UserActionType.ADD_CLIENT:
-      return "Cliente agregado";
+      return "Punto de acceso agregado";
     case UserActionType.REMOVE_CLIENT:
-      return "Cliente eliminado";
+      return "Punto de acceso eliminado";
     case UserActionType.EDIT_CLIENT:
-      return "Cliente editado";
+      return "Punto de acceso editado";
     default:
       return "Cambio";
   }

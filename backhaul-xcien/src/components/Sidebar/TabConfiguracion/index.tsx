@@ -43,6 +43,7 @@ export default function TabConfiguracion({
   useEffect(() => {
     const node = cy.getElementById(selectedNode);
     if (node) {
+      console.log("Node data:", node.data());
       setNodeData(node.data());
     }
   }, [selectedNode, cy]);
@@ -52,7 +53,7 @@ export default function TabConfiguracion({
       return;
     }
     if (selectedType == "node") {
-      setName(node_data["name"] || "");
+      setName(node_data["name"]);
     } else if (selectedType == "edge") {
       setName(node_data["id"]);
     }
@@ -62,9 +63,11 @@ export default function TabConfiguracion({
     if (!node_data) {
       return;
     }
+    console.log("Before", cy.getElementById(selectedNode).data());
     cy.getElementById(selectedNode).data({
       name: newName,
     });
+    console.log("After", cy.getElementById(selectedNode).data());
 
     if (selectedType == "node") {
       if (name != newName) {
@@ -99,6 +102,7 @@ export default function TabConfiguracion({
             newUsage: strUsage,
           },
         });
+        setName(newName);
       }
     }
   };
@@ -106,9 +110,9 @@ export default function TabConfiguracion({
   return (
     <div className="flex flex-col items-center p-4 h-full">
       <Button
-        endContent={<PencilIcon />}
+        endContent={selectedType == "node" ? <PencilIcon /> : null}
         className="bg-transparent mb-4"
-        onPress={onOpenChangeName}
+        onPress={selectedType == "node" ? onOpenChangeName : undefined}
       >
         <h1 className="text-xl font-bold text-ellipsis whitespace-nowrap overflow-hidden max-w-[300px]">
           {name}

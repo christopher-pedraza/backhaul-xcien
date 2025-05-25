@@ -3,7 +3,7 @@ import { FC, useEffect, useState } from "react";
 import Graph from "@/components/graph";
 import { useCyContext } from "@/hooks/useCyContext";
 import { AlertProvider } from "@/context/AlertContext";
-import { getRandomPosition, getBottomLeftPosition } from "./utils";
+import { getBottomLeftPosition } from "./utils";
 import Sidebar from "@/components/Sidebar/index";
 import CreateNodeModal from "@/components/toolBox/CreateNodeModal/CreateNodeModal";
 import LinkModal from "@/components/toolBox/CreatEdgeModal/CreateEdgeModal";
@@ -62,6 +62,7 @@ const IndexPage: FC<Props> = () => {
   const { data: selectedTopology } = useTopology(selectedTopologyId);
 
   const [isSidebarOpen, setSidebarIsOpen] = useState(false);
+  const [wasTapped, setWasTapped] = useState(false);
   const [selectedNode, setSelectedNode] = useState<string | null>(null);
   const [selectedType, setSelectedType] = useState<string | null>(null);
 
@@ -108,15 +109,18 @@ const IndexPage: FC<Props> = () => {
       const id = event.target.id();
       setSelectedNode(id);
       setSelectedType("node");
-      if (!isSidebarOpen) setSidebarIsOpen(true);
-      console.log(cy.getElementById(id).connectedEdges()[0].id());
+      setWasTapped(true);
+      if (!isSidebarOpen) {
+      }
     };
 
     const handleEdgeTap = (event: any) => {
       const id = event.target.id();
       setSelectedNode(id);
       setSelectedType("edge");
-      if (!isSidebarOpen) setSidebarIsOpen(true);
+      setWasTapped(true);
+      if (!isSidebarOpen) {
+      }
     };
 
     cy.on("tap", "node", handleNodeTap);
@@ -278,7 +282,7 @@ const IndexPage: FC<Props> = () => {
     : "";
 
   return (
-    <div className="flex-1 flex flex-col bg-dotted relative">
+    <div className="flex-1 flex flex-col bg-dotted relative overflow-hidden">
       <MyNavbar />
 
       <Graph />
@@ -295,8 +299,12 @@ const IndexPage: FC<Props> = () => {
         <Sidebar
           isOpen={isSidebarOpen}
           setIsOpen={setSidebarIsOpen}
+          wasTapped={wasTapped}
+          setWasTapped={setWasTapped}
           selectedNode={selectedNode || ""}
           selectedType={selectedType || ""}
+          setSelectedNode={setSelectedNode}
+          setSelectedType={setSelectedType}
         />
 
         {/* Modal para crear nodo */}
