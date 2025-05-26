@@ -7,9 +7,8 @@ import {
   getActionTitle,
   getActionDetails,
 } from "../CardsChanges/actions";
-import EmptyChanges from "../EmptyChanges/EmptyChanges"; 
+import EmptyChanges from "../EmptyChanges/EmptyChanges";
 import { FileClock } from "lucide-react";
-
 
 const ChangesList = () => {
   const context = useContext(ChangeLogContext);
@@ -24,8 +23,10 @@ const ChangesList = () => {
     <div className="changes-list max-w-2xl mx-auto my-0 relative h-[87vh]">
       <div className="max-h-full overflow-y-auto p-2 space-y-3 relative z-10">
         {actions.length === 0 ? (
-          <EmptyChanges Icon={FileClock} message="No se han realizado cambios."/>
-
+          <EmptyChanges
+            Icon={FileClock}
+            message="No se han realizado cambios."
+          />
         ) : (
           actions.map((action, index) => (
             <ChangeCard

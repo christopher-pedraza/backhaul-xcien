@@ -93,8 +93,8 @@ export default function AlertCard({
         </div>
       </div>
 
-      <div className="flex-1 p-4" >
-          <div className="flex justify-between items-center font-semibold cursor-pointer transition-colors duration-300 hover:text-gray-500">
+      <div className="flex-1 p-4">
+        <div className="flex justify-between items-center font-semibold cursor-pointer transition-colors duration-300 hover:text-gray-500">
           <span onClick={handleSelectEdge}>Enlace: {enlace}</span>
           <button onClick={() => setExpanded(!expanded)}>
             {expanded ? (

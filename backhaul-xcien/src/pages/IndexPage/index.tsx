@@ -224,7 +224,7 @@ const IndexPage: FC<Props> = () => {
         target: targetNode,
         label: `${capacity}/${usage}`,
         capacity,
-        usage:0,
+        usage: 0,
       },
     });
 
@@ -285,7 +285,7 @@ const IndexPage: FC<Props> = () => {
     <div className="flex-1 flex flex-col bg-dotted relative overflow-hidden">
       <MyNavbar />
 
-        <Graph />
+      <Graph />
 
       <div className="absolute top-0 left-0 z-10 mt-[4rem] ml-2 w-1/6">
         <Selector
