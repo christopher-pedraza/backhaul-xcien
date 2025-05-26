@@ -224,7 +224,7 @@ const IndexPage: FC<Props> = () => {
         target: targetNode,
         label: `${capacity}/${usage}`,
         capacity,
-        usage,
+        usage: 0,
       },
     });
 

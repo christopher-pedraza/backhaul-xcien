@@ -1,0 +1,26 @@
+.emptyChangesContainer {
+  width: 100% !important;
+  height: 80vh;
+  background-color: #f3f4f6; /* gris claro */
+  border: 1px solid #d1d5db; /* borde gris */
+  border-radius: 0.75rem; /* rounded-xl (12px aprox) */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #595959; /* text-gray-500 */
+  font-weight: 500;
+  font-size: 0.875rem; /* text-sm */
+  padding-top: 50px;
+  padding-bottom: 50px;
+  font-family: "Red Hat Text", sans-serif;
+  font-weight: lighter;
+  margin-top: 3vh;
+}
+
+.emptyChangesIcon {
+  width: 32px;
+  height: 32px;
+  margin-bottom: 0.5rem;
+  stroke-width: 1.5; /* para que el icono luzca bien */
+}
