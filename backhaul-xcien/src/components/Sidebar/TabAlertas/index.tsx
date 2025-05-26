@@ -44,7 +44,7 @@ export default function TabAlertas({
       </div>
       <div className="flex justify-center items-center p-2">
         <Button
-          variant="solid"
+          variant="ghost"
           color="primary"
           className="w-full"
           onPress={() => {
