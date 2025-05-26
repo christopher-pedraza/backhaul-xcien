@@ -6,7 +6,7 @@ import { UserAction } from "../context/ChangeLogContext";
 
 export function generatePDFReport(
   alertCards: AlertCardData[],
-  actions: UserAction[]
+  actions: UserAction[],
 ) {
   const doc = new jsPDF();
   const pageWidth = doc.internal.pageSize.getWidth();
@@ -175,7 +175,7 @@ export function generatePDFReport(
       `Página ${i} de ${pageCount}`,
       pageWidth - 14,
       doc.internal.pageSize.getHeight() - 8,
-      { align: "right" }
+      { align: "right" },
     );
     doc.setTextColor(0, 0, 0);
   }
