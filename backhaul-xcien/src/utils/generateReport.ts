@@ -180,5 +180,6 @@ export function generatePDFReport(
     doc.setTextColor(0, 0, 0);
   }
 
-  doc.save("reporte_alertas_cambios.pdf");
+  const fileDate = now.toISOString().slice(0, 10); // YYYY-MM-DD
+  doc.save(`reporte_${fileDate}.pdf`);
 }
