@@ -26,8 +26,6 @@ interface CreateEdgeModalProps {
   setTargetNode: (value: string) => void;
   capacity: string;
   setCapacity: (value: string) => void;
-  usage: string;
-  setUsage: (value: string) => void;
   handleCreateLink: () => void;
   availableNodes: NodeOption[];
 }
@@ -41,8 +39,6 @@ const CreateEdgeModal: FC<CreateEdgeModalProps> = ({
   setTargetNode,
   capacity,
   setCapacity,
-  usage,
-  setUsage,
   handleCreateLink,
   availableNodes,
 }) => {
@@ -51,11 +47,8 @@ const CreateEdgeModal: FC<CreateEdgeModalProps> = ({
     targetNode.trim() !== "" &&
     sourceNode !== targetNode &&
     capacity.trim() !== "" &&
-    usage.trim() !== "" &&
     !isNaN(Number(capacity)) &&
-    !isNaN(Number(usage)) &&
-    Number(capacity) > 0 &&
-    Number(usage) >= 0;
+    Number(capacity) > 0;
 
   // Ordena los nodos por nombre alfabéticamente
   const sortedAvailableNodes = [...availableNodes].sort((a, b) =>
@@ -78,7 +71,11 @@ const CreateEdgeModal: FC<CreateEdgeModalProps> = ({
             }}
           >
             {sortedAvailableNodes.map((node) => (
-              <SelectItem key={node.id} value={node.id}>
+              <SelectItem
+                key={node.id}
+                value={node.id}
+                isDisabled={node.id === targetNode}
+              >
                 {node.name}
               </SelectItem>
             ))}
@@ -95,22 +92,15 @@ const CreateEdgeModal: FC<CreateEdgeModalProps> = ({
             }}
           >
             {sortedAvailableNodes.map((node) => (
-              <SelectItem key={node.id} value={node.id}>
+              <SelectItem
+                key={node.id}
+                value={node.id}
+                isDisabled={node.id === sourceNode}
+              >
                 {node.name}
               </SelectItem>
             ))}
           </Select>
-
-          {/* Uso */}
-          <Input
-            isRequired
-            type="number"
-            min={0}
-            label="Uso"
-            placeholder="Uso actual del enlace"
-            value={usage}
-            onChange={(e) => setUsage(e.target.value)}
-          />
 
           {/* Capacidad */}
           <Input

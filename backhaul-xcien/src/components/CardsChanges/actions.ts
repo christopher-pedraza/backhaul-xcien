@@ -69,7 +69,7 @@ export const getActionDetails = (action: UserAction): string[] => {
         `Desde: ${(action.data as any).source}`,
         `Hacia: ${(action.data as any).target}`,
         `Capacidad: ${(action.data as any).capacity}`,
-        `Uso: ${(action.data as any).usage}`,
+        `Uso: 0`,
       ];
 
     case UserActionType.EDIT_EDGE:
