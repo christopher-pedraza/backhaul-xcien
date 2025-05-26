@@ -13,8 +13,9 @@ export default function TabAlertas({
 }: TabAlertasProps) {
   const { alertCards } = useAlerts();
 
+  // flex items-center justify-center max-w-[370px] h-full
   return (
-    <div className="max-w-2xl mx-auto my-0 relative h-[87vh] flex flex-col">
+    <div className="max-w-[370px] mx-auto my-0 relative h-[87vh] flex flex-col">
       <div className="max-h-full overflow-y-auto p-2 space-y-3 relative z-10 flex-1">
         {alertCards.length === 0 ? (
           <EmptyChanges message="No hay alertas por mostrar." />

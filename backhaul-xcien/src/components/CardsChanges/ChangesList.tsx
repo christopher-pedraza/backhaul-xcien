@@ -20,7 +20,7 @@ const ChangesList = () => {
   const { actions } = context;
 
   return (
-    <div className="changes-list max-w-2xl mx-auto my-0 relative h-[87vh]">
+    <div className="changes-list max-w-[370px] mx-auto my-0 relative h-[87vh]">
       <div className="max-h-full overflow-y-auto p-2 space-y-3 relative z-10">
         {actions.length === 0 ? (
           <EmptyChanges
