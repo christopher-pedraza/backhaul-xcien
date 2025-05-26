@@ -6,7 +6,7 @@ import { UserAction } from "../context/ChangeLogContext";
 
 export function generatePDFReport(
   alertCards: AlertCardData[],
-  actions: UserAction[]
+  actions: UserAction[],
 ) {
   const doc = new jsPDF();
 
