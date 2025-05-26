@@ -43,6 +43,7 @@ export default function TabInput({
       classNames={{ input: inputClass }}
       isReadOnly={isReadOnly}
       labelPlacement={labelPlacement}
+      disabled={isReadOnly}
     />
   );
 }
