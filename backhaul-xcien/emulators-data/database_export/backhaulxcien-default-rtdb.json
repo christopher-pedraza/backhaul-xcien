@@ -101,6 +101,28 @@
           "y": 150
         },
         "coreApolo": {
+          "clients": {
+            "coreApolo1": {
+              "name": "Core Apolo Client 1",
+              "soldCapacity": 200,
+              "usage": 50
+            },
+            "coreApolo2": {
+              "name": "Core Apolo Client 2",
+              "soldCapacity": 200,
+              "usage": 50
+            },
+            "coreApolo3": {
+              "name": "Core Apolo Client 3",
+              "soldCapacity": 200,
+              "usage": 50
+            },
+            "coreApolo4": {
+              "name": "Core Apolo Client 4",
+              "soldCapacity": 200,
+              "usage": 50
+            }
+          },
           "name": "Core Apolo",
           "type": "router",
           "x": -200,
@@ -125,6 +147,28 @@
           "y": 350
         },
         "coreSispa": {
+          "clients": {
+            "coreSispa1": {
+              "name": "Core Sispa Client 1",
+              "soldCapacity": 200,
+              "usage": 50
+            },
+            "coreSispa2": {
+              "name": "Core Sispa Client 2",
+              "soldCapacity": 200,
+              "usage": 50
+            },
+            "coreSispa3": {
+              "name": "Core Sispa Client 3",
+              "soldCapacity": 200,
+              "usage": 50
+            },
+            "coreSispa4": {
+              "name": "Core Sispa Client 4",
+              "soldCapacity": 200,
+              "usage": 50
+            }
+          },
           "name": "Core Sispa",
           "type": "router",
           "x": 0,
@@ -137,6 +181,28 @@
           "y": 100
         },
         "coreVillaUnion": {
+          "clients": {
+            "coreVillaUnion1": {
+              "name": "Core Villa Unión Client 1",
+              "soldCapacity": 200,
+              "usage": 50
+            },
+            "coreVillaUnion2": {
+              "name": "Core Villa Unión Client 2",
+              "soldCapacity": 200,
+              "usage": 50
+            },
+            "coreVillaUnion3": {
+              "name": "Core Villa Unión Client 3",
+              "soldCapacity": 200,
+              "usage": 50
+            },
+            "coreVillaUnion4": {
+              "name": "Core Villa Unión Client 4",
+              "soldCapacity": 200,
+              "usage": 50
+            }
+          },
           "name": "Core Villa Unión",
           "type": "router",
           "x": 300,
@@ -155,28 +221,6 @@
           "y": 0
         },
         "movistar": {
-          "clients": {
-            "movistarClient1": {
-              "name": "Movistar Client 1",
-              "soldCapacity": 1000,
-              "usage": 300
-            },
-            "movistarClient2": {
-              "name": "Movistar Client 2",
-              "soldCapacity": 1000,
-              "usage": 300
-            },
-            "movistarClient3": {
-              "name": "Movistar Client 3",
-              "soldCapacity": 1000,
-              "usage": 300
-            },
-            "movistarClient4": {
-              "name": "Movistar Client 4",
-              "soldCapacity": 1000,
-              "usage": 300
-            }
-          },
           "name": "Carrier\nMovistar",
           "type": "cloud",
           "x": -100,
@@ -285,6 +329,28 @@
           "y": 200
         },
         "coreSanAntonioTRM2": {
+          "clients": {
+            "coreSanAntonio1": {
+              "name": "Core San Antonio Client 1",
+              "soldCapacity": 200,
+              "usage": 50
+            },
+            "coreSanAntonio2": {
+              "name": "Core San Antonio Client 2",
+              "soldCapacity": 200,
+              "usage": 50
+            },
+            "coreSanAntonio3": {
+              "name": "Core San Antonio Client 3",
+              "soldCapacity": 200,
+              "usage": 50
+            },
+            "coreSanAntonio4": {
+              "name": "Core San Antonio Client 4",
+              "soldCapacity": 200,
+              "usage": 50
+            }
+          },
           "name": "Core San Antonio\nTRM2",
           "type": "router",
           "x": 200,
@@ -315,6 +381,28 @@
           "y": 250
         },
         "wrtMatias": {
+          "clients": {
+            "coreMatias1": {
+              "name": "Core Matias Client 1",
+              "soldCapacity": 200,
+              "usage": 50
+            },
+            "coreMatias2": {
+              "name": "Core Matias Client 2",
+              "soldCapacity": 200,
+              "usage": 50
+            },
+            "coreMatias3": {
+              "name": "Core Matias Client 3",
+              "soldCapacity": 200,
+              "usage": 50
+            },
+            "coreMatias4": {
+              "name": "Core Matias Client 4",
+              "soldCapacity": 200,
+              "usage": 50
+            }
+          },
           "name": "WRT Planta\nLos Matias",
           "type": "router",
           "x": -200,
