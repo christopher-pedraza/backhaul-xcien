@@ -6,7 +6,7 @@ import { UserAction } from "../context/ChangeLogContext";
 
 export function generatePDFReport(
   alertCards: AlertCardData[],
-  actions: UserAction[]
+  actions: UserAction[],
 ) {
   const doc = new jsPDF();
   const pageWidth = doc.internal.pageSize.getWidth();
@@ -104,7 +104,7 @@ export function generatePDFReport(
 
   // --- Action Card Helpers ---
   function getActionCardFields(
-    action: UserAction
+    action: UserAction,
   ): [string, string, string, string] {
     switch (action.type) {
       case "ADD_NODE":
@@ -183,7 +183,7 @@ export function generatePDFReport(
       headerHeight: number;
       footerHeight: number;
       valueWidth: number;
-    }
+    },
   ): number {
     const { cardPadding, labelWidth, headerHeight, footerHeight, valueWidth } =
       options;
@@ -195,7 +195,7 @@ export function generatePDFReport(
       { label: "Detalles", value: detalles },
     ].filter((f) => f.value && f.value !== "-");
     const linesArr = contentFields.map((f) =>
-      doc.splitTextToSize(f.value, valueWidth)
+      doc.splitTextToSize(f.value, valueWidth),
     );
     const lineHeight = 5.5;
     const contentHeight =
@@ -238,7 +238,7 @@ export function generatePDFReport(
       action.timestamp,
       14 + cardWidth - cardPadding,
       y + cardHeight - cardPadding,
-      { align: "right" }
+      { align: "right" },
     );
     doc.setTextColor(0, 0, 0);
     doc.setFontSize(10);
@@ -264,7 +264,7 @@ export function generatePDFReport(
         { label: "Detalles", value: detalles },
       ].filter((f) => f.value && f.value !== "-");
       const linesArr = contentFields.map((f) =>
-        doc.splitTextToSize(f.value, valueWidth)
+        doc.splitTextToSize(f.value, valueWidth),
       );
       const lineHeight = 5.5;
       const contentHeight =
@@ -302,7 +302,7 @@ export function generatePDFReport(
       `Página ${i} de ${pageCount}`,
       pageWidth - 14,
       doc.internal.pageSize.getHeight() - 8,
-      { align: "right" }
+      { align: "right" },
     );
     doc.setTextColor(0, 0, 0);
   }
