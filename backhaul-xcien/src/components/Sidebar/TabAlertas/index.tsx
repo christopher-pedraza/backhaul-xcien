@@ -41,19 +41,19 @@ export default function TabAlertas({
         </div>
 
         <div className="pointer-events-none absolute bottom-0 left-0 w-full h-3 bg-gradient-to-t from-white to-transparent z-20" />
-      
-      <div className="flex justify-center items-center p-2">
-        <Button
-          variant="ghost"
-          color="primary"
-          className="w-full"
-          onPress={() => {
-            generatePDFReport(alertCards, actions);
-          }}
-        >
-          Exportar reporte
-        </Button>
-      </div>
+
+        <div className="flex justify-center items-center p-2">
+          <Button
+            variant="ghost"
+            color="primary"
+            className="w-full"
+            onPress={() => {
+              generatePDFReport(alertCards, actions);
+            }}
+          >
+            Exportar reporte
+          </Button>
+        </div>
       </div>
     </div>
   );
