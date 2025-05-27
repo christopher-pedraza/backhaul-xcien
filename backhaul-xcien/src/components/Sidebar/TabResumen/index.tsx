@@ -6,9 +6,8 @@ import { useAlerts } from "@/context/AlertContext";
 import { useChangeLogContext } from "@/hooks/useChangeLogContext";
 
 export default function TabResumen() {
-
-    const { alertCards } = useAlerts();
-    const { actions } = useChangeLogContext();
+  const { alertCards } = useAlerts();
+  const { actions } = useChangeLogContext();
 
   return (
     <div>
