@@ -7,6 +7,7 @@ import {
 } from "react";
 import { Select, SelectItem } from "@heroui/react";
 import { SelectOption } from "./types";
+import { useChangeLogContext } from "@/hooks/useChangeLogContext";
 
 interface Props {
   isLoadingOptions: boolean;
@@ -21,6 +22,8 @@ const Selector: FC<Props> = ({
   selectedValue,
   setSelectedValue,
 }) => {
+  const { clearActions } = useChangeLogContext();
+
   // set the first option as selected if no value is selected
   useEffect(() => {
     if (!selectedValue && options.length > 0) {
@@ -29,6 +32,7 @@ const Selector: FC<Props> = ({
   }, [options]);
 
   const handleSelectionChange: ChangeEventHandler<HTMLSelectElement> = (e) => {
+    clearActions(); // Clear the change log when a new selection is made
     setSelectedValue(e.target.value);
   };
 
