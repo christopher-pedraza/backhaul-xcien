@@ -39,7 +39,7 @@ export const AlertProvider: React.FC<{ children: React.ReactNode }> = ({
 
         const capacidadRecomendada =
           recommendedCapacities.find( (c) => (newUsage * 100) / c <= 70 && c >= capacity) ||
-          `${newUsage}`;
+          `${newUsage + 1000}`;
 
         return {
           enlace: edgeId,
