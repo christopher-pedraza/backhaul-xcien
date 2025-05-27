@@ -26,7 +26,8 @@ const CalculateRouteModal: FC<CalculateRouteModalProps> = ({
 
   const onTest = async () => {
     try {
-      const results = await computeFlow();
+      const jumpWeight = distanceValue / 100;
+      const results = await computeFlow(jumpWeight);
       console.log("Flow calculation results:", results);
       setAlertsFromResults(results);
     } catch (err) {

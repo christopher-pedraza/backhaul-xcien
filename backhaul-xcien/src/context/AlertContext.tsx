@@ -7,7 +7,7 @@ type Alert = {
   capacity: number;
 };
 
-type AlertCardData = {
+export type AlertCardData = {
   enlace: string;
   porcentaje: number;
   uso: number;

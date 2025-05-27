@@ -57,6 +57,12 @@ export default function Sidebar({
     setSelected("alertas");
   }, [alertCards]);
 
+  useEffect(() => {
+    if (!selectedNode || !selectedType) {
+      setSelected("resumen");
+    }
+  }, [selectedNode, selectedType]);
+
   const [openButtonRotation, setOpenButtonRotation] = useState(0);
   const [showOpenButton, setShowOpenButton] = useState(true);
   const [disableOpenButton, setDisableOpenButton] = useState(false);

@@ -272,7 +272,8 @@ const IndexPage: FC<Props> = () => {
       }
 
       setSelectedNode(null);
-      setSidebarIsOpen(false);
+      setSelectedType(null);
+      // setSidebarIsOpen(false);
       setIsDeleteModalOpen(false);
     }
   };
