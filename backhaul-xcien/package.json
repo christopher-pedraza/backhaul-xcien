@@ -11,7 +11,8 @@
     "export-data": "firebase emulators:export ./emulators-data",
     "build": "tsc && vite build",
     "lint": "eslint --fix",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "all": "concurrently \"npm:emulators-safe\" \"npm:dev\""
   },
   "dependencies": {
     "@heroui/button": "2.2.19",
