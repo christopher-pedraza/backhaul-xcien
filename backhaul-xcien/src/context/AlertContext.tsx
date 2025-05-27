@@ -22,7 +22,10 @@ type AlertContextType = {
 
 const AlertContext = createContext<AlertContextType | undefined>(undefined);
 
-const recommendedCapacities = [100, 200, 300, 500, 800, 1000, 1100, 1250, 1500];
+const recommendedCapacities = [
+  100, 200, 300, 500, 800, 1000, 1100, 1250, 1500, 1750, 2000, 2500, 3000, 3500,
+  4000, 4500, 5000, 6000, 7000, 8000, 9000, 10000,
+];
 
 export const AlertProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -35,8 +38,9 @@ export const AlertProvider: React.FC<{ children: React.ReactNode }> = ({
         const porcentaje = Math.round((newUsage * 100) / capacity);
 
         const capacidadRecomendada =
-          recommendedCapacities.find((c) => (newUsage * 100) / c <= 70) ||
-          `${newUsage}`;
+          recommendedCapacities.find(
+            (c) => (newUsage * 100) / c <= 70 && c >= capacity,
+          ) || `${newUsage + 1000}`;
 
         return {
           enlace: edgeId,
