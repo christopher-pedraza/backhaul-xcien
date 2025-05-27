@@ -25,7 +25,12 @@
           "target": "coreMTPGuerrero",
           "usage": 0
         },
-        "RF_B5C_Acuña-Apolo": { "source": "coreAcuna", "target": "swPoEAcuna", "capacity": 10, "usage": 0 },
+        "RF_B5C_Acuña-Apolo": {
+          "source": "coreAcuna",
+          "target": "swPoEAcuna",
+          "capacity": 10,
+          "usage": 0
+        },
         "RF_C5C_Piedras_Negras-Telco": {
           "capacity": 100,
           "source": "coreBorderPDN",
@@ -246,8 +251,18 @@
           "target": "wrtMatias",
           "usage": 0
         },
-        "carrier_core": { "source": "carrier", "target": "coreSanLuis", "capacity": 10, "usage": 0 },
-        "core_switchEME": { "source": "coreSanLuis", "target": "switchEME", "capacity": 10, "usage": 0 },
+        "carrier_core": {
+          "source": "carrier",
+          "target": "coreSanLuis",
+          "capacity": 10,
+          "usage": 0
+        },
+        "core_switchEME": {
+          "source": "coreSanLuis",
+          "target": "switchEME",
+          "capacity": 10,
+          "usage": 0
+        },
         "switchEME_coreCarretera57": {
           "capacity": 700,
           "source": "switchEME",
