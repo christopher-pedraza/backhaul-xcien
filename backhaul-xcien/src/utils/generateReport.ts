@@ -6,7 +6,7 @@ import { UserAction } from "../context/ChangeLogContext";
 
 export function generatePDFReport(
   alertCards: AlertCardData[],
-  actions: UserAction[],
+  actions: UserAction[]
 ) {
   const doc = new jsPDF();
   const pageWidth = doc.internal.pageSize.getWidth();
@@ -99,66 +99,154 @@ export function generatePDFReport(
   doc.setFont("helvetica", "normal");
   y += 4;
 
-  function formatActionData(action: UserAction): string {
+  // Helper to structure action data for card layout
+  function getActionCardFields(action: UserAction) {
     switch (action.type) {
       case "ADD_NODE":
-        return `Nodo agregado: ${(action.data as any).name}`;
+        return [
+          (action.data as any).name || "-", // Elemento
+          "-", // Antes
+          "-", // Después
+          "Nodo agregado",
+        ];
       case "EDIT_NODE":
-        return `Nodo editado: ${(action.data as any).oldName} → ${(action.data as any).newName}`;
+        return [
+          (action.data as any).oldName || "-", // Elemento
+          `Nombre: ${(action.data as any).oldName}` || "-", // Antes
+          `Nombre: ${(action.data as any).newName}` || "-", // Después
+          "Nodo editado",
+        ];
       case "REMOVE_NODE":
-        return (
-          `Nodo eliminado: ${(action.data as any).name}` +
-          ((action.data as any).removedEdges?.length
-            ? ` (Enlaces eliminados: ${(action.data as any).removedEdges.join(", ")})`
-            : "")
-        );
+        return [
+          (action.data as any).name || "-", // Elemento
+          "-", // Antes
+          "-", // Después
+          (action.data as any).removedEdges?.length
+            ? `Enlaces eliminados: ${(action.data as any).removedEdges.join(", ")}`
+            : "Nodo eliminado",
+        ];
       case "ADD_EDGE":
-        return `Enlace agregado: ${(action.data as any).source} → ${(action.data as any).target}, Capacidad: ${(action.data as any).capacity}, Uso: ${(action.data as any).usage}`;
+        return [
+          `${(action.data as any).source} - ${(action.data as any).target}`,
+          "-",
+          `-`,
+          `Capacidad: ${(action.data as any).capacity}`,
+        ];
       case "EDIT_EDGE":
-        return `Enlace editado: ${(action.data as any).oldName} → ${(action.data as any).newName}, Capacidad: ${(action.data as any).oldCapacity} → ${(action.data as any).newCapacity}, Uso: ${(action.data as any).oldUsage} → ${(action.data as any).newUsage}`;
+        return [
+          `${(action.data as any).oldName}`,
+          `Capacidad: ${(action.data as any).oldCapacity}`,
+          `Capacidad: ${(action.data as any).newCapacity}`,
+          `Características del enlace editadas`,
+        ];
       case "REMOVE_EDGE":
-        return `Enlace eliminado: ${(action.data as any).name}`;
+        return [
+          (action.data as any).name || "-",
+          (action.data as any).name || "-",
+          "-",
+          "Enlace eliminado",
+        ];
       case "ADD_CLIENT":
-        return `Cliente agregado: ${(action.data as any).name} en nodo ${(action.data as any).nodeName}, Capacidad vendida: ${(action.data as any).soldCapacity}, Uso: ${(action.data as any).usage}`;
+        return [
+          (action.data as any).name || "-",
+          "-",
+          "-",
+          `Nodo: ${(action.data as any).nodeName}\nCapacidad vendida: ${(action.data as any).soldCapacity}\nUso: ${(action.data as any).usage}`,
+        ];
       case "EDIT_CLIENT":
-        return `Cliente editado: ${(action.data as any).oldName} → ${(action.data as any).newName}, Capacidad vendida: ${(action.data as any).oldSoldCapacity} → ${(action.data as any).newSoldCapacity}, Uso: ${(action.data as any).oldUsage} → ${(action.data as any).newUsage}`;
+        return [
+          (action.data as any).oldName || "-",
+          `Nombre: ${(action.data as any).oldName}\nCapacidad vendida: ${(action.data as any).oldSoldCapacity}\nUso: ${(action.data as any).oldUsage}`,
+          `Nombre: ${(action.data as any).newName}\nCapacidad vendida: ${(action.data as any).newSoldCapacity}\nUso: ${(action.data as any).newUsage}`,
+          "Características del cliente editadas",
+        ];
       case "REMOVE_CLIENT":
-        return `Cliente eliminado: ${(action.data as any).name}`;
+        return [
+          (action.data as any).name || "-",
+          "-",
+          "-",
+          "Cliente eliminado",
+        ];
       default:
-        return "-";
+        return ["-", "-", "-", "-"];
     }
   }
 
   if (actions.length > 0) {
-    autoTable(doc, {
-      startY: y,
-      head: [["ID", "Tipo", "Fecha/Hora", "Datos"]],
-      body: actions.map((action) => [
-        action.id.toString(),
-        action.type,
+    const cardMargin = 4;
+    const cardPadding = 3;
+    const cardWidth = pageWidth - 2 * 14;
+    const labelWidth = 36;
+    const valueWidth = cardWidth - labelWidth - 2 * cardPadding;
+    const headerHeight = 12;
+    const footerHeight = 8;
+    doc.setFontSize(10);
+    actions.forEach((action) => {
+      const [elemento, antes, despues, detalles] = getActionCardFields(action);
+      const contentFields = [
+        { label: "Elemento", value: elemento },
+        { label: "Antes", value: antes },
+        { label: "Después", value: despues },
+        { label: "Detalles", value: detalles },
+      ].filter((f) => f.value && f.value !== "-");
+      const linesArr = contentFields.map((f) =>
+        doc.splitTextToSize(f.value, valueWidth)
+      );
+      const lineHeight = 5.5;
+      const contentHeight =
+        linesArr.reduce((sum, lines) => sum + lines.length * lineHeight, 0) +
+        contentFields.length * 2;
+      const cardHeight = headerHeight + contentHeight + footerHeight;
+      // --- PAGE BREAK CHECK BEFORE DRAWING CARD ---
+      const minTopMargin = 20;
+      if (y + cardHeight > doc.internal.pageSize.getHeight() - 40) {
+        doc.addPage();
+        y = minTopMargin;
+      }
+      // Draw card background (all corners rounded)
+      doc.setFillColor(245, 248, 255);
+      doc.setDrawColor(180);
+      doc.roundedRect(14, y, cardWidth, cardHeight, 3, 3, "FD");
+      // Draw header (only top corners rounded, bottom corners straight)
+      doc.setFillColor(41, 128, 185);
+      doc.setDrawColor(41, 128, 185);
+      // Draw header as a rectangle with only top corners rounded
+      doc.roundedRect(14, y, cardWidth, headerHeight, 3, 3, "F");
+      doc.rect(14, y + headerHeight - 3, cardWidth, 3, "F"); // overlays bottom of header to make corners straight
+      // Header text: ID left, Type right
+      doc.setFontSize(14);
+      doc.setTextColor(255, 255, 255);
+      doc.setFont("helvetica", "bold");
+      doc.text(`${action.id}`, 18, y + 8);
+      doc.setFontSize(10);
+      doc.text(`${action.type}`, 14 + cardWidth - 6, y + 8, { align: "right" });
+      doc.setTextColor(0, 0, 0);
+      // Draw content fields
+      let lineY = y + headerHeight + cardPadding + lineHeight - 2;
+      contentFields.forEach((f, idx) => {
+        doc.setFont("helvetica", "bold");
+        doc.text(`${f.label}:`, 16, lineY);
+        doc.setFont("helvetica", "normal");
+        (linesArr[idx] as string[]).forEach((line: string, lidx: number) => {
+          doc.text(line, 16 + labelWidth, lineY);
+          if (lidx < (linesArr[idx] as string[]).length - 1)
+            lineY += lineHeight;
+        });
+        lineY += lineHeight;
+      });
+      // Draw footer (Fecha/Hora)
+      doc.setFontSize(9);
+      doc.setTextColor(120, 120, 120);
+      doc.text(
         action.timestamp,
-        formatActionData(action),
-      ]),
-      headStyles: {
-        fillColor: [41, 128, 185],
-        textColor: 255,
-        fontSize: 11,
-      },
-      bodyStyles: {
-        fontSize: 9,
-        lineColor: [220, 220, 220],
-      },
-      alternateRowStyles: { fillColor: [245, 245, 245] },
-      margin: { left: 14, right: 14 },
-      styles: { cellPadding: 2 },
-      columnStyles: {
-        3: { cellWidth: 60 },
-      },
-      theme: "grid",
+        14 + cardWidth - cardPadding,
+        y + cardHeight - cardPadding,
+        { align: "right" }
+      );
+      doc.setTextColor(0, 0, 0);
+      doc.setFontSize(10);
+      y += cardHeight + cardMargin;
     });
-    y = (doc as any).lastAutoTable?.finalY
-      ? (doc as any).lastAutoTable.finalY + 10
-      : y + 40;
   } else {
     doc.setFontSize(11);
     doc.text("No hay cambios registrados.", 14, y + 8);
@@ -175,7 +263,7 @@ export function generatePDFReport(
       `Página ${i} de ${pageCount}`,
       pageWidth - 14,
       doc.internal.pageSize.getHeight() - 8,
-      { align: "right" },
+      { align: "right" }
     );
     doc.setTextColor(0, 0, 0);
   }
