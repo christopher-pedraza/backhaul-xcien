@@ -43,7 +43,8 @@ export function generatePDFReport(
   doc.text(`Total de alertas: ${alertCards.length}`, 14, 39);
   doc.text(`Total de cambios: ${actions.length}`, 14, 45);
 
-  let y = 55;
+  // Add extra space after summary
+  let y = 55 + 6; // 6px extra space
 
   // --- Graph Image Section ---
   if (graphImageBase64) {
@@ -59,6 +60,8 @@ export function generatePDFReport(
       imgHeight = maxImgHeight;
       imgWidth = (imgProps.width * maxImgHeight) / imgProps.height;
     }
+    // Center the image horizontally
+    const imgX = (pageWidth - imgWidth) / 2;
     doc.setFontSize(13);
     doc.setFont("helvetica", "bold");
     doc.text("Vista actual del grafo", 14, y);
@@ -66,12 +69,12 @@ export function generatePDFReport(
     doc.addImage(
       "data:image/png;base64," + graphImageBase64,
       "PNG",
-      14,
+      imgX,
       y + 2,
       imgWidth,
       imgHeight
     );
-    y = y + 2 + imgHeight + 6;
+    y = y + 2 + imgHeight + 12; // 12px extra space after diagram
   }
 
   // Section: Alertas
@@ -79,7 +82,7 @@ export function generatePDFReport(
   doc.setFont("helvetica", "bold");
   doc.text("Alertas", 14, y);
   doc.setFont("helvetica", "normal");
-  y += 4;
+  y += 10; // 10px space after section title
 
   if (alertCards.length > 0) {
     autoTable(doc, {
@@ -115,12 +118,12 @@ export function generatePDFReport(
       theme: "grid",
     });
     y = (doc as any).lastAutoTable?.finalY
-      ? (doc as any).lastAutoTable.finalY + 12
+      ? (doc as any).lastAutoTable.finalY + 16 // 16px extra space after table
       : y + 40;
   } else {
     doc.setFontSize(11);
     doc.text("No hay alertas.", 14, y + 8);
-    y += 20;
+    y += 28; // 28px space if no table
   }
 
   // Section: Cambios
@@ -128,7 +131,7 @@ export function generatePDFReport(
   doc.setFont("helvetica", "bold");
   doc.text("Historial de Cambios", 14, y);
   doc.setFont("helvetica", "normal");
-  y += 4;
+  y += 10; // 10px space after section title
 
   // --- Types ---
   type CardField = { label: string; value: string };
