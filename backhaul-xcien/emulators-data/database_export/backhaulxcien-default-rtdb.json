@@ -84,7 +84,7 @@
           "capacity": 700,
           "source": "movistar",
           "target": "coreBorderPDN",
-          "usage": 500
+          "usage": 0
         },
         "swAcuna-CoreApolo": {
           "capacity": 720,
