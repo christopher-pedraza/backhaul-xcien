@@ -20,7 +20,7 @@ const ChangesList = () => {
   const { actions } = context;
 
   return (
-    <div className="changes-list max-w-[370px] mx-auto my-0 relative h-[87vh]">
+    <div className="changes-list max-w-[370px] mx-auto my-0 relative h-[80vh] mb-[2vh]">
       <div className="max-h-full overflow-y-auto p-2 space-y-3 relative z-10">
         {actions.length === 0 ? (
           <EmptyChanges
@@ -41,7 +41,7 @@ const ChangesList = () => {
         )}
       </div>
 
-      <div className="pointer-events-none absolute bottom-0 left-0 w-full h-12 bg-gradient-to-t from-white to-transparent z-20" />
+      <div className="pointer-events-none absolute bottom-0 left-0 w-full h-3 bg-gradient-to-t from-white to-transparent z-20" />
     </div>
   );
 };
