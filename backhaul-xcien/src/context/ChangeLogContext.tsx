@@ -88,6 +88,7 @@ export interface UserAction {
 export interface ChangeLogContextValue {
   actions: UserAction[];
   addAction: (action: Omit<UserAction, "timestamp" | "id">) => void;
+  clearActions: () => void;
 }
 
 export const ChangeLogContext = createContext<
@@ -107,7 +108,7 @@ export const ChangeLogProvider = ({ children }: { children: ReactNode }) => {
       })
       .replace(
         /^(\d{2}):(\d{2}):(\d{2})$/,
-        "$1:$2:$3",
+        "$1:$2:$3"
       )} - ${now.getDate().toString().padStart(2, "0")} de ${now.toLocaleString("es-ES", { month: "long" })}, ${now.getFullYear()}`;
 
     const newAction: UserAction = {
@@ -118,8 +119,12 @@ export const ChangeLogProvider = ({ children }: { children: ReactNode }) => {
     setActions((prevActions) => [...prevActions, newAction]);
   };
 
+  const clearActions = () => {
+    setActions([]);
+  };
+
   return (
-    <ChangeLogContext.Provider value={{ actions, addAction }}>
+    <ChangeLogContext.Provider value={{ actions, addAction, clearActions }}>
       {children}
     </ChangeLogContext.Provider>
   );
