@@ -11,10 +11,16 @@ import { FileClock } from "lucide-react";
 import { Button } from "@heroui/button";
 import { generatePDFReport } from "@/utils/generateReport";
 import { useAlerts } from "@/context/AlertContext";
+import { useCyContext } from "@/hooks/useCyContext";
 
 const ChangesList = () => {
   const context = useContext(ChangeLogContext);
   const { alertCards } = useAlerts();
+  const { cy } = useCyContext();
+
+  const graphImage = cy
+    ? cy.png({ output: "base64", full: true, scale: 2 })
+    : undefined;
 
   if (!context) {
     return <div>Error: ChangeLogContext no está disponible</div>;
@@ -51,7 +57,7 @@ const ChangesList = () => {
           variant="ghost"
           color="primary"
           className="w-full"
-          onPress={() => generatePDFReport(alertCards, actions)}
+          onPress={() => generatePDFReport(alertCards, actions, graphImage)}
         >
           Exportar reporte
         </Button>

@@ -7,6 +7,7 @@ import { UserAction } from "../context/ChangeLogContext";
 export function generatePDFReport(
   alertCards: AlertCardData[],
   actions: UserAction[],
+  graphImageBase64?: string // <-- Optional PNG base64 string
 ) {
   const doc = new jsPDF();
   const pageWidth = doc.internal.pageSize.getWidth();
@@ -42,8 +43,38 @@ export function generatePDFReport(
   doc.text(`Total de alertas: ${alertCards.length}`, 14, 39);
   doc.text(`Total de cambios: ${actions.length}`, 14, 45);
 
-  // Section: Alertas
   let y = 55;
+
+  // --- Graph Image Section ---
+  if (graphImageBase64) {
+    // Calculate image size (fit to page width, max height 90)
+    const imgProps = doc.getImageProperties(
+      "data:image/png;base64," + graphImageBase64
+    );
+    const maxImgWidth = pageWidth - 28;
+    const maxImgHeight = 90;
+    let imgWidth = maxImgWidth;
+    let imgHeight = (imgProps.height * maxImgWidth) / imgProps.width;
+    if (imgHeight > maxImgHeight) {
+      imgHeight = maxImgHeight;
+      imgWidth = (imgProps.width * maxImgHeight) / imgProps.height;
+    }
+    doc.setFontSize(13);
+    doc.setFont("helvetica", "bold");
+    doc.text("Vista actual del grafo", 14, y);
+    doc.setFont("helvetica", "normal");
+    doc.addImage(
+      "data:image/png;base64," + graphImageBase64,
+      "PNG",
+      14,
+      y + 2,
+      imgWidth,
+      imgHeight
+    );
+    y = y + 2 + imgHeight + 6;
+  }
+
+  // Section: Alertas
   doc.setFontSize(14);
   doc.setFont("helvetica", "bold");
   doc.text("Alertas", 14, y);
@@ -104,7 +135,7 @@ export function generatePDFReport(
 
   // --- Action Card Helpers ---
   function getActionCardFields(
-    action: UserAction,
+    action: UserAction
   ): [string, string, string, string] {
     switch (action.type) {
       case "ADD_NODE":
@@ -183,7 +214,7 @@ export function generatePDFReport(
       headerHeight: number;
       footerHeight: number;
       valueWidth: number;
-    },
+    }
   ): number {
     const { cardPadding, labelWidth, headerHeight, footerHeight, valueWidth } =
       options;
@@ -195,7 +226,7 @@ export function generatePDFReport(
       { label: "Detalles", value: detalles },
     ].filter((f) => f.value && f.value !== "-");
     const linesArr = contentFields.map((f) =>
-      doc.splitTextToSize(f.value, valueWidth),
+      doc.splitTextToSize(f.value, valueWidth)
     );
     const lineHeight = 5.5;
     const contentHeight =
@@ -238,7 +269,7 @@ export function generatePDFReport(
       action.timestamp,
       14 + cardWidth - cardPadding,
       y + cardHeight - cardPadding,
-      { align: "right" },
+      { align: "right" }
     );
     doc.setTextColor(0, 0, 0);
     doc.setFontSize(10);
@@ -264,7 +295,7 @@ export function generatePDFReport(
         { label: "Detalles", value: detalles },
       ].filter((f) => f.value && f.value !== "-");
       const linesArr = contentFields.map((f) =>
-        doc.splitTextToSize(f.value, valueWidth),
+        doc.splitTextToSize(f.value, valueWidth)
       );
       const lineHeight = 5.5;
       const contentHeight =
@@ -302,7 +333,7 @@ export function generatePDFReport(
       `Página ${i} de ${pageCount}`,
       pageWidth - 14,
       doc.internal.pageSize.getHeight() - 8,
-      { align: "right" },
+      { align: "right" }
     );
     doc.setTextColor(0, 0, 0);
   }

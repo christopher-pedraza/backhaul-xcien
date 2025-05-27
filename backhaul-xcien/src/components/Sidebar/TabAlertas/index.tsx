@@ -3,6 +3,7 @@ import { useAlerts } from "@/context/AlertContext";
 import EmptyChanges from "@/components/EmptyChanges/EmptyChanges";
 import { generatePDFReport } from "@/utils/generateReport";
 import { useChangeLogContext } from "@/hooks/useChangeLogContext";
+import { useCyContext } from "@/hooks/useCyContext";
 
 import { Button } from "@heroui/button";
 
@@ -17,6 +18,10 @@ export default function TabAlertas({
 }: TabAlertasProps) {
   const { alertCards } = useAlerts();
   const { actions } = useChangeLogContext();
+  const { cy } = useCyContext();
+  const graphImage = cy
+    ? cy.png({ output: "base64", full: true, scale: 2 })
+    : undefined;
 
   return (
     <div className="justify-between">
@@ -48,7 +53,7 @@ export default function TabAlertas({
             color="primary"
             className="w-full"
             onPress={() => {
-              generatePDFReport(alertCards, actions);
+              generatePDFReport(alertCards, actions, graphImage);
             }}
           >
             Exportar reporte
