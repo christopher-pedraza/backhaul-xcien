@@ -15,8 +15,10 @@
           "usage": 0
         },
         "CoreSispa-SwSispa": {
+          "capacity": 200,
           "source": "coreSispa",
-          "target": "swRB2011Sispa"
+          "target": "swRB2011Sispa",
+          "usage": 0
         },
         "CoreVillaUnion-CoreGuerrero": {
           "capacity": 100,
@@ -24,7 +26,12 @@
           "target": "coreMTPGuerrero",
           "usage": 0
         },
-        "RF_B5C_Acuña-Apolo": { "source": "coreAcuna", "target": "swPoEAcuna" },
+        "RF_B5C_Acuña-Apolo": {
+          "capacity": 200,
+          "source": "coreAcuna",
+          "target": "swPoEAcuna",
+          "usage": 0
+        },
         "RF_C5C_Piedras_Negras-Telco": {
           "capacity": 100,
           "source": "coreBorderPDN",
@@ -56,16 +63,22 @@
           "usage": 0
         },
         "carrier1000_coreBorderPDN": {
+          "capacity": 150,
           "source": "fibranet1000",
-          "target": "coreBorderPDN"
+          "target": "coreBorderPDN",
+          "usage": 0
         },
         "coreBorderPDN-swPoEPDN": {
+          "capacity": 200,
           "source": "coreBorderPDN",
-          "target": "swPoEPDN"
+          "target": "swPoEPDN",
+          "usage": 0
         },
         "fibranet500-coreAcuna": {
+          "capacity": 200,
           "source": "fibranet500",
-          "target": "coreAcuna"
+          "target": "coreAcuna",
+          "usage": 0
         },
         "movistar-coreBorderPDN": {
           "capacity": 700,
@@ -239,8 +252,18 @@
           "target": "wrtMatias",
           "usage": 0
         },
-        "carrier_core": { "source": "carrier", "target": "coreSanLuis" },
-        "core_switchEME": { "source": "coreSanLuis", "target": "switchEME" },
+        "carrier_core": {
+          "capacity": 200,
+          "source": "carrier",
+          "target": "coreSanLuis",
+          "usage": 0
+        },
+        "core_switchEME": {
+          "capacity": 200,
+          "source": "coreSanLuis",
+          "target": "switchEME",
+          "usage": 0
+        },
         "switchEME_coreCarretera57": {
           "capacity": 700,
           "source": "switchEME",
