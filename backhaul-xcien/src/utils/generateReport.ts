@@ -99,28 +99,28 @@ export function generatePDFReport(
   doc.setFont("helvetica", "normal");
   y += 4;
 
-  // Helper to structure action data for card layout
-  function getActionCardFields(action: UserAction) {
+  // --- Types ---
+  type CardField = { label: string; value: string };
+
+  // --- Action Card Helpers ---
+  function getActionCardFields(
+    action: UserAction
+  ): [string, string, string, string] {
     switch (action.type) {
       case "ADD_NODE":
-        return [
-          (action.data as any).name || "-", // Elemento
-          "-", // Antes
-          "-", // Después
-          "Nodo agregado",
-        ];
+        return [(action.data as any).name || "-", "-", "-", "Nodo agregado"];
       case "EDIT_NODE":
         return [
-          (action.data as any).oldName || "-", // Elemento
-          `Nombre: ${(action.data as any).oldName}` || "-", // Antes
-          `Nombre: ${(action.data as any).newName}` || "-", // Después
+          (action.data as any).oldName || "-",
+          `Nombre: ${(action.data as any).oldName}` || "-",
+          `Nombre: ${(action.data as any).newName}` || "-",
           "Nodo editado",
         ];
       case "REMOVE_NODE":
         return [
-          (action.data as any).name || "-", // Elemento
-          "-", // Antes
-          "-", // Después
+          (action.data as any).name || "-",
+          "-",
+          "-",
           (action.data as any).removedEdges?.length
             ? `Enlaces eliminados: ${(action.data as any).removedEdges.join(", ")}`
             : "Nodo eliminado",
@@ -172,6 +172,79 @@ export function generatePDFReport(
     }
   }
 
+  function drawActionCard(
+    doc: jsPDF,
+    action: UserAction,
+    y: number,
+    cardWidth: number,
+    options: {
+      cardPadding: number;
+      labelWidth: number;
+      headerHeight: number;
+      footerHeight: number;
+      valueWidth: number;
+    }
+  ): number {
+    const { cardPadding, labelWidth, headerHeight, footerHeight, valueWidth } =
+      options;
+    const [elemento, antes, despues, detalles] = getActionCardFields(action);
+    const contentFields: CardField[] = [
+      { label: "Elemento", value: elemento },
+      { label: "Antes", value: antes },
+      { label: "Después", value: despues },
+      { label: "Detalles", value: detalles },
+    ].filter((f) => f.value && f.value !== "-");
+    const linesArr = contentFields.map((f) =>
+      doc.splitTextToSize(f.value, valueWidth)
+    );
+    const lineHeight = 5.5;
+    const contentHeight =
+      linesArr.reduce((sum, lines) => sum + lines.length * lineHeight, 0) +
+      contentFields.length * 2;
+    const cardHeight = headerHeight + contentHeight + footerHeight;
+    // Draw card background (all corners rounded)
+    doc.setFillColor(245, 248, 255);
+    doc.setDrawColor(180);
+    doc.roundedRect(14, y, cardWidth, cardHeight, 3, 3, "FD");
+    // Draw header (only top corners rounded, bottom corners straight)
+    doc.setFillColor(41, 128, 185);
+    doc.setDrawColor(41, 128, 185);
+    doc.roundedRect(14, y, cardWidth, headerHeight, 3, 3, "F");
+    doc.rect(14, y + headerHeight - 3, cardWidth, 3, "F");
+    // Header text: ID left, Type right
+    doc.setFontSize(14);
+    doc.setTextColor(255, 255, 255);
+    doc.setFont("helvetica", "bold");
+    doc.text(`${action.id}`, 18, y + 8);
+    doc.setFontSize(10);
+    doc.text(`${action.type}`, 14 + cardWidth - 6, y + 8, { align: "right" });
+    doc.setTextColor(0, 0, 0);
+    // Draw content fields
+    let lineY = y + headerHeight + cardPadding + lineHeight - 2;
+    contentFields.forEach((f, idx) => {
+      doc.setFont("helvetica", "bold");
+      doc.text(`${f.label}:`, 16, lineY);
+      doc.setFont("helvetica", "normal");
+      (linesArr[idx] as string[]).forEach((line: string, lidx: number) => {
+        doc.text(line, 16 + labelWidth, lineY);
+        if (lidx < (linesArr[idx] as string[]).length - 1) lineY += lineHeight;
+      });
+      lineY += lineHeight;
+    });
+    // Draw footer (Fecha/Hora)
+    doc.setFontSize(9);
+    doc.setTextColor(120, 120, 120);
+    doc.text(
+      action.timestamp,
+      14 + cardWidth - cardPadding,
+      y + cardHeight - cardPadding,
+      { align: "right" }
+    );
+    doc.setTextColor(0, 0, 0);
+    doc.setFontSize(10);
+    return cardHeight;
+  }
+
   if (actions.length > 0) {
     const cardMargin = 4;
     const cardPadding = 3;
@@ -182,6 +255,7 @@ export function generatePDFReport(
     const footerHeight = 8;
     doc.setFontSize(10);
     actions.forEach((action) => {
+      // --- PAGE BREAK CHECK BEFORE DRAWING CARD ---
       const [elemento, antes, despues, detalles] = getActionCardFields(action);
       const contentFields = [
         { label: "Elemento", value: elemento },
@@ -197,55 +271,20 @@ export function generatePDFReport(
         linesArr.reduce((sum, lines) => sum + lines.length * lineHeight, 0) +
         contentFields.length * 2;
       const cardHeight = headerHeight + contentHeight + footerHeight;
-      // --- PAGE BREAK CHECK BEFORE DRAWING CARD ---
       const minTopMargin = 20;
       if (y + cardHeight > doc.internal.pageSize.getHeight() - 40) {
         doc.addPage();
         y = minTopMargin;
       }
-      // Draw card background (all corners rounded)
-      doc.setFillColor(245, 248, 255);
-      doc.setDrawColor(180);
-      doc.roundedRect(14, y, cardWidth, cardHeight, 3, 3, "FD");
-      // Draw header (only top corners rounded, bottom corners straight)
-      doc.setFillColor(41, 128, 185);
-      doc.setDrawColor(41, 128, 185);
-      // Draw header as a rectangle with only top corners rounded
-      doc.roundedRect(14, y, cardWidth, headerHeight, 3, 3, "F");
-      doc.rect(14, y + headerHeight - 3, cardWidth, 3, "F"); // overlays bottom of header to make corners straight
-      // Header text: ID left, Type right
-      doc.setFontSize(14);
-      doc.setTextColor(255, 255, 255);
-      doc.setFont("helvetica", "bold");
-      doc.text(`${action.id}`, 18, y + 8);
-      doc.setFontSize(10);
-      doc.text(`${action.type}`, 14 + cardWidth - 6, y + 8, { align: "right" });
-      doc.setTextColor(0, 0, 0);
-      // Draw content fields
-      let lineY = y + headerHeight + cardPadding + lineHeight - 2;
-      contentFields.forEach((f, idx) => {
-        doc.setFont("helvetica", "bold");
-        doc.text(`${f.label}:`, 16, lineY);
-        doc.setFont("helvetica", "normal");
-        (linesArr[idx] as string[]).forEach((line: string, lidx: number) => {
-          doc.text(line, 16 + labelWidth, lineY);
-          if (lidx < (linesArr[idx] as string[]).length - 1)
-            lineY += lineHeight;
-        });
-        lineY += lineHeight;
+      // --- DRAW CARD ---
+      const drawnHeight = drawActionCard(doc, action, y, cardWidth, {
+        cardPadding,
+        labelWidth,
+        headerHeight,
+        footerHeight,
+        valueWidth,
       });
-      // Draw footer (Fecha/Hora)
-      doc.setFontSize(9);
-      doc.setTextColor(120, 120, 120);
-      doc.text(
-        action.timestamp,
-        14 + cardWidth - cardPadding,
-        y + cardHeight - cardPadding,
-        { align: "right" }
-      );
-      doc.setTextColor(0, 0, 0);
-      doc.setFontSize(10);
-      y += cardHeight + cardMargin;
+      y += drawnHeight + cardMargin;
     });
   } else {
     doc.setFontSize(11);
