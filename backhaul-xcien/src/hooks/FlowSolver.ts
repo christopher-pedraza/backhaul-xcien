@@ -155,8 +155,8 @@ export const useFlowSolver = () => {
       };
 
       // Add variables and objective terms
-      for (const { from, to, capacity, strictCapacity } of edges) {
-        const fName = `f_${from}->${to}`;
+      for (const { from, to, capacity, strictCapacity, edgeId } of edges) {
+        const fName = `f_${from}->${to}_${edgeId}`;
 
         // Add flow variable
         lp.bounds!.push({
@@ -169,7 +169,7 @@ export const useFlowSolver = () => {
         if (strictCapacity) {
           // For edges that cannot exceed capacity, just add a direct upper bound constraint
           lp.subjectTo!.push({
-            name: `capacity_${from}->${to}`,
+            name: `capacity_${from}->${to}_${edgeId}`,
             vars: [{ name: fName, coef: 1 }],
             bnds: { type: glpk.GLP_UP, ub: capacity, lb: 0 },
           });
@@ -178,7 +178,7 @@ export const useFlowSolver = () => {
           lp.objective!.vars.push({ name: fName, coef: jump_weight });
         } else {
           // For regular edges, use the overflow variable approach
-          const oName = `o_${from}->${to}`;
+          const oName = `o_${from}->${to}_${edgeId}`;
 
           lp.bounds!.push({
             name: oName,
@@ -198,7 +198,7 @@ export const useFlowSolver = () => {
             upperbound *= 0.5;
           }
           lp.subjectTo!.push({
-            name: `overflow_${from}->${to}`,
+            name: `overflow_${from}->${to}_${edgeId}`,
             vars: [
               { name: fName, coef: 1 },
               { name: oName, coef: -1 },
@@ -214,11 +214,11 @@ export const useFlowSolver = () => {
 
         const inflow = edges
           .filter((e) => e.to === v)
-          .map((e) => ({ name: `f_${e.from}->${e.to}`, coef: 1 }));
+          .map((e) => ({ name: `f_${e.from}->${e.to}_${e.edgeId}`, coef: 1 }));
 
         const outflow = edges
           .filter((e) => e.from === v)
-          .map((e) => ({ name: `f_${e.from}->${e.to}`, coef: -1 }));
+          .map((e) => ({ name: `f_${e.from}->${e.to}_${e.edgeId}`, coef: -1 }));
 
         if (v == sink) {
           lp.subjectTo!.push({
@@ -253,8 +253,8 @@ export const useFlowSolver = () => {
         }
 
         let edge = graph.cy.edges(`[id="${edgeId}"]`);
-        let varName1 = `f_${from}->${to}`;
-        let varName2 = `f_${to}->${from}`;
+        let varName1 = `f_${from}->${to}_${edgeId}`;
+        let varName2 = `f_${to}->${from}_${edgeId}`;
         const data = edge.data();
         const recomm: SimulationRecommendation = {
           edgeId: data.id,
