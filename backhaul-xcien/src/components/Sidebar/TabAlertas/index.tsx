@@ -42,7 +42,7 @@ export default function TabAlertas({
 
         <div className="pointer-events-none absolute bottom-0 left-0 w-full h-3 bg-gradient-to-t from-white to-transparent z-20" />
       
-      <div className="flex justify-center items-center p-2">
+      <div className="flex justify-center items-center p-2 pt-4">
         <Button
           variant="ghost"
           color="primary"
