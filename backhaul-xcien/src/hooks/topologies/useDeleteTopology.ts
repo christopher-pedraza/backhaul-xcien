@@ -8,7 +8,6 @@ const useDeleteTopology = () => {
   return useMutation({
     mutationFn: (id: string) => deleteTopologyById(id),
     onSuccess: () => {
-
       // refresh the list of topologies
       queryClient.invalidateQueries({ queryKey: ["topologies"] });
 

@@ -1,5 +1,11 @@
 import { Button } from "@heroui/button";
-import { Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger } from "@heroui/dropdown";
+import {
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownSection,
+  DropdownTrigger,
+} from "@heroui/dropdown";
 import { useDisclosure } from "@heroui/react";
 import { cn } from "@heroui/theme";
 import { CirclePlus, Copy, Menu, Save, Trash } from "lucide-react";
@@ -22,7 +28,11 @@ const TopologyOptions: FC<Props> = ({
   selectedTopologyId,
 }) => {
   const { cy } = useCyContext();
-  const { isOpen, onOpen: openCreateNewTopologyModal, onOpenChange } = useDisclosure();
+  const {
+    isOpen,
+    onOpen: openCreateNewTopologyModal,
+    onOpenChange,
+  } = useDisclosure();
   const { mutate: updateTopology } = useUpdateTopology();
 
   // determine if the new topology should be empty or a copy of the current one
@@ -39,11 +49,10 @@ const TopologyOptions: FC<Props> = ({
     const params: UpdateTopologyParams = {
       id: selectedTopologyId,
       elements: convertedElements,
-    }
+    };
 
     updateTopology(params);
-  }
-
+  };
 
   return (
     <>
@@ -60,7 +69,10 @@ const TopologyOptions: FC<Props> = ({
             <Menu />
           </Button>
         </DropdownTrigger>
-        <DropdownMenu aria-label="Dropdown menu with description" variant="faded">
+        <DropdownMenu
+          aria-label="Dropdown menu with description"
+          variant="faded"
+        >
           <DropdownSection title="Acciones">
             <DropdownItem
               key="save"
@@ -99,7 +111,9 @@ const TopologyOptions: FC<Props> = ({
               className="text-danger"
               color="danger"
               description="Elimina la topología actual"
-              startContent={<Trash className={cn(iconClasses, "text-danger")} />}
+              startContent={
+                <Trash className={cn(iconClasses, "text-danger")} />
+              }
               onPress={onDeleteTopology}
             >
               Eliminar Topología
@@ -114,7 +128,7 @@ const TopologyOptions: FC<Props> = ({
         createEmptyTopology={createEmpty}
       />
     </>
-  )
-}
+  );
+};
 
 export default TopologyOptions;

@@ -3,7 +3,7 @@ import { Node } from "@/types/Node";
 import { CollectionReturnValue } from "cytoscape";
 
 export const convertCyElementsToAppElements = (
-  cyElements: CollectionReturnValue
+  cyElements: CollectionReturnValue,
 ): (Node | Edge)[] => {
   return cyElements.map((element) => {
     const json = element.json() as any;

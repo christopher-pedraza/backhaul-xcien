@@ -19,7 +19,7 @@ import { UserActionType } from "@/context/ChangeLogContext";
 import TopologyOptions from "@/components/TopologyOptions";
 import useDeleteTopology from "@/hooks/topologies/useDeleteTopology";
 
-interface Props { }
+interface Props {}
 
 // Función auxiliar: Devuelve el siguiente índice disponible para un enlace
 function getNextEdgeIndex(source: string, target: string, cy: any): number {
@@ -89,9 +89,9 @@ const IndexPage: FC<Props> = () => {
 
   const availableNodes = cy
     ? cy.nodes().map((node) => ({
-      id: node.id(),
-      name: node.data("name") || node.id(),
-    }))
+        id: node.id(),
+        name: node.data("name") || node.id(),
+      }))
     : [];
 
   const [selectedNodeType, setSelectedNodeType] = useState<string>("cloud");
@@ -135,14 +135,13 @@ const IndexPage: FC<Props> = () => {
     };
   }, [cy, isSidebarOpen]);
 
-
   const resetStates = () => {
     setSelectedTopologyId("");
     setSelectedNode(null);
     setSelectedType(null);
     setSidebarIsOpen(false);
     setWasTapped(false);
-  }
+  };
 
   const addNode = () => {
     setNewNodeId("");
@@ -294,22 +293,20 @@ const IndexPage: FC<Props> = () => {
     ? cy?.getElementById(selectedNode)?.data("name") || selectedNode
     : "";
 
-
   const deleteTopologyById = () => {
     if (!selectedTopologyId) return;
 
     deleteTopology(selectedTopologyId, {
       onSuccess: () => {
         resetStates();
-      }
+      },
     });
   };
-
 
   const onCreatedTopology = (newTopologyId: string) => {
     resetStates();
     setSelectedTopologyId(newTopologyId);
-  }
+  };
 
   return (
     <div className="flex-1 flex flex-col bg-dotted relative overflow-hidden">

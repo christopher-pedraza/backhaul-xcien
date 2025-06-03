@@ -33,9 +33,7 @@ export const getTopologyById = async (id: string): Promise<Topology> => {
   const indexSnap = await get(ref(rtdb, `topologyIndex/${id}`));
   if (!indexSnap.exists()) throw new Error(`Topology "${id}" not found`);
 
-
   const snap = await get(ref(rtdb, `topologies/${id}`));
-
 
   // the topology exists, but is empty (no nodes or edges)
   if (!snap.exists()) {
@@ -59,7 +57,6 @@ export const getTopologyById = async (id: string): Promise<Topology> => {
   };
 };
 
-
 export const deleteTopologyById = async (id: string): Promise<void> => {
   try {
     await remove(ref(rtdb, `topologies/${id}`));
@@ -70,9 +67,8 @@ export const deleteTopologyById = async (id: string): Promise<void> => {
   }
 };
 
-
 export const createTopology = async (
-  params: CreateTopologyParams
+  params: CreateTopologyParams,
 ): Promise<Topology> => {
   const { name, elements } = params;
 
@@ -97,7 +93,6 @@ export const createTopology = async (
     elements,
   };
 };
-
 
 export const updateTopologyById = async ({
   id,

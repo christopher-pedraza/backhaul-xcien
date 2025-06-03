@@ -3,7 +3,7 @@ import { RtdbNodes } from "@/converters/node";
 import { CytoscapeOptions } from "cytoscape";
 
 export const splitElements = (
-  elements: CytoscapeOptions["elements"] = []
+  elements: CytoscapeOptions["elements"] = [],
 ): { nodes: RtdbNodes; edges: RtdbEdges } => {
   const nodes: RtdbNodes = {};
   const edges: RtdbEdges = {};
@@ -20,7 +20,7 @@ export const splitElements = (
         // adapta este bloque si quieres persistir clientes
         ...(clients.length && {
           clients: Object.fromEntries(
-            clients.map((c: any) => [c.id, { name: c.name }])
+            clients.map((c: any) => [c.id, { name: c.name }]),
           ),
         }),
       };

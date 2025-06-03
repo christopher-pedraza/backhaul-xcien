@@ -7,18 +7,16 @@ const useUpdateTopology = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (params: UpdateTopologyParams) =>
-      updateTopologyById(params),
+    mutationFn: (params: UpdateTopologyParams) => updateTopologyById(params),
 
     onSuccess: (data) => {
-
       // refetch topology
       queryClient.invalidateQueries({ queryKey: ["topology", data.id] });
 
       showInfoToast({
         title: "Cambios guardados",
         description: "La topología ha sido actualizada correctamente.",
-      })
+      });
     },
   });
 };
