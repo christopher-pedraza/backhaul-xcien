@@ -1,6 +1,6 @@
 import { Edge } from "@/types/Edge";
 
-interface RtdbEdges {
+export interface RtdbEdges {
   [edgeId: string]: {
     source: string;
     target: string;
@@ -27,5 +27,6 @@ export const edgesConverter = (edges: RtdbEdges): Edge[] => {
       capacity: edge.capacity,
       usage: edge.usage,
     },
+    type: "edge",
   }));
 };
