@@ -1,5 +1,5 @@
 import { Topology } from "@/types/Topology";
-import { get, ref } from "firebase/database";
+import { get, ref, remove } from "firebase/database";
 import { rtdb } from "@/firebaseConfig";
 import { CytoscapeOptions } from "cytoscape";
 import { edgesConverter } from "@/converters/edge";
@@ -46,4 +46,15 @@ export const getTopologyById = async (id: string): Promise<Topology> => {
     id,
     elements: [...nodeElements, ...edgeElements],
   };
+};
+
+
+export const deleteTopologyById = async (id: string): Promise<void> => {
+  try {
+    await remove(ref(rtdb, `topologies/${id}`));
+
+    await remove(ref(rtdb, `topologyIndex/${id}`));
+  } catch (error) {
+    throw new Error(`Error al eliminar la topología "${id}": ${error}`);
+  }
 };
