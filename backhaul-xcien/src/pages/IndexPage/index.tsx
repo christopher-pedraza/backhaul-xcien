@@ -16,6 +16,8 @@ import DeleteConfirmModal from "@/components/toolBox/DeleteConfirmModal/DeleteCo
 
 import { useChangeLogContext } from "@/hooks/useChangeLogContext";
 import { UserActionType } from "@/context/ChangeLogContext";
+import TopologyOptions from "@/components/TopologyOptions";
+import useDeleteTopology from "@/hooks/topologies/useDeleteTopology";
 
 interface Props {}
 
@@ -60,6 +62,7 @@ const IndexPage: FC<Props> = () => {
   // Select Topology states
   const [selectedTopologyId, setSelectedTopologyId] = useState<string>("");
   const { data: selectedTopology } = useTopology(selectedTopologyId);
+  const { mutate: deleteTopology } = useDeleteTopology();
 
   const [isSidebarOpen, setSidebarIsOpen] = useState(false);
   const [wasTapped, setWasTapped] = useState(false);
@@ -131,6 +134,14 @@ const IndexPage: FC<Props> = () => {
       cy.off("tap", "edge", handleEdgeTap);
     };
   }, [cy, isSidebarOpen]);
+
+  const resetStates = () => {
+    setSelectedTopologyId("");
+    setSelectedNode(null);
+    setSelectedType(null);
+    setSidebarIsOpen(false);
+    setWasTapped(false);
+  };
 
   const addNode = () => {
     setNewNodeId("");
@@ -282,18 +293,39 @@ const IndexPage: FC<Props> = () => {
     ? cy?.getElementById(selectedNode)?.data("name") || selectedNode
     : "";
 
+  const deleteTopologyById = () => {
+    if (!selectedTopologyId) return;
+
+    deleteTopology(selectedTopologyId, {
+      onSuccess: () => {
+        resetStates();
+      },
+    });
+  };
+
+  const onCreatedTopology = (newTopologyId: string) => {
+    resetStates();
+    setSelectedTopologyId(newTopologyId);
+  };
+
   return (
     <div className="flex-1 flex flex-col bg-dotted relative overflow-hidden">
       <MyNavbar />
 
       <Graph />
 
-      <div className="absolute top-0 left-0 z-10 mt-[4rem] ml-2 w-1/6">
+      <div className="absolute top-0 left-0 z-10 mt-[4rem] ml-2 flex gap-2">
+        <TopologyOptions
+          selectedTopologyId={selectedTopologyId}
+          onDeleteTopology={deleteTopologyById}
+          onCreatedTopology={onCreatedTopology}
+        />
         <Selector
           options={topologyOptions}
           isLoadingOptions={isLoadingTopologyOptions}
           selectedValue={selectedTopologyId}
           setSelectedValue={setSelectedTopologyId}
+          width="180px"
         />
       </div>
       <AlertProvider>

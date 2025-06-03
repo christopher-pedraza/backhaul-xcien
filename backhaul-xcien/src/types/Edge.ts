@@ -1,3 +1,5 @@
+import { BaseElement } from "./BaseElement";
+
 export interface EdgeData {
   id: string;
   source: string;
@@ -6,6 +8,6 @@ export interface EdgeData {
   usage?: number;
 }
 
-export interface Edge {
+export interface Edge extends BaseElement {
   data: EdgeData;
 }

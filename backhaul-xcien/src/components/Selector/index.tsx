@@ -14,6 +14,7 @@ interface Props {
   options: SelectOption[];
   selectedValue: string;
   setSelectedValue: Dispatch<SetStateAction<string>>;
+  width?: string | number;
 }
 
 const Selector: FC<Props> = ({
@@ -21,6 +22,7 @@ const Selector: FC<Props> = ({
   options,
   selectedValue,
   setSelectedValue,
+  width,
 }) => {
   const { clearActions } = useChangeLogContext();
 
@@ -43,6 +45,7 @@ const Selector: FC<Props> = ({
       selectedKeys={[selectedValue]}
       selectionMode="single"
       className="shadow shadow-gray-400 rounded-lg"
+      style={width ? { width } : {}}
     >
       {isLoadingOptions ? (
         <SelectItem key="loading">Cargando…</SelectItem>
