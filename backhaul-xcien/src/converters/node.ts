@@ -2,7 +2,7 @@ import { Client } from "@/types/Client";
 import { clientsConverter, RtdbClients } from "./client";
 import { Node, NodeClass } from "@/types/Node";
 
-interface RtdbNodes {
+export interface RtdbNodes {
   [nodeId: string]: {
     name: string;
     x: number;
@@ -35,6 +35,7 @@ export const nodesConverter = (nodes: RtdbNodes): Node[] => {
       },
       position: { x: node.x, y: node.y },
       classes: node.type as NodeClass,
+      type: "node",
     };
   });
 };
