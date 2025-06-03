@@ -15,3 +15,15 @@ export const showSuccessToast = ({
     color: "success",
   })
 }
+
+
+export const showInfoToast = ({
+  title,
+  description
+}: ToastOptions) => {
+  addToast({
+    title,
+    description,
+    color: "primary",
+  })
+}
