@@ -5,7 +5,7 @@ import { CytoscapeOptions } from "cytoscape";
 import { edgesConverter } from "@/converters/edge";
 import { nodesConverter } from "@/converters/node";
 import { splitElements } from "./utils";
-import { CreateTopologyParams } from "@/types/Services";
+import { CreateTopologyParams, UpdateTopologyParams } from "@/types/Services";
 
 interface TopologyOption {
   id: string;
@@ -71,7 +71,6 @@ export const deleteTopologyById = async (id: string): Promise<void> => {
 };
 
 
-
 export const createTopology = async (
   params: CreateTopologyParams
 ): Promise<Topology> => {
@@ -97,4 +96,18 @@ export const createTopology = async (
     id: newId,
     elements,
   };
+};
+
+
+export const updateTopologyById = async ({
+  id,
+  elements,
+}: UpdateTopologyParams): Promise<Topology> => {
+  const { nodes, edges } = splitElements(elements);
+
+  // rewrite the topology in topologyIndex/{id}
+  await set(ref(rtdb, `topologies/${id}`), { nodes, edges });
+
+  // return the updated topology structure
+  return { id, elements };
 };
