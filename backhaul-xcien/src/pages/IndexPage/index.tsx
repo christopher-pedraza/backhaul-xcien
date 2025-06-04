@@ -68,6 +68,7 @@ const IndexPage: FC<Props> = () => {
   const [wasTapped, setWasTapped] = useState(false);
   const [selectedNode, setSelectedNode] = useState<string | null>(null);
   const [selectedType, setSelectedType] = useState<string | null>(null);
+  const [closeDrawer, setCloseDrawer] = useState(false);
 
   // Node modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -139,7 +140,7 @@ const IndexPage: FC<Props> = () => {
     setSelectedTopologyId("");
     setSelectedNode(null);
     setSelectedType(null);
-    setSidebarIsOpen(false);
+    setCloseDrawer(true);
     setWasTapped(false);
   };
 
@@ -338,6 +339,8 @@ const IndexPage: FC<Props> = () => {
           selectedType={selectedType || ""}
           setSelectedNode={setSelectedNode}
           setSelectedType={setSelectedType}
+          closeDrawer={closeDrawer}
+          setCloseDrawer={setCloseDrawer}
         />
 
         {/* Modal para crear nodo */}

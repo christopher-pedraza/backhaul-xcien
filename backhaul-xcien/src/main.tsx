@@ -24,7 +24,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
           <ChangeLogProvider>
             <QueryClientProvider client={queryClient}>
               <App />
-              <ReactQueryDevtools initialIsOpen={false} />
+              {/* <ReactQueryDevtools initialIsOpen={false} /> */}
             </QueryClientProvider>
           </ChangeLogProvider>
         </CytoscapeProvider>

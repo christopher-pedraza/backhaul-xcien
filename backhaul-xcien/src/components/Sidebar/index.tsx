@@ -31,6 +31,8 @@ interface SideBarProps {
   setWasTapped: (value: boolean) => void;
   setSelectedNode: (value: string) => void;
   setSelectedType: (value: string) => void;
+  closeDrawer: boolean;
+  setCloseDrawer: (value: boolean) => void;
 }
 
 export default function Sidebar({
@@ -42,6 +44,8 @@ export default function Sidebar({
   setWasTapped,
   setSelectedNode,
   setSelectedType,
+  closeDrawer,
+  setCloseDrawer,
 }: SideBarProps) {
   useEffect(() => {
     if (wasTapped) {
@@ -62,6 +66,14 @@ export default function Sidebar({
       setSelected("resumen");
     }
   }, [selectedNode, selectedType]);
+
+  useEffect(() => {
+    if (closeDrawer) {
+      handleDrawerClose();
+    }
+    // Reset closeDrawer state after handling
+    setCloseDrawer(false);
+  }, [closeDrawer]);
 
   const [openButtonRotation, setOpenButtonRotation] = useState(0);
   const [showOpenButton, setShowOpenButton] = useState(true);

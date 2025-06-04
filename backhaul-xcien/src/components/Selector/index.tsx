@@ -24,17 +24,18 @@ const Selector: FC<Props> = ({
   setSelectedValue,
   width,
 }) => {
-  const { clearActions } = useChangeLogContext();
+  const { switchTopology } = useChangeLogContext();
 
   // set the first option as selected if no value is selected
   useEffect(() => {
     if (!selectedValue && options.length > 0) {
       setSelectedValue(options[0].key);
+      switchTopology(options[0].key); // Switch to the first topology when options are loaded
     }
   }, [options]);
 
   const handleSelectionChange: ChangeEventHandler<HTMLSelectElement> = (e) => {
-    clearActions(); // Clear the change log when a new selection is made
+    switchTopology(e.target.value); // Clear the change log when a new selection is made
     setSelectedValue(e.target.value);
   };
 
