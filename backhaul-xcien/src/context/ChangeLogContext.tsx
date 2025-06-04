@@ -89,6 +89,8 @@ export interface ChangeLogContextValue {
   actions: UserAction[];
   addAction: (action: Omit<UserAction, "timestamp" | "id">) => void;
   clearActions: () => void;
+  switchTopology: (id: string) => void;
+  currentTopologyId: string | null;
 }
 
 export const ChangeLogContext = createContext<
@@ -96,9 +98,18 @@ export const ChangeLogContext = createContext<
 >(undefined);
 
 export const ChangeLogProvider = ({ children }: { children: ReactNode }) => {
-  const [actions, setActions] = useState<UserAction[]>([]);
+  const [actionsByTopology, setActionsByTopology] = useState<
+    Record<string, UserAction[]>
+  >({});
+  const [currentTopologyId, setCurrentTopologyId] = useState<string | null>(
+    null
+  );
+  const actions = currentTopologyId
+    ? actionsByTopology[currentTopologyId] || []
+    : [];
 
   const addAction = (action: Omit<UserAction, "timestamp" | "id">) => {
+    if (!currentTopologyId) return;
     const now = new Date();
     const formattedTimestamp = `${now
       .toLocaleTimeString("es-ES", {
@@ -108,23 +119,47 @@ export const ChangeLogProvider = ({ children }: { children: ReactNode }) => {
       })
       .replace(
         /^(\d{2}):(\d{2}):(\d{2})$/,
-        "$1:$2:$3",
+        "$1:$2:$3"
       )} - ${now.getDate().toString().padStart(2, "0")} de ${now.toLocaleString("es-ES", { month: "long" })}, ${now.getFullYear()}`;
 
+    const prevActions = actionsByTopology[currentTopologyId] || [];
     const newAction: UserAction = {
       ...action,
-      id: actions.length + 1,
+      id: prevActions.length + 1,
       timestamp: formattedTimestamp,
     };
-    setActions((prevActions) => [...prevActions, newAction]);
+    setActionsByTopology((prev) => ({
+      ...prev,
+      [currentTopologyId]: [...prevActions, newAction],
+    }));
   };
 
   const clearActions = () => {
-    setActions([]);
+    if (!currentTopologyId) return;
+    setActionsByTopology((prev) => ({
+      ...prev,
+      [currentTopologyId]: [],
+    }));
+  };
+
+  const switchTopology = (id: string) => {
+    setCurrentTopologyId(id);
+    setActionsByTopology((prev) => ({
+      ...prev,
+      [id]: prev[id] || [],
+    }));
   };
 
   return (
-    <ChangeLogContext.Provider value={{ actions, addAction, clearActions }}>
+    <ChangeLogContext.Provider
+      value={{
+        actions,
+        addAction,
+        clearActions,
+        switchTopology,
+        currentTopologyId,
+      }}
+    >
       {children}
     </ChangeLogContext.Provider>
   );
