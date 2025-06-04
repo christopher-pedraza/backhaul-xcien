@@ -30,5 +30,5 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         </CytoscapeProvider>
       </HeroUIProviderWrapper>
     </BrowserRouter>
-  </React.StrictMode>
+  </React.StrictMode>,
 );
